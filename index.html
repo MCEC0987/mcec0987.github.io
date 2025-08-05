@@ -1,0 +1,1737 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fall - official website</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-light: #4895ef;
+            --secondary-color: #3f37c9;
+            --accent-color: #f72585;
+            --text-color: #2b2d42;
+            --text-light: #8d99ae;
+            --bg-color: #f8f9fa;
+            --menu-bg: rgba(255, 255, 255, 0.98);
+            --nav-bg: #fff;
+            --border-color: #e9ecef;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-radius: 12px;
+            --section-padding: 60px 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 {
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 顶部控制面板 */
+        .control-panel {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 5px;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* 侧边菜单 */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 85%;
+            max-width: 320px;
+            height: 100vh;
+            background-color: var(--menu-bg);
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: left 0.4s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side-menu.active {
+            left: 0;
+        }
+
+        .menu-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .menu-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .close-menu {
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            padding: 5px;
+        }
+
+        .close-menu:hover {
+            transform: rotate(90deg);
+        }
+
+        .menu-items {
+            padding: 10px 0;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: var(--text-color);
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            border-left-color: var(--primary-color);
+            padding-left: 30px;
+        }
+
+        .menu-item i {
+            margin-right: 15px;
+            width: 24px;
+            text-align: center;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+
+        .account-section {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background-color: rgba(248, 249, 250, 0.8);
+        }
+
+        .account-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 12px;
+            transition: var(--transition);
+            box-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
+        }
+
+        .account-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .account-btn:last-child {
+            margin-bottom: 0;
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            box-shadow: none;
+        }
+
+        .account-btn:last-child:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        /* 轮播图 */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 0;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            height: 220px;
+        }
+
+        @media (min-width: 768px) {
+            .slider {
+                height: 450px;
+            }
+        }
+
+        .slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            color: white;
+            padding: 20px;
+            padding-top: 40px;
+        }
+
+        .slide-title {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide-desc {
+            margin: 10px 0 0;
+            font-size: 15px;
+            opacity: 0.9;
+            display: none;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (min-width: 768px) {
+            .slide-title {
+                font-size: 28px;
+            }
+            
+            .slide-desc {
+                font-size: 17px;
+                display: block;
+            }
+        }
+
+        .slider-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dot.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+
+        .dot:hover {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 导航栏 */
+        .nav-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 0;
+            border: none;
+        }
+
+        .nav-bar {
+            display: flex;
+            background-color: var(--nav-bg);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 18px 0;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 15px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+            color: var(--primary-color);
+        }
+
+        /* 内容区域 */
+        .content-section {
+            padding: var(--section-padding);
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            font-size: 28px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+
+        /* 首页内容 */
+        .welcome-section {
+            text-align: center;
+            padding: 40px 0 20px;
+        }
+
+        .welcome-title {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .welcome-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .welcome-text {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            flex: 1 1 300px;
+            max-width: 350px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .feature-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 15px;
+        }
+
+        /* 服务内容 */
+        .services-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 25px;
+            padding: 20px 0;
+            scroll-snap-type: x mandatory;
+            scroll-padding: 0 20px;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .services-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .service-card {
+            min-width: 85%;
+            scroll-snap-align: start;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (min-width: 768px) {
+            .service-card {
+                min-width: 48%;
+            }
+        }
+
+        .service-title {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .service-title i {
+            margin-right: 10px;
+            font-size: 22px;
+        }
+
+        .service-card p {
+            color: var(--text-light);
+            font-size: 15px;
+        }
+
+        /* 关于我们 */
+        .about-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .about-text {
+            margin-bottom: 20px;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .about-content h3 {
+            color: var(--primary-color);
+            margin: 25px 0 15px;
+            font-size: 22px;
+        }
+
+        .about-content ul {
+            margin: 15px 0 25px 25px;
+        }
+
+        .about-content li {
+            margin-bottom: 10px;
+            color: var(--text-light);
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .about-content li::before {
+            content: '•';
+            color: var(--accent-color);
+            font-size: 20px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+
+        .team-placeholder {
+            text-align: center;
+            margin-top: 40px;
+            padding: 40px 30px;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .team-placeholder:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+
+        .team-placeholder i {
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .team-placeholder h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .team-placeholder p {
+            color: var(--text-light);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 联系我们 */
+        .contact-info {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .contact-info p {
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+
+        .contact-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .contact-method {
+            flex: 1 1 250px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .contact-method:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .contact-icon {
+            font-size: 28px;
+            color: var(--primary-color);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(67, 97, 238, 0.1);
+            border-radius: 50%;
+        }
+
+        .contact-method h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .contact-method p, .contact-method a {
+            color: var(--text-light);
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .contact-method a:hover {
+            color: var(--primary-color);
+        }
+
+        .contact-form-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .contact-form-container h3 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            outline: none;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        /* 图片全屏查看 */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease-out;
+        }
+
+        .fullscreen-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .fullscreen-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.4s ease-out;
+        }
+
+        .fullscreen-overlay.active .fullscreen-image {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .close-fullscreen {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .close-fullscreen:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        /* 登录/注册模态框 */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1003;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-out;
+            backdrop-filter: blur(5px);
+        }
+
+        .auth-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .auth-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 450px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease-out;
+        }
+
+        .auth-modal.active .auth-container {
+            transform: translateY(0);
+            opacity: 1;
+            transition-delay: 0.1s;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .auth-tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: var(--text-light);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .auth-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .auth-tab:hover {
+            color: var(--primary-color);
+        }
+
+        .auth-form {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            outline: none;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .auth-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .auth-link {
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .auth-link:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            :root {
+                --section-padding: 40px 0;
+            }
+            
+            .welcome-title {
+                font-size: 26px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .feature-card {
+                padding: 25px 20px;
+            }
+            
+            .auth-container {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-title {
+                font-size: 24px;
+            }
+            
+            .section-title {
+                font-size: 22px;
+            }
+            
+            .nav-item {
+                font-size: 14px;
+                padding: 15px 0;
+            }
+            
+            .auth-tab {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+        /* 添加在现有CSS中 */
+.ripple {
+    position: relative;
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+}
+
+.ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(200, 200, 200, 0.7);
+    transform: scale(0);
+    animation: ripple 600ms linear;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+    </style>
+</head>
+<body>
+<div id="progress-container">
+        <div id="progress-bar"></div>
+        <div id="progress-percent">0%</div>
+    </div>
+    <!-- 顶部控制面板 -->
+    <div class="control-panel">
+        <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+        <div class="logo">陨落官网</div>
+    </div>
+
+    <!-- 侧边菜单 -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <div class="menu-title">菜单(开发中)</div>
+            <button class="close-menu" id="closeMenu"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="menu-items">
+            <a href="#" class="menu-item"><i class="fas fa-user"></i>我的账号</a>
+            <a href="#" class="menu-item"><i class="fas fa-cog"></i>设置</a>
+            <a href="#" class="menu-item"><i class="fas fa-handshake"></i>商务合作</a>
+            <a href="#" class="menu-item"><i class="fas fa-envelope"></i>消息中心</a>
+            <a href="#" class="menu-item"><i class="fas fa-heart"></i>收藏内容</a>
+            <a href="#" class="menu-item"><i class="fas fa-history"></i>浏览历史</a>
+            <a href="#" class="menu-item"><i class="fas fa-question-circle"></i>帮助中心</a>
+        </div>
+        <div class="account-section">
+            <button class="account-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> 登录账号</button>
+            <button class="account-btn" id="registerBtn"><i class="fas fa-user-plus"></i> 注册账号</button>
+        </div>
+    </div>
+
+    <!-- 轮播图 -->
+    <div class="slider-container">
+        <div class="slider" id="slider">
+            <div class="slide">
+                <img src="img/1.png"/>
+                <div class="slide-overlay">
+                    <h3 class="slide-title">日出大山风光</h3>
+                    <p class="slide-desc">日出的景象很是舒悦</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="img/2.png"/>
+                <div class="slide-overlay">
+                    <h3 class="slide-title">雪山</h3>
+                    <p class="slide-desc">自定义抒情语。。暂时没效果</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="img/3.png"/>
+                <div class="slide-overlay">
+                    <h3 class="slide-title">松果</h3>
+                    <p class="slide-desc">自定义</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="img/4.png"/>
+                <div class="slide-overlay">
+                    <h3 class="slide-title">冰雪小镇</h3>
+                    <p class="slide-desc">自定义</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="img/5.png"/>
+                <div class="slide-overlay">
+                    <h3 class="slide-title">壮丽高山</h3>
+                    <p class="slide-desc">自定义</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="img/6.png"/>
+                <div class="slide-overlay">
+                    <h3 class="slide-title">山地风光</h3>
+                    <p class="slide-desc">自定义</p>
+                </div>
+            </div>
+        </div>
+        <div class="slider-dots" id="sliderDots">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <!-- 导航分隔线 -->
+    <hr class="nav-divider">
+
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+        <a href="#" class="nav-item active" data-section="home"><i class="fas fa-home"></i> 首页</a>
+        <a href="#" class="nav-item" data-section="services"><i class="fas fa-concierge-bell"></i> 服务</a>
+        <a href="#" class="nav-item" data-section="about"><i class="fas fa-info-circle"></i> 关于我们</a>
+        <a href="#" class="nav-item" data-section="contact"><i class="fas fa-envelope"></i> 联系我们</a>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="container">
+        <!-- 首页内容 -->
+        <section class="content-section active" id="home-section">
+            <div class="welcome-section">
+                <h1 class="welcome-title">欢迎</h1>
+                <p class="welcome-text">这是一个提供各种资源的网站</p>
+                <a href="more/resources.html">⇨| 点击前往资源分享站 |⇦</a>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3 class="feature-title">设备</h3>
+                        <p>完美适配各种设备，从手机到桌面电脑都能提供优秀的浏览体验，确保用户在任何设备上都能获得最佳视觉效果。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-sliders-h"></i></div>
+                        <h3 class="feature-title">易于定制</h3>
+                        <p>简洁的代码结构和详细的注释让您可以轻松修改和扩展功能，使主题颜色和样式的调整变得简单快捷。</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-paint-brush"></i></div>
+                        <h3 class="feature-title">现代设计</h3>
+                        <p>采用最新的设计趋势，包括微交互、平滑过渡和精心选择的配色方案，确保资源看起来专业而时尚。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 服务内容 -->
+        <section class="content-section" id="services-section">
+            <h2 class="section-title">我们的服务</h2>
+            
+            <div class="services-container">
+                <div class="service-card">
+                    <h3 class="service-title"><i class="fas fa-laptop-code"></i>网站设计与开发</h3>
+                    <p>我们提供的网站设计与开发服务，我们都能为您打造专业、响应式的网站解决方案。</p>
+                </div>
+                <div class="service-card">
+                    <h3 class="service-title"><i class="fas fa-mobile"></i>移动应用开发</h3>
+                    <p>Android平台</p>
+                </div>
+                <div class="service-card">
+                    <h3 class="service-title"><i class="fas fa-pencil-ruler"></i>UI/UX设计</h3>
+                    <p>现代化界面设计，创建直观、美观且高效的数字资源，提升用户满意度。</p>
+                </div>
+                <div class="service-card">
+                    <h3 class="service-title"><i class="fas fa-chart-line"></i>数据</h3>
+                    <p>null</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于我们 -->
+        <section class="content-section" id="about-section">
+            <h2 class="section-title">关于我们</h2>
+            
+            <div class="about-content">
+                <p class="about-text">我们只是一个小工作室</p>
+                
+                <p class="about-text">没什么好的</p>
+                
+                <h3>我们的成员</h3>
+                <ul>
+                    <li>成员 - ℳঞᩚ QQ:3473937826</li>
+                    <li>成员 - Aaa</li>
+                </ul>
+                
+                <div class="team-placeholder">
+                    <i class="fas fa-user-plus"></i>
+                    <h3>加入我们</h3>
+                    <p>暂不支持加入我们</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系我们 -->
+        <section class="content-section" id="contact-section">
+            <h2 class="section-title">联系我们</h2>
+            
+            <div class="contact-info">
+                <p>如果您对资源有任何问题，可以与我们联系。我们的团队不是很乐意为您提供帮助，我们会在144小时内回复。</p>
+                
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                        <div>
+                            <h4>电话</h4>
+                            <p>+86 123 4567 8910</p>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <h4>电子邮件</h4>
+                            <p>li331066@163.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <div class="contact-icon"><i class="fab fa-qq"></i></div>
+                        <div>
+                            <h4>QQ</h4>
+                            <p><a href="http://wpa.qq.com/msgrd?v=3&uin=3473937826&site=qq&menu=yes" target="_blank">3473937826</a></p>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div>
+                            <h4>地址</h4>
+                            <p>月球1区</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form-container">
+                <h3>发送消息</h3>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="contactName">您的姓名</label>
+                        <input type="text" id="contactName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">电子邮件</label>
+                        <input type="email" id="contactEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">消息内容</label>
+                        <textarea id="contactMessage" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">发送消息</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <!-- 登录/注册模态框 -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">登录</div>
+                <div class="auth-tab" data-tab="register">注册</div>
+            </div>
+            
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">电子邮件</label>
+                    <input type="email" id="loginEmail" placeholder="请输入您的邮箱" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">密码</label>
+                    <input type="password" id="loginPassword" placeholder="请输入您的密码" required>
+                </div>
+                <button type="submit" class="auth-btn">登录</button>
+                <div class="auth-footer">
+                    还没有账号？ <span class="auth-link" data-tab="register">立即注册</span>
+                </div>
+            </form>
+            
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">姓名</label>
+                    <input type="text" id="registerName" placeholder="请输入您的姓名" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">电子邮件</label>
+                    <input type="email" id="registerEmail" placeholder="请输入您的邮箱" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">密码</label>
+                    <input type="password" id="registerPassword" placeholder="请设置密码(至少8位)" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirm">确认密码</label>
+                    <input type="password" id="registerConfirm" placeholder="请再次输入密码" required>
+                </div>
+                <button type="submit" class="auth-btn">注册</button>
+                <div class="auth-footer">
+                    已有账号？ <span class="auth-link" data-tab="login">立即登录</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 图片全屏查看 -->
+    <div class="fullscreen-overlay" id="fullscreenOverlay">
+        
+        <div class="close-fullscreen" id="closeFullscreen"><i class="fas fa-times"></i></div>
+    </div>
+<script src="js/script.js"></script>
+<script src="js/mobile-prompt.js"></script>
+    <script>
+        // 菜单功能
+const menuBtn = document.getElementById('menuBtn');
+const sideMenu = document.getElementById('sideMenu');
+const closeMenu = document.getElementById('closeMenu');
+const menuItems = document.querySelectorAll('.menu-item');
+
+menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sideMenu.classList.add('active');
+    document.body.style.overflow = 'hidden'; // 防止背景滚动
+});
+
+closeMenu.addEventListener('click', () => {
+    sideMenu.classList.remove('active');
+    document.body.style.overflow = '';
+});
+
+// 点击菜单项不做任何操作
+menuItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        sideMenu.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+});
+
+// 导航功能
+const navItems = document.querySelectorAll('.nav-item');
+const contentSections = document.querySelectorAll('.content-section');
+
+function setActiveSection(sectionId) {
+    // 更新导航栏
+    navItems.forEach(item => {
+        if (item.dataset.section === sectionId) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+    
+    // 更新内容区域
+    contentSections.forEach(section => {
+        if (section.id === `${sectionId}-section`) {
+            section.classList.add('active');
+            // 滚动到顶部
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        } else {
+            section.classList.remove('active');
+        }
+    });
+    
+    // 关闭菜单
+    sideMenu.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+navItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveSection(item.dataset.section);
+    });
+});
+
+// 点击文档其他区域关闭菜单
+document.addEventListener('click', (e) => {
+    if (!sideMenu.contains(e.target) && e.target !== menuBtn) {
+        sideMenu.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
+
+// 轮播图功能
+const slider = document.getElementById('slider');
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+let currentSlide = 0;
+let touchStartX = 0;
+let touchEndX = 0;
+const slideCount = slides.length;
+let slideInterval;
+
+// 初始化轮播图
+function initSlider() {
+    // 自动轮播
+    slideInterval = setInterval(nextSlide, 5000);
+}
+
+function nextSlide() {
+    currentSlide = (currentSlide + 1) % slideCount;
+    updateSlider();
+}
+
+function updateSlider() {
+    slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    // 更新指示点
+    dots.forEach((dot, index) => {
+        if (index === currentSlide) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+    
+    // 重置自动轮播计时器
+    clearInterval(slideInterval);
+    slideInterval = setInterval(nextSlide, 5000);
+}
+
+// 点击指示点切换
+dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        currentSlide = index;
+        updateSlider();
+    });
+});
+
+// 触摸滑动
+slider.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    // 停止自动轮播
+    clearInterval(slideInterval);
+});
+
+slider.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    handleSwipe();
+    // 重新开始自动轮播
+    slideInterval = setInterval(nextSlide, 5000);
+});
+
+function handleSwipe() {
+    const diff = touchStartX - touchEndX;
+    if (diff > 50) {
+        // 向左滑动 - 下一张
+        nextSlide();
+    } else if (diff < -50) {
+        // 向右滑动 - 上一张
+        currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+        updateSlider();
+    }
+}
+
+// 图片点击放大
+const slideImages = document.querySelectorAll('.slide-img');
+const fullscreenOverlay = document.getElementById('fullscreenOverlay');
+const fullscreenImage = document.getElementById('fullscreenImage');
+const closeFullscreen = document.getElementById('closeFullscreen');
+
+slideImages.forEach(img => {
+    img.addEventListener('click', () => {
+        fullscreenImage.src = img.src;
+        fullscreenImage.alt = img.alt;
+        fullscreenOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+});
+
+closeFullscreen.addEventListener('click', () => {
+    fullscreenOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+});
+
+// 点击全屏背景关闭
+fullscreenOverlay.addEventListener('click', (e) => {
+    if (e.target === fullscreenOverlay) {
+        fullscreenOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
+
+// 账号系统
+const authModal = document.getElementById('authModal');
+const loginBtn = document.getElementById('loginBtn');
+const registerBtn = document.getElementById('registerBtn');
+const authTabs = document.querySelectorAll('.auth-tab');
+const authForms = document.querySelectorAll('.auth-form');
+const authLinks = document.querySelectorAll('.auth-link');
+const contactForm = document.getElementById('contactForm');
+
+// 显示登录/注册模态框
+function showAuthModal(tab) {
+    authModal.classList.add('active');
+    setActiveAuthTab(tab);
+    document.body.style.overflow = 'hidden';
+}
+
+// 设置激活的认证标签
+function setActiveAuthTab(tab) {
+    authTabs.forEach(t => {
+        if (t.dataset.tab === tab) {
+            t.classList.add('active');
+        } else {
+            t.classList.remove('active');
+        }
+    });
+    
+    authForms.forEach(form => {
+        if (form.id === `${tab}Form`) {
+            form.classList.add('active');
+        } else {
+            form.classList.remove('active');
+        }
+    });
+}
+
+// 切换登录/注册标签
+authTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        setActiveAuthTab(tab.dataset.tab);
+    });
+});
+
+// 切换登录/注册链接
+authLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        setActiveAuthTab(link.dataset.tab);
+    });
+});
+
+// 关闭认证模态框
+document.addEventListener('click', (e) => {
+    if (e.target === authModal) {
+        authModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
+
+// 初始化轮播图
+initSlider();
+
+// 为所有按钮添加涟漪效果
+document.addEventListener('DOMContentLoaded', function() {
+    // 为所有按钮添加涟漪效果
+    const buttons = document.querySelectorAll('.account-btn, .auth-btn, .submit-btn, .menu-btn, .close-menu, .close-fullscreen, .nav-item, .menu-item, .dot, .auth-tab, .auth-link');
+    
+    buttons.forEach(button => {
+        // 为按钮添加ripple类
+        button.classList.add('ripple');
+        
+        button.addEventListener('click', function(e) {
+            // 创建涟漪元素
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple-effect');
+            
+            // 设置涟漪位置
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            // 添加到按钮
+            this.appendChild(ripple);
+            
+            // 动画结束后移除元素
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+});
+    </script>
+    
+    
+       <!-- 雨滴开头 直接从复制到结尾即可 -->
+    <style>
+        /* 雨滴容器样式 - 固定定位覆盖整个视口 */
+        .rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 禁用鼠标事件，避免干扰页面交互 */
+            z-index: 9999; /* 确保在最上层显示 */
+            overflow: hidden; /* 隐藏超出容器的内容 */
+            background: transparent; /* 透明背景 */
+        }
+
+        /* 单个雨滴样式 */
+        .rain {
+            position: absolute;
+            width: 2px; /* 雨滴宽度 */
+            height: 20px; /* 雨滴长度 */
+            background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0), /* 顶部透明 */
+                rgba(255, 255, 255, 0.7)); /* 底部半透明白色 */
+            border-radius: 0 0 5px 5px; /* 底部圆角 */
+            transform-origin: bottom; /* 变换原点在底部 */
+            animation: rain-fall linear forwards; /* 下落动画 */
+            top: -20px; /* 初始位置在屏幕外顶部 */
+        }
+
+        /* 雨滴溅射效果样式 */
+        .splash {
+            position: absolute;
+            width: 8px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5); /* 半透明白色 */
+            border-radius: 50%; /* 圆形溅射 */
+            opacity: 0; /* 初始透明 */
+            animation: splash-effect 0.4s ease-out forwards; /* 溅射动画 */
+        }
+
+        /* 雨滴下落动画定义 */
+        @keyframes rain-fall {
+            0% {
+                transform: translateY(0); /* 起始位置 */
+                opacity: 1; /* 完全可见 */
+            }
+            100% {
+                transform: translateY(calc(100vh + 20px)); /* 落出屏幕底部 */
+                opacity: 1; /* 保持可见直到动画结束 */
+            }
+        }
+
+        /* 溅射效果动画定义 */
+        @keyframes splash-effect {
+            0% {
+                transform: scale(0.3); /* 开始很小 */
+                opacity: 0; /* 开始透明 */
+            }
+            50% {
+                transform: scale(1); /* 中间正常大小 */
+                opacity: 0.5; /* 半透明 */
+            }
+            100% {
+                transform: scale(1.5); /* 结束时放大 */
+                opacity: 0; /* 完全透明 */
+            }
+        }
+    </style>
+    <!-- 雨滴效果的容器 -->
+    <div id="rain-container" class="rain-container"></div>
+    
+    <script>
+        (function() {
+            // 雨滴数量配置
+            const rainCount = 100;
+            // 雨滴速度范围(秒)
+            const minSpeed = 1.5;
+            const maxSpeed = 3;
+            // 雨滴出现延迟范围(秒)
+            const minDelay = 0;
+            const maxDelay = 2;
+            
+            let animationFrameId; // 用于存储动画帧ID
+            const container = document.getElementById('rain-container');
+            
+            /**
+             * 初始化雨滴效果
+             */
+            function initRain() {
+                // 清除现有雨滴
+                const existingRain = container.querySelectorAll('.rain, .splash');
+                existingRain.forEach(el => el.remove());
+                
+                // 创建新雨滴
+                for (let i = 0; i < rainCount; i++) {
+                    createRaindrop();
+                }
+            }
+            
+            /**
+             * 创建单个雨滴元素
+             */
+            function createRaindrop() {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'rain';
+                
+                // 随机水平位置
+                const left = Math.random() * window.innerWidth;
+                raindrop.style.left = `${left}px`;
+                
+                // 随机下落速度
+                const speed = minSpeed + Math.random() * (maxSpeed - minSpeed);
+                raindrop.style.animationDuration = `${speed}s`;
+                
+                // 随机出现延迟
+                const delay = Math.random() * maxDelay;
+                raindrop.style.animationDelay = `${delay}s`;
+                
+                // 将雨滴添加到容器
+                container.appendChild(raindrop);
+                
+                // 计算溅射出现时间(雨滴下落95%时)
+                setTimeout(() => {
+                    createSplash(left, window.innerHeight - 5);
+                }, (delay * 1000) + (speed * 1000 * 0.95));
+                
+                // 动画结束后移除并创建新的雨滴
+                raindrop.addEventListener('animationend', function() {
+                    raindrop.remove();
+                    createRaindrop(); // 循环创建新雨滴
+                });
+            }
+            
+            /**
+             * 创建溅射效果
+             * @param {number} x - 溅射的水平位置
+             * @param {number} y - 溅射的垂直位置
+             */
+            function createSplash(x, y) {
+                const splash = document.createElement('div');
+                splash.className = 'splash';
+                splash.style.left = `${x - 4}px`; // 居中显示
+                splash.style.top = `${y}px`;
+                
+                container.appendChild(splash);
+                
+                // 动画结束后移除溅射元素
+                splash.addEventListener('animationend', function() {
+                    splash.remove();
+                });
+            }
+            
+            /**
+             * 处理窗口大小变化
+             */
+            function handleResize() {
+                // 使用requestAnimationFrame优化性能
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = requestAnimationFrame(() => {
+                    initRain(); // 重新初始化雨滴
+                });
+            }
+            
+            // 初始化雨滴效果
+            initRain();
+            
+            // 监听窗口大小变化事件
+            window.addEventListener('resize', handleResize);
+            
+            // 暴露API供外部调用
+            window.RainEffect = {
+                /**
+                 * 初始化雨滴效果
+                 */
+                init: initRain,
+                
+                /**
+                 * 销毁雨滴效果
+                 */
+                destroy: function() {
+                    // 移除事件监听
+                    window.removeEventListener('resize', handleResize);
+                    // 取消动画帧
+                    cancelAnimationFrame(animationFrameId);
+                    // 清空容器
+                    container.innerHTML = '';
+                    // 移除容器
+                    container.remove();
+                }
+            };
+        })();
+    </script>
+    <!-- 下雨结尾 -->
+
+</body>
+</html>
