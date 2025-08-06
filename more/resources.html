@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fallen website-资源分享</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        /* 导航栏样式 - 谷歌蓝 */
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(135deg, #4285F4, #3367D6);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        /* 刷新按钮样式 */
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: inherit;
+            display: flex;
+            align-items: center;
+        }
+        
+        .refresh-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 搜索框样式 */
+        .search-container {
+            position: relative;
+            margin: 15px;
+            display: none;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            padding-left: 45px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            outline: none;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+        
+        /* 内容区域 */
+        .content {
+            padding: 10px;
+        }
+        
+        /* 产品内容分隔线 */
+        .product-divider {
+            border-top: 3px solid #ccc;
+            margin: 15px 0;
+            width: 100%;
+        }
+        
+        /* 轮播图区域 */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .carousel {
+            display: flex;
+            width: 400%;
+            height: 100%;
+        }
+        
+        .carousel-slide {
+            width: 25%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .carousel-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.5);
+        }
+        
+        .indicator.active {
+            background-color: white;
+        }
+        
+        /* 广播弹幕公告区域 */
+        .broadcast-section {
+            margin-bottom: 20px;
+        }
+        
+        .broadcast-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            border-left: 3px solid #4285F4;
+            color: #4285F4;
+        }
+        
+        /* 统计信息面板 */
+        .stats-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4285F4;
+            margin: 5px 0;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #777;
+        }
+        
+        /* 时间显示面板 */
+        .time-panel {
+            background: linear-gradient(135deg, #FBBC05, #f5f5f5);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        
+        .time-display {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4285F4;
+        }
+        
+        .time-prefix {
+            color: #333;
+            margin-right: 5px;
+        }
+        
+        /* 弹幕容器 */
+        .barrage-container {
+            width: 100%;
+            height: 40px;
+            overflow: hidden;
+            position: relative;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .barrage-item {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 14px;
+            color: #4285F4;
+            line-height: 40px;
+            animation: barrage 15s linear infinite;
+        }
+        
+        @keyframes barrage {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        /* 产品介绍区域 */
+        .product-section {
+            margin-bottom: 20px;
+        }
+        
+        .product-item {
+            display: flex;
+            margin-bottom: 15px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            min-height: 120px;
+            cursor: pointer;
+        }
+        
+        .product-text {
+            flex: 1;
+            padding: 15px;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+        
+        .product-text h3 {
+            margin-bottom: 5px;
+            color: #4285F4;
+        }
+        
+        .product-image {
+            width: 120px;
+            height: 120px;
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .top-label {
+            position: absolute;
+            top: 1px;
+            left: 175px;
+            background-color: rgba(66, 133, 244, 0.2);
+            color: #4285F4;
+            font-size: 12px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        /* 页脚 - 谷歌蓝 */
+        .footer {
+            background: linear-gradient(135deg, #4285F4, #3367D6);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .footer-links {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .copyright {
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+        
+        /* 页面切换效果 */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* 搜索页面样式 - 修改后 */
+        .search-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            padding-top: 80px;
+        }
+        
+        .search-page.active {
+            display: flex;
+        }
+        
+        .search-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #4285F4, #3367D6);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            z-index: 1001;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .search-back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        
+        .search-input-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            padding-left: 45px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+            outline: none;
+        }
+        
+        .search-input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+        
+        .search-clear-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+            background: none;
+            border: none;
+            cursor: button;
+        }
+        
+        .search-results-container {
+            flex: 1;
+            width: 100%;
+            overflow-y: auto;
+            padding: 15px;
+            padding-top: 0;
+        }
+        
+        .results-count {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .no-results {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60%;
+            color: #777;
+        }
+        
+        .no-results i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+        
+        /* 友情链接全屏面板 */
+        .friends-fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .friends-fullscreen.active {
+            display: flex;
+        }
+        
+        .friends-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .friends-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4285F4;
+        }
+        
+        .friends-close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #777;
+            cursor: pointer;
+        }
+        
+        .friends-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .friend-card {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 5px solid #4285F4;
+        }
+        
+        .friend-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .friend-card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4285F4;
+            margin-bottom: 5px;
+        }
+        
+        .friend-card-desc {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        /* 标签面板 - 修改后 */
+        .tab-panel {
+            position: sticky;
+            top: 56px;
+            z-index: 90;
+            background-color: white;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 8px 20px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .tab-button.active {
+            color: #4285F4;
+            font-weight: bold;
+        }
+        
+        .tab-separator {
+            width: 1px;
+            height: 20px;
+            background-color: #ddd;
+            margin: 0 5px;
+        }
+        
+        /* 菜单面板 */
+        .menu-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .menu-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+        
+        /* 工具面板 */
+        .tools-panel {
+            display: none;
+            margin-bottom: 15px;
+        }
+        
+        .tools-stats {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tools-stats .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4285F4;
+            margin: 5px 0;
+        }
+        
+        .tools-stats .stat-label {
+            font-size: 12px;
+            color: #777;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .tool-card {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: none;
+        }
+        
+        .tool-card:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .tool-card-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #4285F4;
+            margin-bottom: 5px;
+        }
+        
+        .tool-card-desc {
+            font-size: 12px;
+            color: #777;
+        }
+        
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4285F4, #3367D6);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* 谷歌蓝按钮 */
+        .google-blue-btn {
+            background: linear-gradient(135deg, #4285F4, #3367D6);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .google-blue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /*js换行*/
+        /*在js中使用\n换行 示列: 文本\n文本*/
+        .product-text p, .tool-card-desc {
+    white-space: pre-line;
+}
+    </style>
+</head>
+<body>
+<div id="progress-container">
+        <div id="progress-bar"></div>
+        <div id="progress-percent">0%</div>
+    </div>
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <a href="#" class="nav-item active" onclick="switchPage('home', event)">
+            <i class="fas fa-home" style="margin-right: 5px;"></i> 首页 
+        </a>
+        <a href="#" class="nav-item" onclick="switchPage('about', event)">
+            <i class="fas fa-info-circle" style="margin-right: 5px;"></i> 介绍 
+        </a>
+        <button class="refresh-btn" onclick="hardRefresh()">
+            <i class="fas fa-sync-alt" style="margin-right: 5px;"></i> 刷新网站 
+        </button>
+        <a href="#" class="nav-item" onclick="showSearchPage()">
+            <i class="fas fa-search" style="margin-right: 5px;"></i> 搜索 
+        </a>
+    </div>
+    
+    <!-- 搜索框容器 -->
+    <div class="search-container" id="searchContainer">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-box" id="searchBox" placeholder="搜索网站产品（关键词搜索）..." maxlength="30" 
+               oninput="handleSearchInput(this)" onkeyup="handleSearch(event)">
+    </div>
+    
+    <!-- 首页内容 -->
+    <div id="home" class="page active">
+        <div class="content">
+            <!-- 轮播图 -->
+            <div class="carousel-container">
+                <div class="carousel" id="carousel">
+                    <div class="carousel-slide">
+                        <img src="image/Rotation_chart/img.png" alt="轮播图1">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="image/Rotation_chart/img.png" alt="轮播图2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="image/Rotation_chart/img.png" alt="轮播图3">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="image/Rotation_chart/img.png" alt="轮播图4">
+                    </div>
+                </div>
+                <div class="carousel-indicators">
+                    <div class="indicator active" data-slide="0"></div>
+                    <div class="indicator" data-slide="1"></div>
+                    <div class="indicator" data-slide="2"></div>
+                    <div class="indicator" data-slide="3"></div>
+                </div>
+            </div>
+            
+            <!-- 网站名称 -->
+            <div class="broadcast-section">
+                <div class="broadcast-title">陨落网站</div>
+                <div class="barrage-container">
+                    <div class="barrage-item">欢迎访问陨落的资源网站，网站将为各位展示多种免费资源，欢迎大家联系投稿 ˃ 𖥦 ˂ </div>
+                </div>
+                
+                <!-- 标签面板 -->
+                <div class="tab-panel">
+                    <button class="tab-button active" onclick="showResources()">网站资源</button>
+                    <div class="tab-separator"></div>
+                    <button class="tab-button" onclick="showMenu()">聊天/反馈/公告</button>
+                    <div class="tab-separator"></div>
+                    <button class="tab-button" onclick="showTools()">本站工具</button>
+                </div>
+                
+                <!-- 资源面板 -->
+                <div id="resourcesPanel">
+                    <!-- 统计信息面板 -->
+                    <div class="stats-panel">
+                        <div class="stat-item">
+                            <div class="stat-label">网站总访问量</div>
+                            <div class="stat-value" id="totalVisits">null</div>
+                            <div class="stat-label">(统计)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">资源数量</div>
+                            <div class="stat-value" id="totalResources">0</div>
+                            <div class="stat-label">(统计)</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 时间显示面板 -->
+                    <div class="time-panel">
+                        <span class="time-prefix">当前时间：</span>
+                        <span class="time-display" id="currentTime"></span>
+                    </div>
+                    
+                    <!-- 产品内容分隔线 -->
+                    <div class="product-divider"></div>
+                    
+                    <!-- 产品介绍区域 - 动态生成 -->
+                    <div class="product-section" id="productsContainer">
+                        <!-- 产品将通过JavaScript动态添加 -->
+                    </div>
+                </div>
+                
+                <!-- 菜单面板 -->
+                <div id="menuPanel" style="display: none;">
+                    <div class="menu-panel">
+                        <div class="menu-item" onclick="window.location.href='other/hgv/index.html'">
+                            <i class="fas fa-comments" style="margin-right: 5px;"></i> 网站聊天室 
+                        </div>
+                        <div class="menu-item" onclick="window.location.href='other/Notice/index.html'">
+                            <i class="fas fa-bullhorn" style="margin-right: 5px;"></i> 公告内容查看 
+                        </div>
+                        <div class="menu-item" onclick="showFriendsFullscreen()">
+                            <i class="fas fa-link" style="margin-right: 5px;"></i> 友情链接 
+                        </div>
+                        <div class="menu-item" onclick="window.location.href='other/Feedback/index.html'">
+                            <i class="fas fa-comment-dots" style="margin-right: 5px;"></i> 意见反馈 
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 工具面板 -->
+                <div id="toolsPanel" class="tools-panel">
+                    <div class="tools-stats">
+                        <div class="stat-value" id="totalTools">0</div>
+                        <div class="stat-label">本站工具数量(统计)</div>
+                    </div>
+                    
+                    <div class="tools-grid" id="toolsContainer">
+                        <!-- 工具将通过JavaScript动态添加 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 介绍页面 -->
+    <div id="about" class="page">
+        <div class="content">
+            <div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h2 style="color: #4285F4; margin-bottom: 15px;">关于我们的网站</h2>
+                <p style="line-height: 1.6; margin-bottom: 15px;">
+                    欢迎来到陨落网站！这是一个展示我们产品和服务的平台，致力于为用户提供有趣的资源，主网站创键于7月14日。
+                </p>
+                <p style="line-height: 1.6; margin-bottom: 15px;">
+                     目前网站属于简易设计概念且布局算美观的小网站。这里没有登录和注册，作为分享网站，我们设计为所有人访问当前网站都是游客身份                </p>
+                <p style="line-height: 1.6; margin-bottom: 15px;">
+                    本网站特色：
+                </p>
+                <ul style="margin-left: 20px; line-height: 1.6; margin-bottom: 15px;">
+                    <li>丰富的产品展示</li>
+                    <li>便捷的搜索功能</li>
+                    <li>实时的聊天交流</li>
+                    <li>清晰的公告查看</li>
+                    <li>友好的用户反馈</li>
+                </ul>
+                <p style="line-height: 1.6;">
+                    感谢您的访问，如有任何问题或建议，请通过意见反馈联系我们！
+                </p>
+                
+                <a href="404.html" class="google-blue-btn" style="display: block; margin-top: 20px; text-align: center;">
+                    隐私协议
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 搜索页面 - 修改后 -->
+    <div class="search-page" id="searchPage">
+        <div class="search-header">
+            <button class="search-back-btn" onclick="hideSearchPage()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="search-input-container">
+                <i class="fas fa-search search-input-icon"></i>
+                <input type="text" class="search-input" id="mainSearchBox" placeholder="可以搜索资源和工具..." maxlength="30" 
+                       oninput="handleSearchInput(this)" onkeyup="handleSearch(event)">
+                <button class="search-clear-btn" onclick="clearSearchInput()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="search-results-container">
+            <div class="results-count" id="resultsCount">请输入你想要的内容关键词并搜索</div>
+            <div id="searchResults">
+                <!-- 搜索结果将通过JavaScript动态添加 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 友情链接全屏面板 -->
+    <div class="friends-fullscreen" id="friendsFullscreen">
+        <div class="friends-header">
+            <div class="friends-title">友情链接—体验更多资源网站</div>
+            <button class="friends-close-btn" onclick="hideFriendsFullscreen()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="friends-grid">
+            <div class="friend-card" onclick="window.location.href='#http://ayosiq.top/'">
+                <div class="friend-card-title">待合作—欢迎联系申请</div>
+                <div class="friend-card-desc">网站简介词</div>
+            </div>
+            <div class="friend-card" onclick="window.location.href='https://example.com/video'">
+                <div class="friend-card-title">待合作—欢迎联系申请</div>
+                <div class="friend-card-desc">网站简介词</div>
+            </div>
+            <div class="friend-card" onclick="window.location.href='https://example.com/docs'">
+                <div class="friend-card-title">待合作—欢迎联系申请</div>
+                <div class="friend-card-desc">网站简介词</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 返回顶部按钮 -->
+    <div class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- 广告开始 -->
+      <link rel="stylesheet" href="css/advertisement.css">
+  <!-- 顶部等待提示条 - 初始隐藏 -->
+  <div id="waitingBar" class="waitingBar">
+    <div class="waitingProgress"></div>
+    <span class="waitingText">广告跳转中，请稍候...</span>
+  </div>
+
+  <!-- 主广告容器 -->
+  <div class="adContainer">
+    <!-- 顶部图片横幅广告 -->
+    <div class="bannerAd">
+      <a href="404.html" target="_blank" class="bannerLink ripple" data-wait="1000">
+        <img src="./image/advertisement/img.jpeg" alt="广告招商" class="bannerImg">
+        <div class="bannerOverlay">
+          <span class="bannerText">限时优惠 · 点击查看</span>
+        </div>
+      </a>
+    </div>
+    
+    <!-- 中部按钮式广告 -->
+    <div class="ctaButtons">
+      <a href="other/Popular_Resources/index.html" target="_blank" class="ctaButton ctaPrimary ripple" data-wait="2000">
+        <i class="icon">🔥</i> 热门产品 · 立即查看
+      </a>
+      <a href="404.html" target="_blank" class="ctaButton ctaSecondary ripple" data-wait="2000">
+        <i class="icon">💎</i> 高级资源 · 免费下载
+      </a>
+    </div>
+    
+    <!-- 底部文字广告 -->
+    <div class="textAds">
+      <div class="textAdHeader">
+        <span class="tag">推荐</span>
+        <h3>热门合作伙伴</h3>
+      </div>
+      <div class="textAdGrid">
+        <a href="404.html" target="_blank" class="textAdItem ad1 ripple" data-wait="500">
+          <span class="adBadge">暂无</span>
+          <span class="adTitle">广告招租</span>
+          <span class="adDesc">广告位招租</span>
+        </a>
+        <a href="404.html" target="_blank" class="textAdItem ad2 ripple" data-wait="500">
+          <span class="adBadge">暂无</span>
+          <span class="adTitle">广告招租</span>
+          <span class="adDesc">广告位招租</span>
+        </a>
+        <a href="404.html" target="_blank" class="textAdItem ad3 ripple" data-wait="500">
+          <span class="adBadge">特惠</span>
+          <span class="adTitle">超值广告位</span>
+          <span class="adDesc">低至¥9.9</span>
+        </a>
+        <a href="404.html" target="_blank" class="textAdItem ad4 ripple" data-wait="500">
+          <span class="adBadge">特惠</span>
+          <span class="adTitle">黄金广告位</span>
+          <span class="adDesc">广告位招租</span>
+        </a>
+        <a href="404.html" target="_blank" class="textAdItem ad5 ripple" data-wait="500">
+          <span class="adBadge">暂无</span>
+          <span class="adTitle">广告招租</span>
+          <span class="adDesc">广告位招租</span>
+        </a>
+        <a href="404.html" target="_blank" class="textAdItem ad6 ripple" data-wait="500">
+          <span class="adBadge">暂无</span>
+          <span class="adTitle">广告招租</span>
+          <span class="adDesc">广告位招租</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="js/advertisement.js"></script>
+  <!-- 广告结束 -->
+  
+    <!-- 页脚 -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="404.html" class="footer-link">
+                <i class="fas fa-info-circle" style="margin-right: 5px;"></i> 关于我们 
+            </a>
+            <a href="https://qm.qq.com/q/A7lj7zRxRY" class="footer-link">
+                <i class="fas fa-user-plus" style="margin-right: 5px;"></i> 加入交流群 
+            </a>
+        </div>
+        <div class="copyright">
+            <p>© 2025 陨落网站 | 轻量级资源网站</p>
+        </div>
+    </div>
+ <script src="js/script.js"></script>
+ <script src="js/mobile-prompt.js"></script>
+<script>
+// 产品数据 - 由JavaScript统一管理
+const products = [
+    {
+        id: 1,
+        title: "星极下载",
+        description: "一款强力工具箱\n提供者:Aaa",
+        image: "image/software/star/img.png",
+        url: "download/software/star/index.html",
+        isTop: true  // 显示置顶可以保留当前
+    },
+    {
+        id: 2,
+        title: "钵钵鸡 牢大 - 浏览器",
+        description: "一款好用占用小的浏览器\n提供者:钵钵鸡",
+        image: "image/software/browser/img.png",
+        url: "download/software/browser/index.html",
+        isTop: true
+    },
+    {
+        id: 3,
+        title: "暂无资源",
+        description: "暂无资源",
+        image: "image/null/null/img.png",
+        url: "404.html",
+        // 可以添加“isTop：true”模拟实现置顶标签
+    },
+];
+
+// 工具数据 - 统一管理
+const tools = [
+    {
+        id: 1,
+        title: "热门资源",
+        description: "热门高质量资源",
+        url: "other/Popular_Resources/index.html"
+    },
+    {
+        id: 2,
+        title: "网站更新历史",
+        description: "网站更新",
+        url: "other/update/index.html"
+    },
+    {
+        id: 3,
+        title: "小乌龟网页取源",
+        description: "提取网页源码，不是很强，请勿用于非法用途，我们不承担责任",
+        url: "other/Little_turtle/index.html"
+    },
+    {
+        id: 4,
+        title: "QQ工具",
+        description: "获取用户和群聊的头像",
+        url: "other/QQtool/index.html"
+    },
+    {
+        id: 5,
+        title: "无工具",
+        description: "工具简介词",
+        url: "other/Enhance_source_extraction/index.html"
+    },
+];
+ 
+// DOM元素缓存 
+const elements = {
+    pages: document.querySelectorAll('.page'),
+    navItems: document.querySelectorAll('.nav-item'),
+    searchPage: document.getElementById('searchPage'),
+    mainSearchBox: document.getElementById('mainSearchBox'),
+    searchResults: document.getElementById('searchResults'),
+    resultsCount: document.getElementById('resultsCount'),
+    resourcesPanel: document.getElementById('resourcesPanel'),
+    menuPanel: document.getElementById('menuPanel'),
+    toolsPanel: document.getElementById('toolsPanel'),
+    friendsFullscreen: document.getElementById('friendsFullscreen'),
+    tabButtons: document.querySelectorAll('.tab-button'),
+    currentTime: document.getElementById('currentTime'),
+    backToTop: document.getElementById('backToTop'),
+    carousel: document.getElementById('carousel'),
+    indicators: document.querySelectorAll('.indicator'),
+    searchResultsContainer: document.querySelector('.search-results-container'),
+    productsContainer: document.getElementById('productsContainer'),
+    toolsContainer: document.getElementById('toolsContainer'),
+    totalResources: document.getElementById('totalResources'),
+    totalTools: document.getElementById('totalTools'),
+    totalVisits: document.getElementById('totalVisits')
+};
+ 
+// 初始化函数 
+function init() {
+    // 初始化时间显示 
+    updateTime();
+    setInterval(updateTime, 1000);
+    
+    // 初始化轮播图 
+    initCarousel();
+    
+    // 初始化事件监听 
+    initEventListeners();
+    
+    // 初始化滚动监听 
+    initScrollListener();
+    
+    // 渲染产品列表 
+    renderProducts();
+    
+    // 渲染工具列表
+    renderTools();
+    
+    // 更新资源数量 
+    elements.totalResources.textContent = products.length;
+    elements.totalTools.textContent = tools.length;
+    
+    // 设置初始访问量，达到真实统计请使用你自己的服务器对接，暂未预留接口，请自行更改
+    elements.totalVisits.textContent = "1234";
+}
+ 
+// 渲染产品列表
+function renderProducts() {
+    elements.productsContainer.innerHTML = '';
+    
+    // 将产品分成两组显示 
+    const group1 = products.slice(0, 3);
+    const group2 = products.slice(3);
+    
+    // 渲染第一组产品 
+    renderProductGroup(group1);
+    
+    // 如果有第二组产品，渲染分隔线和第二组 
+    if(group2.length > 0) {
+        const divider = document.createElement('div');
+        divider.className = 'product-divider';
+        elements.productsContainer.appendChild(divider);
+        
+        renderProductGroup(group2);
+    }
+}
+ 
+// 渲染产品组 
+function renderProductGroup(products) {
+    const groupContainer = document.createElement('div');
+    groupContainer.className = 'product-section';
+    
+    products.forEach(product => {
+        const productElement = createProductElement(product);
+        groupContainer.appendChild(productElement);
+    });
+    
+    elements.productsContainer.appendChild(groupContainer);
+}
+ 
+// 创建产品元素
+function createProductElement(product) {
+    const productElement = document.createElement('div');
+    productElement.className = 'product-item';
+    productElement.onclick = () => {
+        if(product.url) {
+            window.location.href = product.url;
+        }
+    };
+    
+    productElement.innerHTML = `
+        <div class="product-text">
+            <h3>${escapeHtml(product.title)}</h3>
+            <p>${escapeHtml(product.description)}</p>
+        </div>
+        <div class="product-image">
+            <img src="${product.image}" alt="${escapeHtml(product.title)}">
+        </div>
+        ${product.isTop ? '<div class="top-label">置顶</div>' : ''}
+    `;
+    
+    return productElement;
+}
+
+// 渲染工具列表
+function renderTools() {
+    elements.toolsContainer.innerHTML = '';
+    
+    tools.forEach(tool => {
+        const toolElement = createToolElement(tool);
+        elements.toolsContainer.appendChild(toolElement);
+    });
+}
+
+// 创建工具元素
+function createToolElement(tool) {
+    const toolElement = document.createElement('div');
+    toolElement.className = 'tool-card';
+    toolElement.onclick = () => {
+        if(tool.url) {
+            window.location.href = tool.url;
+        }
+    };
+    
+    toolElement.innerHTML = `
+        <div class="tool-card-title">${escapeHtml(tool.title)}</div>
+        <div class="tool-card-desc">${escapeHtml(tool.description)}</div>
+    `;
+    
+    return toolElement;
+}
+ 
+// 初始化轮播图 
+function initCarousel() {
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    let slideInterval = setInterval(nextSlide, 4500);
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateCarousel();
+    }
+    
+    function updateCarousel() {
+        elements.carousel.style.transform = `translateX(-${currentSlide * 25}%)`;
+        
+        elements.indicators.forEach((indicator, index) => {
+            if(index === currentSlide) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        });
+    }
+    
+    // 指示器点击事件 
+    elements.indicators.forEach(indicator => {
+        indicator.addEventListener('click', () => {
+            currentSlide = parseInt(indicator.getAttribute('data-slide'));
+            updateCarousel();
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        });
+    });
+    
+    // 触摸滑动支持 
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    elements.carousel.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+        clearInterval(slideInterval);
+    });
+    
+    elements.carousel.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+        slideInterval = setInterval(nextSlide, 5000);
+    });
+    
+    function handleSwipe() {
+        const threshold = 50;
+        
+        if(touchEndX < touchStartX - threshold) {
+            nextSlide();
+        } else if(touchEndX > touchStartX + threshold) {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateCarousel();
+        }
+    }
+}
+ 
+// 初始化事件监听 
+function initEventListeners() {
+    // 导航栏点击事件 
+    elements.navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            const pageId = this.getAttribute('onclick').match(/switchPage\('(.*?)'/)[1];
+            switchPage(pageId, e);
+        });
+    });
+    
+    // 标签按钮点击事件 
+    elements.tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const action = this.getAttribute('onclick').match(/(showResources|showMenu|showTools)/)[0];
+            if(action === 'showResources') showResources();
+            else if(action === 'showMenu') showMenu();
+            else showTools();
+        });
+    });
+    
+    // 搜索框输入事件 
+    elements.mainSearchBox.addEventListener('input', function() {
+        handleSearchInput(this);
+    });
+    
+    elements.mainSearchBox.addEventListener('keyup', function(e) {
+        if(e.key === 'Enter') {
+            performSearch(this.value.trim());
+        }
+    });
+}
+ 
+// 初始化滚动监听 
+function initScrollListener() {
+    window.addEventListener('scroll', function() {
+        // 显示/隐藏返回顶部按钮 
+        if (window.pageYOffset > 300) {
+            elements.backToTop.classList.add('visible');
+        } else {
+            elements.backToTop.classList.remove('visible');
+        }
+    });
+}
+ 
+// 页面切换功能 
+function switchPage(pageId, event) {
+    event.preventDefault();
+    
+    // 隐藏所有页面 
+    elements.pages.forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // 显示目标页面 
+    document.getElementById(pageId).classList.add('active');
+    
+    // 更新导航栏活动状态 
+    elements.navItems.forEach(item => {
+        item.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+    
+    // 如果是首页则隐藏搜索页面 
+    if(pageId === 'home') hideSearchPage();
+}
+ 
+// 硬刷新功能 
+function hardRefresh() {
+    // 清除本地存储和缓存 
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // 强制从服务器重新加载页面 
+    window.location.href = window.location.href.split('?')[0] + '?t=' + new Date().getTime();
+}
+ 
+// 显示/隐藏搜索页面 
+function showSearchPage() {
+    elements.searchPage.classList.add('active');
+    elements.mainSearchBox.focus();
+    elements.mainSearchBox.value = '';
+    elements.resultsCount.textContent = '请输入你想要的内容关键词并搜索';
+    elements.searchResults.innerHTML = '';
+}
+ 
+function hideSearchPage() {
+    elements.searchPage.classList.remove('active');
+    elements.mainSearchBox.value = '';
+}
+ 
+// 清空搜索输入框 
+function clearSearchInput() {
+    elements.mainSearchBox.value = '';
+    elements.mainSearchBox.focus();
+    elements.resultsCount.textContent = '请输入你想要的内容关键词并搜索';
+    elements.searchResults.innerHTML = '';
+}
+ 
+// 显示/隐藏友情链接全屏面板 
+function showFriendsFullscreen() {
+    elements.friendsFullscreen.classList.add('active');
+}
+ 
+function hideFriendsFullscreen() {
+    elements.friendsFullscreen.classList.remove('active');
+}
+ 
+// 显示资源/菜单/工具面板 
+function showResources() {
+    elements.resourcesPanel.style.display = 'block';
+    elements.menuPanel.style.display = 'none';
+    elements.toolsPanel.style.display = 'none';
+    updateTabButtons('showResources');
+}
+ 
+function showMenu() {
+    elements.resourcesPanel.style.display = 'none';
+    elements.menuPanel.style.display = 'block';
+    elements.toolsPanel.style.display = 'none';
+    updateTabButtons('showMenu');
+}
+
+function showTools() {
+    elements.resourcesPanel.style.display = 'none';
+    elements.menuPanel.style.display = 'none';
+    elements.toolsPanel.style.display = 'block';
+    updateTabButtons('showTools');
+}
+ 
+function updateTabButtons(activeAction) {
+    elements.tabButtons.forEach(button => {
+        button.classList.remove('active');
+        if(button.getAttribute('onclick').includes(activeAction)) {
+            button.classList.add('active');
+        }
+    });
+}
+ 
+// 搜索处理 
+function handleSearchInput(inputElement) {
+    // 过滤HTML标签防止XSS攻击 
+    const filteredValue = inputElement.value.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    if(inputElement.value !== filteredValue) {
+        inputElement.value = filteredValue;
+        return;
+    }
+    
+    // 限制输入长度 
+    if(inputElement.value.length > 30) {
+        inputElement.value = inputElement.value.substring(0, 30);
+        return;
+    }
+    
+    // 实时搜索 
+    performSearch(inputElement.value.trim());
+}
+ 
+// 执行搜索 
+function performSearch(searchTerm) {
+    // 清空之前的结果 
+    elements.searchResults.innerHTML = '';
+    
+    if(!searchTerm || searchTerm === '') {
+        elements.resultsCount.textContent = '请输入你想要的内容关键词并搜索';
+        return;
+    }
+    
+    // 分割多个关键词 
+    const searchWords = searchTerm.toLowerCase().split(/\s+/).filter(word => word.length > 0);
+    
+    // 如果没有有效关键词 
+    if(searchWords.length === 0) {
+        elements.resultsCount.textContent = '请输入你想要的内容关键词并搜索';
+        return;
+    }
+    
+    // 过滤产品和工具
+    const filteredProducts = products.filter(product => {
+        const title = product.title.toLowerCase();
+        const description = product.description.toLowerCase();
+        
+        return searchWords.every(word => 
+            title.includes(word) || 
+            description.includes(word)
+        );
+    });
+    
+    const filteredTools = tools.filter(tool => {
+        const title = tool.title.toLowerCase();
+        const description = tool.description.toLowerCase();
+        
+        return searchWords.every(word => 
+            title.includes(word) || 
+            description.includes(word)
+        );
+    });
+    
+    const totalResults = filteredProducts.length + filteredTools.length;
+    elements.resultsCount.textContent = `找到 ${totalResults} 个结果`;
+    
+    if(totalResults === 0) {
+        const noResults = document.createElement('div');
+        noResults.className = 'no-results';
+        noResults.innerHTML = `
+            <i class="fas fa-search"></i>
+            <p>未搜索到匹配资源</p>
+        `;
+        elements.searchResults.appendChild(noResults);
+    } else {
+        // 添加产品结果
+        filteredProducts.forEach(product => {
+            const productElement = createProductElement(product);
+            productElement.style.width = '100%';
+            productElement.style.marginBottom = '15px';
+            elements.searchResults.appendChild(productElement);
+        });
+        
+        // 添加工具结果
+        filteredTools.forEach(tool => {
+            const toolElement = createToolElement(tool);
+            toolElement.style.width = '100%';
+            toolElement.style.marginBottom = '15px';
+            elements.searchResults.appendChild(toolElement);
+        });
+    }
+}
+ 
+// 更新时间显示 
+function updateTime() {
+    const now = new Date();
+    const timeStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+    elements.currentTime.textContent = timeStr;
+}
+ 
+// 滚动到顶部 
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+ 
+// HTML转义函数防止XSS 
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+ 
+// 页面加载完成后初始化 
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+   <!-- 雨滴开头 直接从复制到结尾即可 -->
+    <style>
+        /* 雨滴容器样式 - 固定定位覆盖整个视口 */
+        .rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* 禁用鼠标事件，避免干扰页面交互 */
+            z-index: 9999; /* 确保在最上层显示 */
+            overflow: hidden; /* 隐藏超出容器的内容 */
+            background: transparent; /* 透明背景 */
+        }
+
+        /* 单个雨滴样式 */
+        .rain {
+            position: absolute;
+            width: 2px; /* 雨滴宽度 */
+            height: 20px; /* 雨滴长度 */
+            background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0), /* 顶部透明 */
+                rgba(255, 255, 255, 0.7)); /* 底部半透明白色 */
+            border-radius: 0 0 5px 5px; /* 底部圆角 */
+            transform-origin: bottom; /* 变换原点在底部 */
+            animation: rain-fall linear forwards; /* 下落动画 */
+            top: -20px; /* 初始位置在屏幕外顶部 */
+        }
+
+        /* 雨滴溅射效果样式 */
+        .splash {
+            position: absolute;
+            width: 8px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5); /* 半透明白色 */
+            border-radius: 50%; /* 圆形溅射 */
+            opacity: 0; /* 初始透明 */
+            animation: splash-effect 0.4s ease-out forwards; /* 溅射动画 */
+        }
+
+        /* 雨滴下落动画定义 */
+        @keyframes rain-fall {
+            0% {
+                transform: translateY(0); /* 起始位置 */
+                opacity: 1; /* 完全可见 */
+            }
+            100% {
+                transform: translateY(calc(100vh + 20px)); /* 落出屏幕底部 */
+                opacity: 1; /* 保持可见直到动画结束 */
+            }
+        }
+
+        /* 溅射效果动画定义 */
+        @keyframes splash-effect {
+            0% {
+                transform: scale(0.3); /* 开始很小 */
+                opacity: 0; /* 开始透明 */
+            }
+            50% {
+                transform: scale(1); /* 中间正常大小 */
+                opacity: 0.5; /* 半透明 */
+            }
+            100% {
+                transform: scale(1.5); /* 结束时放大 */
+                opacity: 0; /* 完全透明 */
+            }
+        }
+    </style>
+    <!-- 雨滴效果的容器 -->
+    <div id="rain-container" class="rain-container"></div>
+    
+    <script>
+        (function() {
+            // 雨滴数量配置
+            const rainCount = 100;
+            // 雨滴速度范围(秒)
+            const minSpeed = 1.5;
+            const maxSpeed = 3;
+            // 雨滴出现延迟范围(秒)
+            const minDelay = 0;
+            const maxDelay = 2;
+            
+            let animationFrameId; // 用于存储动画帧ID
+            const container = document.getElementById('rain-container');
+            
+            /**
+             * 初始化雨滴效果
+             */
+            function initRain() {
+                // 清除现有雨滴
+                const existingRain = container.querySelectorAll('.rain, .splash');
+                existingRain.forEach(el => el.remove());
+                
+                // 创建新雨滴
+                for (let i = 0; i < rainCount; i++) {
+                    createRaindrop();
+                }
+            }
+            
+            /**
+             * 创建单个雨滴元素
+             */
+            function createRaindrop() {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'rain';
+                
+                // 随机水平位置
+                const left = Math.random() * window.innerWidth;
+                raindrop.style.left = `${left}px`;
+                
+                // 随机下落速度
+                const speed = minSpeed + Math.random() * (maxSpeed - minSpeed);
+                raindrop.style.animationDuration = `${speed}s`;
+                
+                // 随机出现延迟
+                const delay = Math.random() * maxDelay;
+                raindrop.style.animationDelay = `${delay}s`;
+                
+                // 将雨滴添加到容器
+                container.appendChild(raindrop);
+                
+                // 计算溅射出现时间(雨滴下落95%时)
+                setTimeout(() => {
+                    createSplash(left, window.innerHeight - 5);
+                }, (delay * 1000) + (speed * 1000 * 0.95));
+                
+                // 动画结束后移除并创建新的雨滴
+                raindrop.addEventListener('animationend', function() {
+                    raindrop.remove();
+                    createRaindrop(); // 循环创建新雨滴
+                });
+            }
+            
+            /**
+             * 创建溅射效果
+             * @param {number} x - 溅射的水平位置
+             * @param {number} y - 溅射的垂直位置
+             */
+            function createSplash(x, y) {
+                const splash = document.createElement('div');
+                splash.className = 'splash';
+                splash.style.left = `${x - 4}px`; // 居中显示
+                splash.style.top = `${y}px`;
+                
+                container.appendChild(splash);
+                
+                // 动画结束后移除溅射元素
+                splash.addEventListener('animationend', function() {
+                    splash.remove();
+                });
+            }
+            
+            /**
+             * 处理窗口大小变化
+             */
+            function handleResize() {
+                // 使用requestAnimationFrame优化性能
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = requestAnimationFrame(() => {
+                    initRain(); // 重新初始化雨滴
+                });
+            }
+            
+            // 初始化雨滴效果
+            initRain();
+            
+            // 监听窗口大小变化事件
+            window.addEventListener('resize', handleResize);
+            
+            // 暴露API供外部调用
+            window.RainEffect = {
+                /**
+                 * 初始化雨滴效果
+                 */
+                init: initRain,
+                
+                /**
+                 * 销毁雨滴效果
+                 */
+                destroy: function() {
+                    // 移除事件监听
+                    window.removeEventListener('resize', handleResize);
+                    // 取消动画帧
+                    cancelAnimationFrame(animationFrameId);
+                    // 清空容器
+                    container.innerHTML = '';
+                    // 移除容器
+                    container.remove();
+                }
+            };
+        })();
+    </script>
+    <!-- 下雨结尾 -->
+
+</body>
+</html>
