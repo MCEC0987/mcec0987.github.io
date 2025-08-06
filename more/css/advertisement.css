@@ -1,0 +1,290 @@
+/* ==================== */
+/* 等待提示条样式 */
+/* ==================== */
+.waitingBar {
+  position: fixed; /* 固定在顶部 */
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px; /* 细条高度 */
+  background: #f0f0f0; /* 背景色 */
+  z-index: 1000; /* 确保在最上层 */
+  display: none; /* 初始隐藏 */
+  overflow: hidden; /* 隐藏超出部分 */
+}
+
+.waitingProgress {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #FF5E62, #FF9966); /* 进度条渐变 */
+  transition: width 0.1s linear; /* 平滑过渡 */
+}
+
+.waitingText {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  z-index: 1001;
+  display: none; /* 初始隐藏 */
+}
+
+/* ==================== */
+/* 广告容器主样式 */
+/* ==================== */
+.adContainer {
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  max-width: 1200px;
+  margin: 20px auto 0; /* 顶部留出空间 */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* ==================== */
+/* 顶部横幅广告样式 */
+/* ==================== */
+.bannerAd {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.bannerImg {
+  width: 100%;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.bannerLink:hover .bannerImg {
+  transform: scale(1.02);
+}
+
+.bannerOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  padding: 15px;
+  text-align: center;
+}
+
+.bannerText {
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  display: inline-block;
+  padding: 5px 15px;
+  background: rgba(255,50,50,0.8);
+  border-radius: 20px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* ==================== */
+/* 中部CTA按钮广告样式 */
+/* ==================== */
+.ctaButtons {
+  display: flex;
+  padding: 15px;
+  background: #f9f9f9;
+  border-bottom: 1px solid #eee;
+}
+
+.ctaButton {
+  flex: 1;
+  margin: 0 5px;
+  padding: 15px;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaButton .icon {
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+.ctaPrimary {
+  background: linear-gradient(135deg, #FF5E62, #FF9966);
+}
+
+.ctaPrimary:hover {
+  background: linear-gradient(135deg, #FF4D4F, #FF8C4F);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(255,94,98,0.3);
+}
+
+.ctaSecondary {
+  background: linear-gradient(135deg, #4776E6, #8E54E9);
+}
+
+.ctaSecondary:hover {
+  background: linear-gradient(135deg, #3A66D6, #7D44D9);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(71,118,230,0.3);
+}
+
+/* ==================== */
+/* 底部文字广告区域样式 */
+/* ==================== */
+.textAds {
+  padding: 15px;
+}
+
+.textAdHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #eee;
+}
+
+.textAdHeader .tag {
+  background: #FF5E62;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-right: 10px;
+}
+
+.textAdHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.textAdGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.textAdItem {
+  padding: 12px;
+  border-radius: 8px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+.textAdItem:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.adBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(0,0,0,0.2);
+  padding: 2px 8px;
+  font-size: 12px;
+  border-bottom-left-radius: 8px;
+}
+
+.adTitle {
+  display: block;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.adDesc {
+  display: block;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* ==================== */
+/* 多彩广告项配色方案 */
+/* ==================== */
+.ad1 { background: linear-gradient(135deg, #FF5E62, #FF9966); }
+.ad2 { background: linear-gradient(135deg, #4776E6, #8E54E9); }
+.ad3 { background: linear-gradient(135deg, #28a745, #5cb85c); }
+.ad4 { background: linear-gradient(135deg, #ffc107, #ff9800); }
+.ad5 { background: linear-gradient(135deg, #17a2b8, #5bc0de); }
+.ad6 { background: linear-gradient(135deg, #6f42c1, #a37ee8); }
+
+/* ==================== */
+/* 响应式设计适配 */
+/* ==================== */
+@media (max-width: 768px) {
+  .ctaButtons {
+    flex-direction: column;
+  }
+  
+  .ctaButton {
+    margin: 5px 0;
+  }
+  
+  .textAdGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .bannerText {
+    font-size: 14px;
+  }
+  
+  .ctaButton {
+    font-size: 14px;
+    padding: 12px;
+  }
+  
+  .textAdGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==================== */
+/* 涟漪动画样式 */
+/* ==================== */
+.ripple {
+  position: relative;
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes rippleEffect {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.jsRipple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  animation: rippleEffect 0.6s linear;
+  pointer-events: none;
+}
