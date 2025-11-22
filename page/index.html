@@ -350,6 +350,10 @@
 
 
 
+
+
+
+    
     <style>
         /* 加载样式 */
         .loader-screen {
@@ -373,6 +377,23 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+        }
+
+        /* 进度条容器 */
+        .progress-container {
+            width: 200px;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4285f4, #34a853);
+            transition: width 0.3s ease;
         }
 
         /* SVG加载动画样式 */
@@ -519,8 +540,6 @@
             line-height: 1.6;
         }
     </style>
-</head>
-<body>
     <!-- 加载 -->
     <div class="loader-screen" id="loaderScreen">
         <div class="loader">
@@ -592,6 +611,9 @@
                 </g>
             </svg>
             <div class="loader-text">加载中...</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
         </div>
     </div>
 
@@ -599,30 +621,91 @@
     <div class="blocker" id="blocker"></div>
 
     <!-- 页面内容（示例） -->
-<!--    <div class="content">
+   <!-- <div class="content">
         <h1>页面内容</h1>
         <p>页面加载完成后，这里会显示实际内容。</p>
         <p>在加载过程中，用户无法与页面内容进行交互。</p>
         <p>这是一个示例页面，实际使用时可以替换为您自己的内容。</p>
     </div>
--->
+          <iframe 
+  src="https://mcec0987.github.io/page/home.html" 
+  width="100%" 
+  height="450" 
+  frameborder="0" 
+  style="border:0;" 
+  allowfullscreen 
+  title="短信轰炸">
+</iframe> -->
     <script>
         // 获取元素
         const loaderScreen = document.getElementById('loaderScreen');
         const blocker = document.getElementById('blocker');
+        const progressBar = document.getElementById('progressBar');
 
-        // 页面加载开始时显示遮罩（禁止操作）
-        window.addEventListener('load', function() {
-            // 页面完全加载后隐藏加载屏和遮罩
-            setTimeout(() => { // 加个延迟让用户看到加载效果，实际使用可去掉
+        // 页面资源计数器
+        let totalResources = 0;
+        let loadedResources = 0;
+
+        // 监听资源加载
+        document.addEventListener('readystatechange', updateProgress);
+        window.addEventListener('load', onPageLoaded);
+
+        // 开始监控资源加载
+        monitorResources();
+
+        function monitorResources() {
+            // 获取页面所有资源
+            const resources = performance.getEntriesByType('resource');
+            totalResources = resources.length;
+            
+            // 监听新资源的加载
+            const observer = new PerformanceObserver((list) => {
+                const newResources = list.getEntries();
+                totalResources += newResources.length;
+                
+                newResources.forEach(resource => {
+                    if (resource.initiatorType !== 'beacon') {
+                        resource.addEventListener('load', () => {
+                            loadedResources++;
+                            updateProgress();
+                        });
+                        resource.addEventListener('error', () => {
+                            loadedResources++;
+                            updateProgress();
+                        });
+                    }
+                });
+            });
+            
+            observer.observe({ entryTypes: ['resource'] });
+        }
+
+        function updateProgress() {
+            // 计算加载进度
+            const progress = Math.min(100, (loadedResources / totalResources) * 100 || 0);
+            progressBar.style.width = `${progress}%`;
+            
+            // 根据文档状态更新
+            if (document.readyState === 'interactive') {
+                progressBar.style.width = '70%';
+            } else if (document.readyState === 'complete') {
+                progressBar.style.width = '100%';
+            }
+        }
+
+        function onPageLoaded() {
+            // 确保进度条到达100%
+            progressBar.style.width = '100%';
+            
+            // 延迟隐藏加载界面，让用户看到加载完成
+            setTimeout(() => {
                 loaderScreen.style.opacity = '0';
-                // 动画结束后隐藏元素
                 setTimeout(() => {
                     loaderScreen.style.display = 'none';
                     blocker.style.display = 'none';
                 }, 500);
-            }, 800); // 模拟加载时间，实际使用可去掉
-        });
+            }, 300);
+        }
 
         // 页面开始加载时显示遮罩
         window.addEventListener('DOMContentLoaded', function() {
