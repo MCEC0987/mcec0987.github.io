@@ -3,9 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>加载动画示例</title>
+    <title>带加载动画的Tab应用</title>
     <style>
-        /* 加载样式 */
+        /* 全局变量 */
+        :root {
+            --primary-color: #4a6cf7;
+            --secondary-color: #6b7280;
+            --bg-color: #ffffff;
+            --border-color: #e5e7eb;
+            --active-color: #4a6cf7;
+            --inactive-color: #9ca3af;
+            --tab-height: 60px;
+            --highlight-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* 重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1f2937;
+            line-height: 1.6;
+            padding-bottom: var(--tab-height);
+        }
+
+        /* 加载动画样式 */
         .loader-screen {
             position: fixed;
             top: 0;
@@ -17,11 +44,10 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999; /* 确保在最上层 */
+            z-index: 9999;
             transition: opacity 0.5s ease-out;
         }
 
-        /* 加载动画容器 */
         .loader {
             display: flex;
             flex-direction: column;
@@ -29,7 +55,6 @@
             justify-content: center;
         }
 
-        /* 进度条容器 */
         .progress-container {
             width: 200px;
             height: 4px;
@@ -46,7 +71,7 @@
             transition: width 0.3s ease;
         }
 
-        /* SVG加载动画样式 */
+        /* SVG动画样式 */
         .pl {
             display: block;
             width: 9.375em;
@@ -114,34 +139,21 @@
             animation-delay: -0.25s;
         }
 
-        /* Animations */
         @keyframes arrows42 {
-            from {
-                transform: rotate(45deg);
-            }
-
-            to {
-                transform: rotate(405deg);
-            }
+            from { transform: rotate(45deg); }
+            to { transform: rotate(405deg); }
         }
 
         @keyframes ringRotate42 {
-            from {
-                transform: rotate(0);
-            }
-
-            to {
-                transform: rotate(720deg);
-            }
+            from { transform: rotate(0); }
+            to { transform: rotate(720deg); }
         }
 
         @keyframes ringStroke42 {
-            from,
-            to {
+            from, to {
                 stroke-dashoffset: 452;
                 transform: rotate(-45deg);
             }
-
             50% {
                 stroke-dashoffset: 169.5;
                 transform: rotate(-180deg);
@@ -149,50 +161,153 @@
         }
 
         @keyframes tick42 {
-            from,
-            3%,
-            47%,
-            to {
-                stroke-dashoffset: -12;
-            }
-
-            14%,
-            36% {
-                stroke-dashoffset: 0;
-            }
+            from, 3%, 47%, to { stroke-dashoffset: -12; }
+            14%, 36% { stroke-dashoffset: 0; }
         }
 
-        /* 加载文字 */
         .loader-text {
             margin-top: 20px;
             font-size: 18px;
             color: #333;
-            font-family: Arial, sans-serif;
         }
 
-        /* 禁止页面交互的遮罩 */
         .blocker {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 9998; /* 位于加载下方，其他内容上方 */
+            z-index: 9998;
             display: none;
         }
 
-        /* 页面内容样式（示例） */
-        .content {
-            max-width: 800px;
+        /* Tab栏样式 */
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 0;
+        }
+
+        .tab-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--bg-color);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .tab-bar {
+            display: flex;
+            justify-content: space-around;
+            height: var(--tab-height);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            color: var(--inactive-color);
+            user-select: none;
+        }
+
+        .tab-item.active {
+            color: var(--active-color);
+        }
+
+        .tab-item:active {
+            background-color: var(--highlight-color);
+        }
+
+        .tab-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .tab-icon.inactive {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEwIDIwSDE0VjE0SDEwVjIwTTEwIDEwSDE0VjRIMTBWMjBaIiBmaWxsPSIjOWNhM2FmIi8+PC9zdmc+');
+        }
+
+        .tab-icon.active {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEwIDIwSDE0VjE0SDEwVjIwTTEwIDEwSDE0VjRIMTBWMjBaIiBmaWxsPSIjNGE2Y2Y3Ii8+PC9zdmc+');
+        }
+
+        .tab-label {
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--active-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .tab-item.active .tab-indicator {
+            transform: scaleX(1);
+        }
+
+        .tab-content {
+            display: none;
             padding: 20px;
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .tab-label {
+                font-size: 11px;
+            }
+            .tab-icon {
+                width: 22px;
+                height: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --tab-height: 50px;
+            }
+            .tab-label {
+                font-size: 10px;
+            }
+            .tab-icon {
+                width: 20px;
+                height: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- 加载 -->
+    <!-- 加载动画 -->
     <div class="loader-screen" id="loaderScreen">
         <div class="loader">
             <svg class="pl" viewBox="0 0 160 160" width="160px" height="160px" xmlns="http://www.w3.org/2000/svg">
@@ -269,57 +384,88 @@
         </div>
     </div>
 
-    <!-- 交互遮罩（用于禁止操作） -->
+    <!-- 交互遮罩 -->
     <div class="blocker" id="blocker"></div>
 
-    <!-- 页面内容（示例） -->
-              <iframe 
-  src="index.html" 
-  width="100%" 
-  height="450" 
-  frameborder="0" 
-  style="border:0;" 
-  allowfullscreen 
-  title="首页">
-</iframe>
+    <!-- 主内容容器 -->
+    <div class="container">
+        <!-- 动态内容容器 -->
+        <div id="content-container">
+            <div class="tab-content active" id="tab1-content">
+                <h1>欢迎来到首页</h1>
+                <p>这里是首页内容区域。</p>
+            </div>
+            <div class="tab-content" id="tab2-content">
+                <h1>分类</h1>
+                <p>这里是分类内容区域。</p>
+            </div>
+            <div class="tab-content" id="tab3-content">
+                <h1>消息</h1>
+                <p>这里是消息内容区域。</p>
+            </div>
+            <div class="tab-content" id="tab4-content">
+                <h1>个人中心</h1>
+                <p>这里是个人中心内容区域。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部Tab栏 -->
+    <div class="tab-container">
+        <div class="tab-bar">
+            <!-- 首页Tab -->
+            <div class="tab-item active" data-tab="tab1">
+                <div class="tab-indicator"></div>
+                <div class="tab-icon active"></div>
+                <div class="tab-label">首页</div>
+            </div>
+            
+            <!-- 分类Tab -->
+            <div class="tab-item" data-tab="tab2">
+                <div class="tab-indicator"></div>
+                <div class="tab-icon inactive"></div>
+                <div class="tab-label">分类</div>
+            </div>
+            
+            <!-- 消息Tab -->
+            <div class="tab-item" data-tab="tab3">
+                <div class="tab-indicator"></div>
+                <div class="tab-icon inactive"></div>
+                <div class="tab-label">消息</div>
+            </div>
+            
+            <!-- 个人中心Tab -->
+            <div class="tab-item" data-tab="tab4">
+                <div class="tab-indicator"></div>
+                <div class="tab-icon inactive"></div>
+                <div class="tab-label">我的</div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // 获取元素
+        // 加载动画逻辑
         const loaderScreen = document.getElementById('loaderScreen');
         const blocker = document.getElementById('blocker');
         const progressBar = document.getElementById('progressBar');
-
-        // 页面资源计数器
         let totalResources = 0;
         let loadedResources = 0;
-
-        // 监听资源加载
-        document.addEventListener('readystatechange', updateProgress);
-        window.addEventListener('load', onPageLoaded);
 
         // 开始监控资源加载
         monitorResources();
 
         function monitorResources() {
-            // 获取页面所有资源
             const resources = performance.getEntriesByType('resource');
             totalResources = resources.length;
             
-            // 监听新资源的加载
             const observer = new PerformanceObserver((list) => {
                 const newResources = list.getEntries();
                 totalResources += newResources.length;
                 
                 newResources.forEach(resource => {
                     if (resource.initiatorType !== 'beacon') {
-                        resource.addEventListener('load', () => {
-                            loadedResources++;
-                            updateProgress();
-                        });
-                        resource.addEventListener('error', () => {
-                            loadedResources++;
-                            updateProgress();
-                        });
+                        loadedResources++;
+                        updateProgress();
                     }
                 });
             });
@@ -328,11 +474,9 @@
         }
 
         function updateProgress() {
-            // 计算加载进度
             const progress = Math.min(100, (loadedResources / totalResources) * 100 || 0);
             progressBar.style.width = `${progress}%`;
             
-            // 根据文档状态更新
             if (document.readyState === 'interactive') {
                 progressBar.style.width = '70%';
             } else if (document.readyState === 'complete') {
@@ -341,10 +485,8 @@
         }
 
         function onPageLoaded() {
-            // 确保进度条到达100%
             progressBar.style.width = '100%';
             
-            // 延迟隐藏加载界面，让用户看到加载完成
             setTimeout(() => {
                 loaderScreen.style.opacity = '0';
                 setTimeout(() => {
@@ -354,10 +496,53 @@
             }, 300);
         }
 
-        // 页面开始加载时显示遮罩
-        window.addEventListener('DOMContentLoaded', function() {
+        // Tab栏逻辑
+        document.addEventListener('DOMContentLoaded', function() {
             blocker.style.display = 'block';
+            
+            const tabItems = document.querySelectorAll('.tab-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            // 为每个Tab项添加点击事件
+            tabItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    showTab(tabId);
+                });
+            });
+            
+            // 显示指定Tab的函数
+            function showTab(tabId) {
+                // 更新Tab项状态
+                tabItems.forEach(item => {
+                    item.classList.remove('active');
+                    const icon = item.querySelector('.tab-icon');
+                    icon.classList.remove('active');
+                    icon.classList.add('inactive');
+                });
+                
+                const activeTab = document.querySelector(`.tab-item[data-tab="${tabId}"]`);
+                if (activeTab) {
+                    activeTab.classList.add('active');
+                    const activeIcon = activeTab.querySelector('.tab-icon');
+                    activeIcon.classList.remove('inactive');
+                    activeIcon.classList.add('active');
+                }
+                
+                // 更新内容区域
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                const activeContent = document.getElementById(`${tabId}-content`);
+                if (activeContent) {
+                    activeContent.classList.add('active');
+                }
+            }
         });
+
+        // 页面加载完成事件
+        window.addEventListener('load', onPageLoaded);
     </script>
 </body>
 </html>
