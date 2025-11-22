@@ -67,7 +67,7 @@ const TabContentLoader = {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(this.templates[url] || '<div class="tab-content active"><p>内容未找到</p></div>');
-      }, 500); // 模拟网络延迟
+      }, 100); // 模拟网络延迟
     });
   }
 };
