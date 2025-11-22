@@ -8,7 +8,7 @@ const TabContentLoader = {
           <h2>首页内容</h2>
           <p>这是动态加载的首页内容区域。</p>
           <p>内容通过JavaScript异步加载，实现真正的隔离。</p><iframe 
-  src="home.html" 
+  src="https://mcec0987.github.io/page/home.html" 
   width="100%" 
   height="450" 
   frameborder="0" 
