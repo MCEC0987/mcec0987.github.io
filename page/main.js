@@ -23,7 +23,7 @@ const TabContentLoader = {
       <div class="tab-content active">
         <div class="content-card">
           <h2>分类页面</h2>
-          <p>这是动态加载的分类内容区域。</p>
+          <p>这是分类内容区域。</p>
           <ul>
             <li>分类项目 1</li>
             <li>分类项目 2</li>
@@ -36,7 +36,7 @@ const TabContentLoader = {
       <div class="tab-content active">
         <div class="content-card">
           <h2>消息中心</h2>
-          <p>这是动态加载的消息内容区域。</p>
+          <p>这是消息内容区域。</p>
           <div style="display: flex; align-items: center; margin: 10px 0;">
             <div style="width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; margin-right: 10px;"></div>
             <div>
@@ -51,7 +51,7 @@ const TabContentLoader = {
       <div class="tab-content active">
         <div class="content-card">
           <h2>个人中心</h2>
-          <p>这是动态加载的个人中心内容区域。</p>
+          <p>这是个人中心内容区域。</p>
           <div style="text-align: center; padding: 20px;">
             <div style="width: 80px; height: 80px; background: #e5e7eb; border-radius: 50%; margin: 0 auto 15px;"></div>
             <h3>用户名</h3>
