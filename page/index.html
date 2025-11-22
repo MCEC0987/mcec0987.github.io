@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 基础元信息 -->
+    <meta charset="UTF-8">  <!-- 设置文档字符编码为UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- 响应式视口设置 -->
+    <title>改进的底部Tab栏组件</title>  <!-- 页面标题 -->
+    
+    <style>
+        /* CSS变量定义 - 方便主题管理和统一修改 */
+        :root {
+            --primary-color: #4a6cf7;       /* 主色调(蓝色) */
+            --secondary-color: #6b7280;    /* 次要颜色(灰色) */
+            --bg-color: #ffffff;           /* 背景色(白色) */
+            --border-color: #e5e7eb;       /* 边框颜色 */
+            --active-color: #4a6cf7;       /* 激活状态颜色 */
+            --inactive-color: #9ca3af;     /* 非激活状态颜色 */
+            --tab-height: 60px;            /* Tab栏高度 */
+            --highlight-color: rgba(0, 0, 0, 0.05);  /* 点击高亮效果 */
+        }
+
+        /* 全局重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;  /* 盒模型设置为border-box */
+            font-family: 'Segoe UI', system-ui, sans-serif;  /* 字体设置 */
+        }
+
+        /* 页面基础样式 */
+        body {
+            background-color: #f8fafc;  /* 页面背景色 */
+            color: #1f2937;           /* 默认文字颜色 */
+            line-height: 1.6;         /* 行高 */
+            padding-bottom: var(--tab-height);  /* 底部留出Tab栏高度 */
+        }
+
+        /* 主内容容器 */
+        .container {
+            max-width: 1200px;       /* 最大宽度 */
+            margin: 0 auto;          /* 水平居中 */
+            padding: 0px;          /* 内边距 */ /* 👈🏻20px */
+        }
+
+        /* Tab栏容器 - 固定在底部 */
+        .tab-container {
+            position: fixed;        /* 固定定位 */
+            bottom: 0;             /* 贴底 */
+            left: 0;               /* 左对齐 */
+            right: 0;              /* 右对齐 */
+            background-color: var(--bg-color);  /* 背景色 */
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);  /* 顶部阴影效果 */
+            z-index: 1000;         /* 确保在最上层 */
+        }
+
+        /* Tab栏布局 */
+        .tab-bar {
+            display: flex;         /* 弹性布局 */
+            justify-content: space-around;  /* 均匀分布 */
+            height: var(--tab-height);  /* 高度 */
+            max-width: 1200px;     /* 最大宽度 */
+            margin: 0 auto;        /* 水平居中 */
+        }
+
+        /* 单个Tab项样式 */
+        .tab-item {
+            flex: 1;               /* 平均分配宽度 */
+            display: flex;
+            flex-direction: column;  /* 垂直排列 */
+            align-items: center;    /* 水平居中 */
+            justify-content: center; /* 垂直居中 */
+            cursor: pointer;        /* 鼠标指针样式 */
+            transition: all 0.3s ease;  /* 过渡动画 */
+            position: relative;     /* 相对定位(为指示器定位) */
+            color: var(--inactive-color);  /* 默认文字颜色 */
+            user-select: none;      /* 禁止文字选择 */
+        }
+
+        /* 激活状态的Tab项 */
+        .tab-item.active {
+            color: var(--active-color);  /* 激活状态文字颜色 */
+        }
+
+        /* 点击时的反馈效果 */
+        .tab-item:active {
+            background-color: var(--highlight-color);  /* 点击高亮 */
+        }
+
+        /* Tab图标样式 */
+        .tab-icon {
+            width: 24px;           /* 图标大小 */
+            height: 24px;
+            margin-bottom: 4px;     /* 与文字的间距 */
+            transition: all 0.3s ease;  /* 过渡动画 */
+            background-size: contain;  /* 背景图片适应 */
+            background-repeat: no-repeat;  /* 不重复 */
+            background-position: center;  /* 居中 */
+        }
+
+        /* 非激活状态图标 */
+        .tab-icon.inactive {
+            background-image: url('appicon.png');  /* 默认图标 */
+        }
+
+        /* 激活状态图标 */
+        .tab-icon.active {
+            background-image: url('appicon2.png');  /* 激活图标 */
+        }
+
+        /* Tab文字标签 */
+        .tab-label {
+            font-size: 12px;       /* 字体大小 */
+            font-weight: 500;      /* 字体粗细 */
+            transition: all 0.3s ease;  /* 过渡动画 */
+        }
+
+        /* Tab激活指示器(顶部小横条) */
+        .tab-indicator {
+            position: absolute;    /* 绝对定位 */
+            top: 0;                /* 顶部对齐 */
+            left: 0;              /* 左侧对齐 */
+            width: 100%;          /* 宽度100% */
+            height: 3px;          /* 高度 */
+            background-color: var(--active-color);  /* 颜色 */
+            transform: scaleX(0);  /* 默认隐藏(宽度为0) */
+            transition: transform 0.3s ease;  /* 过渡动画 */
+        }
+
+        /* 激活状态的指示器 */
+        .tab-item.active .tab-indicator {
+            transform: scaleX(1);  /* 显示(宽度恢复100%) */
+        }
+
+        /* Tab内容区域(默认隐藏) */
+        .tab-content {
+            display: none;         /* 默认隐藏 */
+            padding: 20px;        /* 内边距 */
+            animation: fadeIn 0.5s ease;  /* 淡入动画 */
+        }
+
+        /* 激活状态的内容区域 */
+        .tab-content.active {
+            display: block;        /* 显示 */
+        }
+
+        /* 淡入动画定义 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }  /* 初始状态 */
+            to { opacity: 1; transform: translateY(0); }      /* 结束状态 */
+        }
+
+        /* 响应式设计 - 平板设备(768px以下) */
+        @media (max-width: 768px) {
+            .tab-label {
+                font-size: 11px;  /* 缩小文字 */
+            }
+            
+            .tab-icon {
+                width: 22px;      /* 缩小图标 */
+                height: 22px;
+            }
+        }
+
+        /* 响应式设计 - 手机设备(480px以下) */
+        @media (max-width: 480px) {
+            :root {
+                --tab-height: 50px;  /* 减小Tab栏高度 */
+            }
+            
+            .tab-label {
+                font-size: 10px;  /* 进一步缩小文字 */
+            }
+            
+            .tab-icon {
+                width: 20px;      /* 进一步缩小图标 */
+                height: 20px;
+            }
+        }
+
+        /* 加载指示器容器(默认隐藏) */
+        .loader {
+            display: none;         /* 默认隐藏 */
+            text-align: center;    /* 文字居中 */
+            padding: 20px;        /* 内边距 */
+        }
+
+        /* 激活状态的加载指示器 */
+        .loader.active {
+            display: block;       /* 显示 */
+        }
+
+        /* 加载动画样式 */
+        .loader-spinner {
+            border: 3px solid #f3f3f3;          /* 边框 */
+            border-top: 3px solid var(--primary-color);  /* 顶部边框(颜色不同) */
+            border-radius: 50%;                 /* 圆形 */
+            width: 30px;                        /* 大小 */
+            height: 30px;
+            animation: spin 1s linear infinite; /* 旋转动画 */
+            margin: 0 auto;                     /* 水平居中 */
+        }
+
+        /* 旋转动画定义 */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }    /* 初始角度 */
+            100% { transform: rotate(360deg); }  /* 结束角度 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 主内容容器 -->
+    <div class="container">
+        <!-- 加载指示器 -->
+        <div id="loader" class="loader">
+            <div class="loader-spinner"></div>  <!-- 旋转动画 -->
+            <p>加载中...</p>                   <!-- 加载文字 -->
+        </div>
+
+        <!-- 动态内容容器 -->
+        <div id="content-container"></div>
+    </div>
+
+    <!-- 底部Tab栏容器 -->
+    <div class="tab-container">
+        <div class="tab-bar">
+            <!-- 首页Tab -->
+            <div class="tab-item active" data-tab="tab1" data-content="home.html">
+                <div class="tab-indicator"></div>  <!-- 激活指示器 -->
+                <div class="tab-icon active"></div>  <!-- 图标 -->
+                <div class="tab-label">首页</div>    <!-- 文字标签 -->
+            </div>
+            
+            <!-- 分类Tab -->
+            <div class="tab-item" data-tab="tab2" data-content="category.html">
+                <div class="tab-indicator"></div>
+                <div class="tab-icon inactive"></div>
+                <div class="tab-label">分类</div>
+            </div>
+            
+            <!-- 消息Tab -->
+            <div class="tab-item" data-tab="tab3" data-content="message.html">
+                <div class="tab-indicator"></div>
+                <div class="tab-icon inactive"></div>
+                <div class="tab-label">消息</div>
+            </div>
+            
+            <!-- 个人中心Tab -->
+            <div class="tab-item" data-tab="tab4" data-content="profile.html">
+                <div class="tab-indicator"></div>
+                <div class="tab-icon inactive"></div>
+                <div class="tab-label">我的</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入外部JavaScript文件 -->
+    <script src="tabContentLoader.js"></script>  <!-- Tab内容加载器 -->
+    <script src="main.js"></script>              <!-- 主逻辑 -->
+
+    <!-- 内联JavaScript -->
+    <script>
+        // DOM加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有Tab项
+            const tabItems = document.querySelectorAll('.tab-item');
+            // 获取内容容器
+            const contentContainer = document.getElementById('content-container');
+            // 获取加载指示器
+            const loader = document.getElementById('loader');
+            
+            // 初始化加载第一个Tab的内容
+            loadTabContent('home.html');
+            
+            // 为每个Tab项添加点击事件
+            tabItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 获取当前Tab的ID和内容URL
+                    const tabId = this.getAttribute('data-tab');
+                    const contentUrl = this.getAttribute('data-content');
+                    
+                    // 显示对应Tab和加载内容
+                    showTab(tabId);
+                    loadTabContent(contentUrl);
+                });
+            });
+            
+            // 显示指定Tab的函数
+            function showTab(tabId) {
+                // 移除所有Tab项的active类
+                tabItems.forEach(item => {
+                    item.classList.remove('active');
+                    const icon = item.querySelector('.tab-icon');
+                    icon.classList.remove('active');
+                    icon.classList.add('inactive');
+                });
+                
+                // 为当前选中的Tab项添加active类
+                const activeTab = document.querySelector(`.tab-item[data-tab="${tabId}"]`);
+                if (activeTab) {
+                    activeTab.classList.add('active');
+                    const activeIcon = activeTab.querySelector('.tab-icon');
+                    activeIcon.classList.remove('inactive');
+                    activeIcon.classList.add('active');
+                }
+            }
+            
+            // 异步加载Tab内容的函数
+            async function loadTabContent(url) {
+                // 显示加载指示器
+                loader.classList.add('active');
+                // 清空内容容器
+                contentContainer.innerHTML = '';
+                
+                try {
+                    // 使用外部加载器获取内容
+                    const content = await TabContentLoader.load(url);
+                    // 插入获取的内容
+                    contentContainer.innerHTML = content;
+                } catch (error) {
+                    // 错误处理
+                    console.error('加载内容失败:', error);
+                    contentContainer.innerHTML = '<div class="tab-content active"><p>加载内容时出错</p></div>';
+                } finally {
+                    // 无论成功失败都隐藏加载指示器
+                    loader.classList.remove('active');
+                }
+            }
+            
+            // 响应式处理函数
+            function handleResize() {
+                // 在小屏幕上调整文字大小
+                if (window.innerWidth < 480) {
+                    document.querySelectorAll('.tab-label').forEach(label => {
+                        label.style.fontSize = '10px';
+                    });
+                } else {
+                    document.querySelectorAll('.tab-label').forEach(label => {
+                        label.style.fontSize = '12px';
+                    });
+                }
+            }
+            
+            // 监听窗口大小变化事件
+            window.addEventListener('resize', handleResize);
+            // 初始化时执行一次
+            handleResize();
+        });
+    </script>
+</body>
+</html>
