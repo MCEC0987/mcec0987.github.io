@@ -6,8 +6,8 @@ const TabContentLoader = {
       <div class="tab-content active">
         <div class="content-card">
           <h2>首页内容</h2>
-          <p>这是动态加载的首页内容区域。</p>
-          <p>内容通过JavaScript异步加载，实现真正的隔离。</p><iframe 
+          <p>这是首页内容区域。</p>
+          <iframe 
   src="home.html" 
   width="100%" 
   height="450" 
