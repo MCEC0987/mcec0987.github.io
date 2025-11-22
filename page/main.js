@@ -5,8 +5,7 @@ const TabContentLoader = {
     'home.html': `
       <div class="tab-content active">
         <div class="content-card">
-          <h2>首页内容</h2>
-          <p>这是首页内容区域。</p>
+          <p>短信测压</p>
           <iframe 
   src="home.html" 
   width="100%" 
@@ -14,7 +13,7 @@ const TabContentLoader = {
   frameborder="0" 
   style="border:0;" 
   allowfullscreen 
-  title="百度地图">
+  title="短信轰炸">
 </iframe>
         </div>
       </div>
@@ -22,13 +21,8 @@ const TabContentLoader = {
     'category.html': `
       <div class="tab-content active">
         <div class="content-card">
-          <h2>分类页面</h2>
-          <p>这是分类内容区域。</p>
-          <ul>
-            <li>分类项目 1</li>
-            <li>分类项目 2</li>
-            <li>分类项目 3</li>
-          </ul>
+          <p>特权页面</p>
+
         </div>
       </div>
     `,
@@ -36,16 +30,17 @@ const TabContentLoader = {
       <div class="tab-content active">
         <div class="content-card">
           <h2>消息中心</h2>
-          <p>这是消息内容区域。</p>
-          <div style="display: flex; align-items: center; margin: 10px 0;">
-            <div style="width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; margin-right: 10px;"></div>
-            <div>
-              <div style="font-weight: bold;">系统通知</div>
-              <div style="font-size: 12px; color: #6b7280;">您有一条新消息</div>
-            </div>
-          </div>
-        </div>
-      </div>
+<p>这是消息内容区域。</p>
+<a href="#" style="text-decoration: none; color: inherit;">
+  <div style="display: flex; align-items: center; margin: 10px 0; cursor: pointer;">
+    <div style="width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; margin-right: 10px;"></div>
+    <div>
+      <div style="font-weight: bold;">系统通知</div>
+      <div style="font-size: 12px; color: #6b7280;">您有一条新消息</div>
+    </div>
+  </div>
+</a>
+
     `,
     'profile.html': `
       <div class="tab-content active">
