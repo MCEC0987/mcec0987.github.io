@@ -97,6 +97,14 @@
                 this.dailyLimit = document.getElementById('dailyLimit');
                 this.limitMessage = document.getElementById('limitMessage');
                 
+                // 定义保护名单手机号数组
+                this.blacklist = [
+                    '13353656018',
+                    '12345678901',
+                    '12345678910'
+                    // 可以在这里添加更多保护名单号码
+                ];
+                
                 this.updateDailyLimit();
                 this.initEvents();
             }
@@ -127,6 +135,13 @@
                 if (!phone || phone.length !== 11) {
                     this.addLog('错误：请输入正确的11位手机号码');
                     this.limitMessage.textContent = '请输入正确的11位手机号码';
+                    return;
+                }
+                
+                // 检查手机号是否在保护名单中
+                if (this.blacklist.includes(phone)) {
+                    this.addLog('错误：该手机号在保护名单中，禁止使用');
+                    this.limitMessage.textContent = '该手机号在保护名单中，禁止使用';
                     return;
                 }
                 
