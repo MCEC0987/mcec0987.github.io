@@ -5,7 +5,7 @@ const TabContentLoader = {
     'home.html': `
       <div class="tab-content active">
         <div class="content-card">
-          <p>短信轰炸</p> <h6>等待加载完成...</h6>
+          <p>短信轰炸  等待加载完成...</p>
           <iframe 
   src="home.html" 
   width="100%" 
