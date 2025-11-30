@@ -173,7 +173,7 @@
             }
             
             async loopRequests(phone) {
-                while (this.isRunning && this.dailyCount < 10) {
+                while (this.isRunning && this.dailyCount < 100) {
                     try {
                         const timestamp = Date.now();
                         const randomNum = Math.floor(Math.random() * 9000) + 1000;
@@ -193,7 +193,7 @@
                         this.addLog(`成功 ${this.count}`);
                         this.statusText.textContent = `运行中... 成功: ${this.count}`;
                         
-                        if (this.dailyCount >= 10) {
+                        if (this.dailyCount >= 100) {
                             this.stop();
                             this.limitMessage.textContent = '今日已达到发送上限';
                             break;
