@@ -122,7 +122,7 @@
             
             updateDailyLimit() {
                 this.dailyLimit.textContent = this.dailyCount;
-                if (this.dailyCount >= 10) {
+                if (this.dailyCount >= 100) {
                     this.limitMessage.textContent = '今日已达到发送上限';
                 } else {
                     this.limitMessage.textContent = '';
@@ -145,7 +145,7 @@
                     return;
                 }
                 
-                if (this.dailyCount >= 10) {
+                if (this.dailyCount >= 100) {
                     this.addLog('错误：今日已达到发送上限');
                     this.limitMessage.textContent = '今日已达到发送上限';
                     return;
