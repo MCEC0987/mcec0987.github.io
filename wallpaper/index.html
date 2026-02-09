@@ -475,6 +475,7 @@
                 <p class="mdui-text-color-theme-secondary" style="font-size: 0.8rem;">© 2026 Whale wallpaper</p>
             </div>
         </div>
+
         <p class="mdui-divider"></p> <!-- 横线-可删 -->
         
      
@@ -2260,6 +2261,129 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, maxWaitTime);
     });
+</script>
+
+<script>
+   class ImageFallbackManager {
+    constructor(options = {}) {
+        this.options = {
+            fallbackUrl: options.fallbackUrl || 'icon.png',
+            errorClass: options.errorClass || 'img-error',
+            altText: options.altText || '图片加载失败',
+            ...options
+        };
+        
+        this.init();
+    }
+    
+    init() {
+        // 立即处理现有图片
+        this.processExistingImages();
+        
+        // 监听动态添加的图片
+        this.setupMutationObserver();
+        
+        // 监听页面可见性变化（标签页切换回来时重新检查）
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) this.checkFailedImages();
+        });
+    }
+    
+    processExistingImages() {
+        document.querySelectorAll('img').forEach(img => {
+            this.setupImage(img);
+            
+            // 检查已经加载失败的图片
+            if (img.complete && img.naturalHeight === 0 && img.src !== this.options.fallbackUrl) {
+                this.handleError(img);
+            }
+        });
+    }
+    
+    setupImage(img) {
+        // 移除现有监听器避免重复
+        img.removeEventListener('error', this.handleError);
+        
+        // 绑定错误处理
+        img.addEventListener('error', () => this.handleError(img));
+        
+        // 如果有 data-fallback 属性，使用自定义备用图
+        if (img.dataset.fallback) {
+            img.dataset.originalFallback = img.dataset.fallback;
+        }
+    }
+    
+    handleError(img) {
+        // 防止无限循环
+        if (img.src.includes(this.options.fallbackUrl) || 
+            img.dataset.fallbackProcessed) return;
+        
+        img.dataset.fallbackProcessed = 'true';
+        img.dataset.originalSrc = img.src; // 保存原始地址
+        
+        // 优先使用 data-fallback，其次是全局配置
+        const fallbackUrl = img.dataset.fallback || this.options.fallbackUrl;
+        
+        // 替换图片
+        img.src = fallbackUrl;
+        img.alt = this.options.altText;
+        img.classList.add(this.options.errorClass);
+        
+        console.warn(`图片加载失败: ${img.dataset.originalSrc}, 已替换为: ${fallbackUrl}`);
+    }
+    
+    setupMutationObserver() {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1) {
+                        // 如果是 img 元素
+                        if (node.tagName === 'IMG') {
+                            this.setupImage(node);
+                        }
+                        // 查找子元素中的 img
+                        if (node.querySelectorAll) {
+                            node.querySelectorAll('img').forEach(img => this.setupImage(img));
+                        }
+                    }
+                });
+            });
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+        
+        this.observer = observer;
+    }
+    
+    checkFailedImages() {
+        document.querySelectorAll('img').forEach(img => {
+            if (img.complete && img.naturalHeight === 0 && 
+                !img.src.includes(this.options.fallbackUrl) &&
+                !img.dataset.fallbackProcessed) {
+                this.handleError(img);
+            }
+        });
+    }
+    
+    disconnect() {
+        if (this.observer) {
+            this.observer.disconnect();
+        }
+    }
+}
+
+// 使用示例
+window.addEventListener('DOMContentLoaded', () => {
+    window.imageFallback = new ImageFallbackManager({
+        fallbackUrl: 'icon.png',
+        errorClass: 'failed-img',
+        altText: '图片无法加载'
+    });
+});
+
 </script>
 </body>
 </html>
