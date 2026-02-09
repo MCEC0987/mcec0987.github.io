@@ -2198,28 +2198,68 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <!-- 交互遮罩（用于禁止操作） -->
     <div class="blocker" id="blocker"></div>
-    <script>
-        // 获取元素
-        const loaderScreen = document.getElementById('loaderScreen');
-        const blocker = document.getElementById('blocker');
+<script>
+    // 获取元素
+    const loaderScreen = document.getElementById('loaderScreen');
+    const blocker = document.getElementById('blocker');
+    
+    // 更自然的随机加载时间设置
+    const getRandomLoadTime = () => {
+        // 基础加载时间 + 随机额外时间
+        const baseTime = 100; // 基础加载时间100ms
+        const randomExtra = Math.random() * 8200; // 随机额外0-8200ms
+        return baseTime + randomExtra; // 总时间800-8200ms
+    };
+    
+    const randomLoadTime = getRandomLoadTime();
+    
+    // 可选：添加进度条动画
+    const progressBar = document.getElementById('progressBar'); // 假设有进度条元素
+    if (progressBar) {
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 20; // 随机递增进度
+            if (progress > 100) progress = 100;
+            progressBar.style.width = progress + '%';
+            
+            if (progress >= 100) {
+                clearInterval(interval);
+            }
+        }, randomLoadTime / 20); // 根据总时间调整动画速度
+    }
 
-        // 页面加载开始时显示遮罩（禁止操作）
-        window.addEventListener('load', function() {
-            // 页面完全加载后隐藏加载屏和遮罩
-            setTimeout(() => { // 加个延迟让用户看到加载效果，实际使用可去掉
-                loaderScreen.style.opacity = '0';
-                // 动画结束后隐藏元素
-                setTimeout(() => {
-                    loaderScreen.style.display = 'none';
-                    blocker.style.display = 'none';
-                }, 500);
-            }, 800); // 模拟加载时间，实际使用可去掉
-        });
+    // 页面加载开始时显示遮罩
+    window.addEventListener('load', function() {
+        // 确保最短显示时间，提升用户体验
+        const minimumDisplayTime = 500; // 最少显示500ms
+        const displayTime = Math.max(randomLoadTime, minimumDisplayTime);
+        
+        setTimeout(() => {
+            loaderScreen.style.opacity = '0';
+            // 淡出动画
+            setTimeout(() => {
+                loaderScreen.style.display = 'none';
+                blocker.style.display = 'none';
+                // 可选：触发加载完成事件
+                document.dispatchEvent(new CustomEvent('loaderComplete'));
+            }, 500);
+        }, displayTime);
+    });
 
-        // 页面开始加载时显示遮罩
-        window.addEventListener('DOMContentLoaded', function() {
-            blocker.style.display = 'block';
-        });
-    </script>
+    // 页面开始加载时显示遮罩
+    window.addEventListener('DOMContentLoaded', function() {
+        blocker.style.display = 'block';
+        
+        // 可选：如果页面加载时间太长，设置最大超时时间
+        const maxWaitTime = 10000; // 最长等待10秒
+        setTimeout(() => {
+            if (loaderScreen.style.display !== 'none') {
+                loaderScreen.style.display = 'none';
+                blocker.style.display = 'none';
+                console.warn('加载超时，强制隐藏加载界面');
+            }
+        }, maxWaitTime);
+    });
+</script>
 </body>
 </html>
