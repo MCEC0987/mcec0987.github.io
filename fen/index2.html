@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分页 (Vuetify版本)</title>
+    
+    <!-- Vuetify 所需资源 (CDN) -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    
+    <style>
+    * {
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+    .content-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        color: #999;
+        padding: 20px;
+    }
+    .v-application--wrap {
+        min-height: 100vh;
+    }
+    .article-container {
+        width: 100%;
+        height: calc(100vh - 64px);
+        margin: 0 auto;
+        padding: 0;
+        position: relative;
+    }
+    .article-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+        border: none;
+    }
+    .closed-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+        font-size: 18px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .closed-state i {
+        font-size: 32px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+    .menu-item-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+    }
+    @media (max-width: 768px) {
+        .article-container {
+            height: calc(100vh - 64px);
+        }
+    }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <v-app>
+            <!-- 顶部应用栏 -->
+            <v-app-bar app color="white" flat elevation="1">
+                <!-- 返回按钮 -->
+                <v-app-bar-nav-icon @click="goBack">
+                    <v-icon>mdi-arrow-left</v-icon>
+                </v-app-bar-nav-icon>
+                
+                <!-- 标题 -->
+                <v-toolbar-title class="text-subtitle-1 font-weight-medium">
+                    鲸鱼壁纸
+                </v-toolbar-title>
+                
+                <v-spacer></v-spacer>
+                
+                <!-- 菜单按钮 -->
+                <v-menu
+                    v-model="menuOpen"
+                    :close-on-content-click="true"
+                    offset-y
+                    left
+                    nudge-bottom="8"
+                >
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon v-bind="attrs" v-on="on">
+                            <v-icon>mdi-dots-vertical</v-icon>
+                        </v-btn>
+                    </template>
+                    
+                    <!-- 菜单内容 -->
+                    <v-list dense nav>
+                        <!-- 全屏/退出全屏 -->
+                        <v-list-item @click="toggleFullscreen">
+                            <v-list-item-icon>
+                                <v-icon v-if="!isFullscreen">mdi-fullscreen</v-icon>
+                                <v-icon v-else>mdi-fullscreen-exit</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title>
+                                {{ isFullscreen ? '退出全屏' : '全屏模式' }}
+                            </v-list-item-title>
+                        </v-list-item>
+                        
+                        <!-- 复制链接 -->
+                        <v-list-item @click="copyLink">
+                            <v-list-item-icon>
+                                <v-icon>mdi-link-variant</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title>复制链接</v-list-item-title>
+                        </v-list-item>
+                        
+                        <v-divider></v-divider>
+                        
+                        <!-- 关闭/打开内容 -->
+                        <v-list-item @click="toggleContent">
+                            <v-list-item-icon>
+                                <v-icon v-if="!contentClosed">mdi-close</v-icon>
+                                <v-icon v-else>mdi-folder-open</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title>
+                                {{ contentClosed ? '打开' : '关闭' }}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-app-bar>
+            
+            <!-- 主要内容区域 -->
+            <v-main>
+                <v-container fluid class="pa-0" style="height: 100%;">
+                    <div class="article-container" id="articleContent">
+                        <!-- 动态内容区域 -->
+                        <template v-if="!contentClosed">
+                            <!-- 文章内容容器 (id便于操作) -->
+    <div class="article-container" id="articleContent">
+<iframe src="https://mcec0987.github.io/wallpaper/"></iframe>
+    </div>
+                        </template>
+                        <template v-else>
+                            <!-- 内容关闭时的占位 -->
+                            <div class="closed-state">
+                                <v-icon x-large color="grey lighten-1">mdi-power</v-icon>
+                                <br />
+                                <span class="text-body-1 grey--text">内容已关闭 (点击菜单中的"打开"可恢复)</span>
+                            </div>
+                        </template>
+                    </div>
+                </v-container>
+            </v-main>
+        </v-app>
+    </div>
+
+    <!-- Vue 和 Vuetify 的 CDN 引入 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    
+    <script>
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: () => ({
+            menuOpen: false,
+            contentClosed: false,
+            originalContent: '',
+            isFullscreen: false
+        }),
+        mounted() {
+            // 监听全屏变化
+            this.addFullscreenListeners();
+        },
+        methods: {
+            // 返回上一页
+            goBack() {
+                window.history.back();
+            },
+            
+            // 切换全屏
+            toggleFullscreen() {
+                const elem = document.documentElement;
+                
+                if (!this.isFullscreen) {
+                    // 进入全屏
+                    if (elem.requestFullscreen) {
+                        elem.requestFullscreen();
+                    } else if (elem.webkitRequestFullscreen) {
+                        elem.webkitRequestFullscreen();
+                    } else if (elem.mozRequestFullScreen) {
+                        elem.mozRequestFullScreen();
+                    } else if (elem.msRequestFullscreen) {
+                        elem.msRequestFullscreen();
+                    }
+                } else {
+                    // 退出全屏
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                }
+                
+                this.menuOpen = false;
+            },
+            
+            // 添加全屏监听器
+            addFullscreenListeners() {
+                const fullscreenEvents = [
+                    'fullscreenchange',
+                    'webkitfullscreenchange', 
+                    'mozfullscreenchange',
+                    'MSFullscreenChange'
+                ];
+                
+                fullscreenEvents.forEach(event => {
+                    document.addEventListener(event, this.handleFullscreenChange);
+                });
+            },
+            
+            // 处理全屏状态变化
+            handleFullscreenChange() {
+                this.isFullscreen = !!(document.fullscreenElement || 
+                                      document.webkitFullscreenElement || 
+                                      document.mozFullScreenElement || 
+                                      document.msFullscreenElement);
+            },
+            
+            // 复制链接
+            copyLink() {
+                const articleContainer = document.getElementById('articleContent');
+                const iframe = articleContainer ? articleContainer.querySelector('iframe') : null;
+                const copyUrl = iframe ? iframe.src : window.location.href;
+                
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(copyUrl).then(() => {
+                        alert('已复制iframe链接：\n' + copyUrl);
+                    }).catch(() => this.fallbackCopy(copyUrl));
+                } else {
+                    this.fallbackCopy(copyUrl);
+                }
+                
+                this.menuOpen = false;
+            },
+            
+            // 备用复制方法
+            fallbackCopy(text) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('已复制iframe链接 (备用方式)：\n' + text);
+                } catch (err) {
+                    alert('无法复制链接，请手动复制：\n' + text);
+                }
+                document.body.removeChild(textarea);
+            },
+            
+            // 切换内容显示/关闭
+            toggleContent() {
+                if (!this.contentClosed) {
+                    // 保存原始内容
+                    const container = document.getElementById('articleContent');
+                    if (container && !this.originalContent) {
+                        this.originalContent = container.innerHTML;
+                    }
+                }
+                
+                this.contentClosed = !this.contentClosed;
+                this.menuOpen = false;
+            }
+        },
+        beforeDestroy() {
+            // 移除全屏监听器
+            const fullscreenEvents = [
+                'fullscreenchange',
+                'webkitfullscreenchange', 
+                'mozfullscreenchange',
+                'MSFullscreenChange'
+            ];
+            
+            fullscreenEvents.forEach(event => {
+                document.removeEventListener(event, this.handleFullscreenChange);
+            });
+        }
+    });
+    </script>
+</body>
+</html>
