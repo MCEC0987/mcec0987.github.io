@@ -1,15 +1,15 @@
 <html>
- <head></head>
- <body>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta http-equiv="Cache-Control" content="max-age=7200">
-  <meta name="description" content="">
-  <meta name="keywords" content="检测中">
-  <title>正在检测你浏览器是否安全</title>
-  <style type="text/css">
+<head></head>
+<body>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Cache-Control" content="max-age=7200">
+<meta name="description" content="">
+<meta name="keywords" content="检测中">
+<title>正在检测你浏览器是否安全</title>
+<style type="text/css">
     html,
     body {
       width: 100%;
@@ -469,49 +469,53 @@
       }
     }
   </style>
-  <table width="100%" height="100%" cellpadding="20">
-   <tbody>
-    <tr>
-     <td align="center" valign="middle">
-      <div class="up-browser-verification up-im-under-attack">
-       <noscript>
-        <h1 data-translate="turn_on_js" style="color:#bd2426;">Please turn JavaScript on and reload the page.</h1>
-       </noscript>
-       <div id="anticc-content">
-        <div id="cssload-wrapper">
-         <div class="cssload-loader">
-          <div class="cssload-line"></div>
-          <div class="cssload-line"></div>
-          <div class="cssload-line"></div>
-          <div class="cssload-line"></div>
-          <div class="cssload-line"></div>
-          <div class="cssload-line"></div>
-          <div class="cssload-subline"></div>
-          <div class="cssload-subline"></div>
-          <div class="cssload-subline"></div>
-          <div class="cssload-subline"></div>
-          <div class="cssload-subline"></div>
-          <div class="cssload-loader-circle-1">
-           <div class="cssload-loader-circle-2"></div>
-          </div>
-          <div class="cssload-needle"></div>
-          <div class="cssload-loading">
+<table width="100%" height="100%" cellpadding="20">
+<tbody>
+<tr>
+<td align="center" valign="middle">
+<div class="up-browser-verification up-im-under-attack">
+<noscript>
+<h1 data-translate="turn_on_js" style="color:#bd2426;">Please turn JavaScript on and reload the page.</h1>
+</noscript>
+<div id="anticc-content">
+<div id="cssload-wrapper">
+<div class="cssload-loader">
+<div class="cssload-line"></div>
+<div class="cssload-line"></div>
+<div class="cssload-line"></div>
+<div class="cssload-line"></div>
+<div class="cssload-line"></div>
+<div class="cssload-line"></div>
+<div class="cssload-subline"></div>
+<div class="cssload-subline"></div>
+<div class="cssload-subline"></div>
+<div class="cssload-subline"></div>
+<div class="cssload-subline"></div>
+<div class="cssload-loader-circle-1">
+<div class="cssload-loader-circle-2"></div>
+</div>
+<div class="cssload-needle"></div>
+<div class="cssload-loading">
            loading
           </div>
-         </div>
-        </div> <br> <br> <br> <br> <br> <br>
-        <h1><span data-translate="checking_browser">荣荣</span></h1>
-        <h2><span data-translate="checking_browser">正在检测您浏览器是否安全.....</span></h2> <span style="color:red;font-family:&amp;#x27;Microsoft YaHei&amp;#x27;">检测完毕自动跳转中</span>
-       </div>
-      </div></td>
-    </tr>
-   </tbody>
-  </table> <!--跳转目标地址自行更换-->
-  <meta http-equiv="refresh" content="2; url=index1.html">
- </body>
-</html>   
+</div>
+</div> <br> <br> <br> <br> <br> <br>
+<h1><span data-translate="checking_browser">荣荣</span></h1>
+<h2><span data-translate="checking_browser">正在检测您浏览器是否安全.....</span></h2> <span style="color:red;font-family:&#x27;Microsoft YaHei&#x27;;">检测完毕自动跳转中</span>
+</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- 移除原有的 meta refresh 跳转，改用 JS 预加载后跳转 -->
+<div id="message" style="text-align:center; margin-top:10px;"></div>
 
 <script>
+// 目标页面地址
+var targetUrl = "./index1.html";
+
+// 原有的浏览器检测函数
 function isBrowser() {
   var userAgent = navigator.userAgent;
   var isBrowser = /Chrome|Firefox|Safari|Edge/.test(userAgent);
@@ -526,11 +530,62 @@ function showMessage() {
   }
 }
 
-window.onload = showMessage;
+// 预加载并跳转的函数
+function preloadAndRedirect() {
+  // 显示预加载状态
+  var statusSpan = document.querySelector("span[style*='color:red']");
+  if (statusSpan) {
+    statusSpan.innerHTML = "正在预加载页面，请稍候...";
+  }
+  
+  // 创建 link 标签进行预加载
+  var link = document.createElement('link');
+  link.rel = 'prefetch';  // 使用 prefetch 预加载
+  link.href = targetUrl;
+  link.as = 'document';   // 指定资源类型为文档
+  
+  // 监听预加载完成
+  link.onload = function() {
+    console.log('预加载完成，准备跳转');
+    if (statusSpan) {
+      statusSpan.innerHTML = "预加载完成，即将跳转...";
+    }
+    // 预加载完成后执行跳转
+    setTimeout(function() {
+      window.location.href = targetUrl;
+    }, 500); // 稍微延迟一下，让用户看到状态更新
+  };
+  
+  // 监听预加载失败
+  link.onerror = function() {
+    console.log('预加载失败，直接跳转');
+    if (statusSpan) {
+      statusSpan.innerHTML = "预加载失败，直接跳转中...";
+    }
+    // 预加载失败也执行跳转，确保功能正常
+    setTimeout(function() {
+      window.location.href = targetUrl;
+    }, 500);
+  };
+  
+  // 将 link 标签添加到 head
+  document.head.appendChild(link);
+  
+  // 设置一个备用超时，防止预加载卡死（10秒后强制跳转）
+  setTimeout(function() {
+    console.log('备用超时触发，强制跳转');
+    if (statusSpan) {
+      statusSpan.innerHTML = "正在跳转中...";
+    }
+    window.location.href = targetUrl;
+  }, 10000);
+}
+
+// 页面加载完成后执行
+window.onload = function() {
+  showMessage();          // 执行原有的消息显示功能
+  preloadAndRedirect();  // 执行预加载并跳转
+};
 </script>
-</head>
-<body>
-<div id="message"></div>
 </body>
 </html>
- 
