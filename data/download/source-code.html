@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源下载</title>
+    <!-- Layui CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/layui@2.8.0/dist/css/layui.css">
+    <style>
+        body {
+            background: #f2f2f2;
+            padding: 40px 0;
+        }
+        .download-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.1);
+            padding: 30px;
+        }
+        .download-title {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .download-desc {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .info-card {
+            background: #fafafa;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e6e6e6;
+        }
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            color: #888;
+        }
+        .info-value {
+            color: #333;
+            font-weight: bold;
+        }
+        .feature-list {
+            margin-bottom: 25px;
+        }
+        .feature-list li {
+            line-height: 28px;
+            color: #555;
+        }
+        .download-btn {
+            text-align: center;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="download-container">
+    <h1 class="download-title">📦 导航网站源码下载</h1>
+    <p class="download-desc">简洁高效，一键下载，立即体验</p>
+
+    <!-- 资源信息卡片 -->
+    <div class="info-card">
+        <div class="info-item">
+            <span class="info-label">资源名称</span>
+            <span class="info-value">Aaa导航 V1.0</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">文件大小</span>
+            <span class="info-value">约 4 MB</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">最近更新日期</span>
+            <span class="info-value">2026-03-21</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">版本号</span>
+            <span class="info-value">v1.0.0</span>
+        </div>
+    </div>
+
+    <!-- 功能特点 -->
+    <ul class="feature-list layui-timeline">
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">功能完整</h3>
+                <p>包含轮播图、搜索、收藏、主题切换等常用功能。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">开箱即用</h3>
+                <p>单文件 HTML 部署零依赖，直接打开即可运行。</p>
+            </div>
+        </li>
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+            <div class="layui-timeline-content layui-text">
+                <h3 class="layui-timeline-title">响应式设计</h3>
+                <p>自动适配手机、平板、PC 等不同设备屏幕。</p>
+            </div>
+        </li>
+    </ul>
+
+    <!-- 下载按钮 -->
+    <div class="download-btn">
+        <button id="downloadBtn" class="layui-btn layui-btn-lg layui-btn-normal">
+            <i class="layui-icon">&#xe601;</i> 立即下载
+        </button>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer">
+        © 2026 Aaa
+    </div>
+</div>
+
+<!-- Layui JS -->
+<script src="https://cdn.jsdelivr.net/npm/layui@2.8.0/dist/layui.js"></script>
+<script>
+    layui.use(['layer'], function(){
+        var layer = layui.layer;
+
+        // 点击下载按钮
+        document.getElementById('downloadBtn').addEventListener('click', function(){
+            layer.confirm('请勿倒卖，倒卖死全家。点击确认即同意', {
+                icon: 1,
+                title: '下载确认'
+            }, function(index){
+                // 这里放你的文件地址，确保文件存在
+                window.location.href = 'nav-source.zip';
+                layer.close(index);
+            });
+        });
+    });
+</script>
+</body>
+</html>
