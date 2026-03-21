@@ -1,0 +1,3539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>手机端Web应用构建器 - 完整版</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #ff9e00;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.2s ease;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 扁平化顶部导航栏 */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--light-gray);
+            z-index: 1000;
+        }
+
+        .header-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            border: none;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .icon-btn:active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        /* 扁平化按钮 */
+        .btn {
+            padding: 8px 14px;
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:active {
+            background-color: var(--primary-dark);
+            transform: translateY(1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:active {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+
+        /* 主内容区 - 更扁平 */
+        .main-content {
+            margin-top: 56px;
+            height: calc(100vh - 56px - 56px); /* 减去顶部和底部高度 */
+            overflow-y: auto;
+            padding: 12px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 扁平化项目列表 */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .project-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 16px 12px;
+            border: 1px solid var(--light-gray);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            text-align: center;
+        }
+
+        .project-card:active {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .project-card.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .project-card-delete {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .project-card:hover .project-card-delete,
+        .project-card.active .project-card-delete {
+            opacity: 1;
+        }
+
+        .project-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            background-color: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .project-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .project-date {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            color: var(--light-gray);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        /* 扁平化编辑器区域 */
+        .editor-container {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .editor-container.active {
+            display: flex;
+        }
+
+        .editor-tabs {
+            display: flex;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2px;
+            margin-bottom: 12px;
+            border: 1px solid var(--light-gray);
+        }
+
+        .editor-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: none;
+            background-color: transparent;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .editor-tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* 编辑器内容区 - 更扁平，更大空间 */
+        .editor-content {
+            flex: 1;
+            background-color: white;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--light-gray);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .html-editor {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+            -webkit-appearance: none;
+            flex: 1;
+        }
+
+        /* 扁平化可视化编辑器 */
+        .visual-editor {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        .visual-editor.active {
+            display: flex;
+        }
+
+        .component-toolbar {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 12px;
+            gap: 8px;
+            background-color: white;
+            border-bottom: 1px solid var(--light-gray);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .component-btn {
+            min-width: 70px;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .component-btn:active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .component-btn i {
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        .component-btn span {
+            font-size: 0.75rem;
+            color: var(--dark);
+        }
+
+        /* 编辑器画布 - 更大空间 */
+        .editor-canvas {
+            flex: 1;
+            padding: 16px;
+            background-color: #fafafa;
+            overflow-y: auto;
+            min-height: 300px;
+            position: relative;
+            touch-action: pan-y;
+        }
+
+        .canvas-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--gray);
+            width: 80%;
+        }
+
+        .canvas-placeholder i {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            color: var(--light-gray);
+        }
+
+        .canvas-placeholder p {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        /* 扁平化组件 */
+        .component-item {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--light-gray);
+            position: relative;
+            cursor: move;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+        }
+
+        .component-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+        }
+
+        .component-item.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+        }
+
+        .component-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .component-action-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 4px;
+            border: none;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .component-action-btn.edit {
+            color: var(--primary);
+        }
+
+        .component-action-btn.edit:active {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .component-action-btn.delete {
+            color: var(--danger);
+        }
+
+        .component-action-btn.delete:active {
+            background-color: rgba(247, 37, 133, 0.1);
+        }
+
+        .drag-handle {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            color: var(--gray);
+            cursor: move;
+            font-size: 0.9rem;
+        }
+
+        /* 扁平化数据表管理 */
+        .database-container {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .database-container.active {
+            display: flex;
+        }
+
+        .database-header {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .database-content {
+            flex: 1;
+            background-color: white;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--light-gray);
+            padding: 12px;
+            overflow-y: auto;
+        }
+
+        .table-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .table-card {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 12px;
+            border-left: 3px solid var(--primary);
+            position: relative;
+        }
+
+        .table-delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .table-card:hover .table-delete-btn {
+            opacity: 1;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .table-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+
+        .table-type {
+            font-size: 0.75rem;
+            padding: 3px 6px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 12px;
+        }
+
+        .table-fields {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .field-badge {
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            background-color: white;
+            border-radius: 10px;
+            border: 1px solid var(--light-gray);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .table-action-btn {
+            flex: 1;
+            padding: 6px;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        /* 数据表详情页 */
+        .table-detail-container {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .table-detail-container.active {
+            display: flex;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+
+        .data-table th {
+            background-color: #f8f9fa;
+            padding: 10px 6px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--light-gray);
+            position: sticky;
+            top: 0;
+            font-size: 0.8rem;
+        }
+
+        .data-table td {
+            padding: 10px 6px;
+            border-bottom: 1px solid var(--light-gray);
+            vertical-align: top;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .field-value {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .field-value.boolean-true {
+            color: green;
+            font-weight: 600;
+        }
+
+        .field-value.boolean-false {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        /* 扁平化模态框 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            animation: slideUp 0.2s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 16px 16px 8px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--gray);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            -webkit-appearance: none;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* 字段配置项 */
+        .field-config-item {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .field-remove-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* 事件编辑器 */
+        .event-editor {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 12px;
+            margin-top: 12px;
+            border: 1px solid var(--light-gray);
+        }
+
+        .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .event-item {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            border-left: 3px solid var(--primary);
+            position: relative;
+        }
+
+        .event-remove-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            cursor: pointer;
+        }
+
+        .event-type {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--primary);
+            font-size: 0.85rem;
+        }
+
+        .event-desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* 文件管理 */
+        .file-manager {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .file-manager.active {
+            display: flex;
+        }
+
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .file-item {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 12px;
+            border: 1px solid var(--light-gray);
+            position: relative;
+            text-align: center;
+        }
+
+        .file-delete-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .file-item:hover .file-delete-btn {
+            opacity: 1;
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+            color: var(--primary);
+        }
+
+        .file-name {
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 扁平化底部选项卡 */
+        .bottom-tabs {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid var(--light-gray);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background-color: transparent;
+            color: var(--gray);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+        }
+
+        .tab-item i {
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        /* 预览模式 */
+        .preview-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: white;
+            z-index: 3000;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .preview-mode.active {
+            display: block;
+        }
+
+        .preview-header {
+            height: 56px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .preview-content {
+            padding: 12px;
+            min-height: calc(100vh - 56px);
+        }
+
+        /* 发布选项 */
+        .publish-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .publish-option {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            border: 1px solid var(--light-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .publish-option:active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .publish-option-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .publish-option-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .publish-option-desc {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* 拖拽指示器 */
+        .drag-indicator {
+            height: 2px;
+            background-color: var(--primary);
+            margin: 8px 0;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .drag-indicator.active {
+            opacity: 1;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 480px) {
+            .project-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            
+            .component-toolbar {
+                flex-wrap: wrap;
+            }
+            
+            .component-btn {
+                min-width: 65px;
+            }
+            
+            .field-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .file-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="header-title">
+            <i class="fas fa-cube"></i>
+            <span id="pageTitle">项目列表</span>
+        </div>
+        <div class="header-actions">
+            <button class="icon-btn" id="publishBtn" title="发布项目">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </button>
+            <button class="icon-btn" id="addBtn" title="添加">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button class="icon-btn" id="saveBtn" title="保存">
+                <i class="fas fa-save"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <!-- 项目列表页面 -->
+        <div id="projectPage">
+            <div class="empty-state" id="emptyProjects">
+                <i class="fas fa-folder-open"></i>
+                <h3>暂无项目</h3>
+                <p>点击右上角 + 创建第一个项目</p>
+            </div>
+            <div class="project-grid" id="projectList">
+                <!-- 项目卡片将通过JS动态加载 -->
+            </div>
+        </div>
+
+        <!-- 编辑器页面 -->
+        <div class="editor-container" id="editorPage">
+            <div class="editor-tabs">
+                <button class="editor-tab active" id="htmlTabBtn">HTML代码</button>
+                <button class="editor-tab" id="visualTabBtn">可视化编辑</button>
+            </div>
+            <div class="editor-content">
+                <!-- HTML编辑器 -->
+                <textarea class="html-editor" id="htmlEditor" placeholder="在此编写HTML代码..."></textarea>
+                
+                <!-- 可视化编辑器 -->
+                <div class="visual-editor" id="visualEditor">
+                    <div class="component-toolbar">
+                        <button class="component-btn" data-type="text">
+                            <i class="fas fa-font"></i>
+                            <span>文字</span>
+                        </button>
+                        <button class="component-btn" data-type="image">
+                            <i class="fas fa-image"></i>
+                            <span>图片</span>
+                        </button>
+                        <button class="component-btn" data-type="video">
+                            <i class="fas fa-video"></i>
+                            <span>视频</span>
+                        </button>
+                        <button class="component-btn" data-type="button">
+                            <i class="fas fa-square"></i>
+                            <span>按钮</span>
+                        </button>
+                        <button class="component-btn" data-type="list">
+                            <i class="fas fa-list"></i>
+                            <span>列表</span>
+                        </button>
+                        <button class="component-btn" data-type="carousel">
+                            <i class="fas fa-images"></i>
+                            <span>轮播</span>
+                        </button>
+                    </div>
+                    <div class="editor-canvas" id="editorCanvas">
+                        <div class="canvas-placeholder">
+                            <i class="fas fa-mouse-pointer"></i>
+                            <p>点击上方组件添加到画布</p>
+                            <p style="font-size: 0.85rem; margin-top: 6px;">长按组件可拖动排序</p>
+                        </div>
+                        <!-- 组件将通过JS动态添加 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据表管理页面 -->
+        <div class="database-container" id="databasePage">
+            <div class="database-header">
+                <h3>数据表管理</h3>
+                <button class="btn btn-primary" id="createTableBtn">
+                    <i class="fas fa-plus"></i> 新建表
+                </button>
+            </div>
+            <div class="database-content">
+                <div class="empty-state" id="emptyTables">
+                    <i class="fas fa-database"></i>
+                    <h3>暂无数据表</h3>
+                    <p>点击"新建表"创建第一个数据表</p>
+                </div>
+                <div class="table-list" id="tableList">
+                    <!-- 数据表将通过JS动态加载 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据表详情页面 -->
+        <div class="table-detail-container" id="tableDetailPage">
+            <div class="database-header">
+                <div>
+                    <h3 id="tableDetailTitle">数据表详情</h3>
+                    <p id="tableDetailDesc" style="font-size: 0.85rem; color: var(--gray); margin-top: 2px;"></p>
+                </div>
+                <button class="btn btn-primary" id="addDataBtn">
+                    <i class="fas fa-plus"></i> 添加数据
+                </button>
+            </div>
+            <div class="database-content">
+                <div class="empty-state" id="emptyTableData">
+                    <i class="fas fa-table"></i>
+                    <h3>暂无数据</h3>
+                    <p>点击"添加数据"添加第一条记录</p>
+                </div>
+                <div class="table-data" id="tableDataContent">
+                    <!-- 数据表内容将通过JS动态加载 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 文件管理页面 -->
+        <div class="file-manager" id="fileManagerPage">
+            <div class="database-header">
+                <h3>文件管理</h3>
+                <button class="btn btn-primary" id="uploadFileBtn">
+                    <i class="fas fa-upload"></i> 上传文件
+                </button>
+            </div>
+            <div class="database-content">
+                <div class="empty-state" id="emptyFiles">
+                    <i class="fas fa-folder"></i>
+                    <h3>暂无文件</h3>
+                    <p>点击"上传文件"添加文件</p>
+                </div>
+                <div class="file-list" id="fileList">
+                    <!-- 文件将通过JS动态加载 -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部选项卡 -->
+    <nav class="bottom-tabs">
+        <button class="tab-item active" data-page="project">
+            <i class="fas fa-home"></i>
+            <span>项目</span>
+        </button>
+        <button class="tab-item" data-page="editor">
+            <i class="fas fa-edit"></i>
+            <span>编辑</span>
+        </button>
+        <button class="tab-item" data-page="database">
+            <i class="fas fa-database"></i>
+            <span>数据表</span>
+        </button>
+        <button class="tab-item" data-page="preview">
+            <i class="fas fa-eye"></i>
+            <span>预览</span>
+        </button>
+        <button class="tab-item" data-page="files">
+            <i class="fas fa-folder"></i>
+            <span>文件</span>
+        </button>
+    </nav>
+
+    <!-- 创建项目模态框 -->
+    <div class="modal-overlay" id="createProjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">创建新项目</h3>
+                <button class="modal-close" id="closeProjectModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="projectName">项目名称</label>
+                    <input type="text" class="form-control" id="projectName" placeholder="请输入项目名称">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projectDescription">项目描述</label>
+                    <textarea class="form-control form-textarea" id="projectDescription" placeholder="请输入项目描述"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelProject">取消</button>
+                <button class="btn btn-primary" id="saveProject">创建</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 创建数据表模态框 -->
+    <div class="modal-overlay" id="createTableModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">创建数据表</h3>
+                <button class="modal-close" id="closeTableModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="tableName">表名称</label>
+                    <input type="text" class="form-control" id="tableName" placeholder="例如：用户信息">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="tableDescription">表描述</label>
+                    <input type="text" class="form-control" id="tableDescription" placeholder="例如：存储用户基本信息">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">字段配置</label>
+                    <div id="fieldList">
+                        <!-- 字段将通过JS动态添加 -->
+                    </div>
+                    <button class="btn btn-outline" style="width: 100%; margin-top: 10px;" id="addFieldBtn">
+                        <i class="fas fa-plus"></i> 添加字段
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelTable">取消</button>
+                <button class="btn btn-primary" id="saveTable">创建</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加数据模态框 -->
+    <div class="modal-overlay" id="addDataModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="addDataTitle">添加数据</h3>
+                <button class="modal-close" id="closeDataModal">&times;</button>
+            </div>
+            <div class="modal-body" id="addDataForm">
+                <!-- 表单字段将通过JS动态生成 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelData">取消</button>
+                <button class="btn btn-primary" id="saveData">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文件上传模态框 -->
+    <div class="modal-overlay" id="uploadFileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">上传文件</h3>
+                <button class="modal-close" id="closeFileModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="fileName">文件名称</label>
+                    <input type="text" class="form-control" id="fileName" placeholder="请输入文件名称">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fileType">文件类型</label>
+                    <select class="form-control" id="fileType">
+                        <option value="image">图片</option>
+                        <option value="video">视频</option>
+                        <option value="audio">音频</option>
+                        <option value="file">其他文件</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="fileUrl">文件URL</label>
+                    <input type="text" class="form-control" id="fileUrl" placeholder="输入文件URL">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelFile">取消</button>
+                <button class="btn btn-primary" id="saveFile">上传</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 组件属性编辑器 -->
+    <div class="modal-overlay" id="componentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="componentTitle">组件属性</h3>
+                <button class="modal-close" id="closeComponentModal">&times;</button>
+            </div>
+            <div class="modal-body" id="componentForm">
+                <!-- 组件属性表单将通过JS动态生成 -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelComponent">取消</button>
+                <button class="btn btn-primary" id="saveComponent">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 事件编辑器 -->
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">事件配置</h3>
+                <button class="modal-close" id="closeEventModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">事件类型</label>
+                    <select class="form-control" id="eventType">
+                        <option value="">选择事件类型</option>
+                        <option value="jump">跳转页面/链接</option>
+                        <option value="modify">动态修改器</option>
+                        <option value="database">操作数据表</option>
+                        <option value="upload">操作上传资源和文件选择</option>
+                        <option value="login">登录注册</option>
+                    </select>
+                </div>
+                <div class="form-group" id="eventParamsContainer">
+                    <!-- 事件参数将通过JS动态生成 -->
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-outline" style="width: 100%;" id="addEventBtn">
+                        <i class="fas fa-plus"></i> 添加事件
+                    </button>
+                </div>
+                <div class="event-list" id="eventListContainer">
+                    <!-- 事件列表将通过JS动态加载 -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelEvent">取消</button>
+                <button class="btn btn-primary" id="saveEvent">完成</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 发布选项模态框 -->
+    <div class="modal-overlay" id="publishModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">发布项目</h3>
+                <button class="modal-close" id="closePublishModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="publish-options">
+                    <div class="publish-option" onclick="publishOption(1)">
+                        <div class="publish-option-icon">
+                            <i class="fas fa-save"></i>
+                        </div>
+                        <div class="publish-option-title">保存到本地存储</div>
+                        <div class="publish-option-desc">将项目保存到浏览器本地存储</div>
+                    </div>
+                    <div class="publish-option" onclick="publishOption(2)">
+                        <div class="publish-option-icon">
+                            <i class="fas fa-file-archive"></i>
+                        </div>
+                        <div class="publish-option-title">导出为压缩包</div>
+                        <div class="publish-option-desc">将项目导出为ZIP文件到设备存储</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelPublish">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 预览模式 -->
+    <div class="preview-mode" id="previewMode">
+        <div class="preview-header">
+            <div class="header-title">
+                <i class="fas fa-eye"></i>
+                <span>预览模式</span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="closePreview">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="preview-content" id="previewContent">
+            <!-- 预览内容将通过JS动态生成 -->
+        </div>
+    </div>
+
+    <script>
+        // 应用状态管理
+        const AppState = {
+            currentProject: null,
+            projects: [],
+            currentTable: null,
+            editingComponent: null,
+            editingEvents: [],
+            selectedFile: null,
+            dragElement: null,
+            dragStartY: 0,
+            isDragging: false
+        };
+
+        // 字段类型配置
+        const FieldTypes = {
+            text: { name: '文本', icon: 'fas fa-font' },
+            number: { name: '数字', icon: 'fas fa-hashtag' },
+            image: { name: '图片', icon: 'fas fa-image' },
+            images: { name: '多图', icon: 'fas fa-images' },
+            video: { name: '视频', icon: 'fas fa-video' },
+            audio: { name: '音频', icon: 'fas fa-music' },
+            file: { name: '文件', icon: 'fas fa-file' },
+            select: { name: '状态', icon: 'fas fa-list' },
+            boolean: { name: '开关', icon: 'fas fa-toggle-on' }
+        };
+
+        // 事件类型配置
+        const EventTypes = {
+            jump: { name: '跳转页面/链接', icon: 'fas fa-external-link-alt' },
+            modify: { name: '动态修改器', icon: 'fas fa-sliders-h' },
+            database: { name: '操作数据表', icon: 'fas fa-database' },
+            upload: { name: '上传资源', icon: 'fas fa-upload' },
+            login: { name: '登录注册', icon: 'fas fa-user' }
+        };
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            setupEventListeners();
+            loadProjects();
+            setupDragAndDrop();
+        });
+
+        // 初始化应用
+        function initApp() {
+            // 从本地存储加载项目
+            const savedProjects = localStorage.getItem('mobileWebAppProjects_v3');
+            if (savedProjects) {
+                AppState.projects = JSON.parse(savedProjects);
+            }
+            
+            // 设置页面标题
+            updatePageTitle('项目列表');
+            
+            // 显示项目页面
+            showPage('project');
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 底部选项卡
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    showPage(page);
+                });
+            });
+            
+            // 添加按钮
+            document.getElementById('addBtn').addEventListener('click', handleAddButton);
+            
+            // 保存按钮
+            document.getElementById('saveBtn').addEventListener('click', saveCurrentProject);
+            
+            // 发布按钮
+            document.getElementById('publishBtn').addEventListener('click', showPublishModal);
+            
+            // 编辑器标签切换
+            document.getElementById('htmlTabBtn').addEventListener('click', () => switchEditorTab('html'));
+            document.getElementById('visualTabBtn').addEventListener('click', () => switchEditorTab('visual'));
+            
+            // 可视化编辑器组件按钮
+            document.querySelectorAll('.component-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    addComponentToCanvas(type);
+                });
+            });
+            
+            // 创建项目模态框
+            document.getElementById('closeProjectModal').addEventListener('click', hideModal);
+            document.getElementById('cancelProject').addEventListener('click', hideModal);
+            document.getElementById('saveProject').addEventListener('click', createNewProject);
+            
+            // 创建数据表模态框
+            document.getElementById('createTableBtn').addEventListener('click', showCreateTableModal);
+            document.getElementById('closeTableModal').addEventListener('click', hideModal);
+            document.getElementById('cancelTable').addEventListener('click', hideModal);
+            document.getElementById('saveTable').addEventListener('click', createNewTable);
+            document.getElementById('addFieldBtn').addEventListener('click', addFieldToTableForm);
+            
+            // 添加数据
+            document.getElementById('addDataBtn').addEventListener('click', showAddDataModal);
+            document.getElementById('closeDataModal').addEventListener('click', hideModal);
+            document.getElementById('cancelData').addEventListener('click', hideModal);
+            document.getElementById('saveData').addEventListener('click', saveNewData);
+            
+            // 文件上传
+            document.getElementById('uploadFileBtn').addEventListener('click', showUploadFileModal);
+            document.getElementById('closeFileModal').addEventListener('click', hideModal);
+            document.getElementById('cancelFile').addEventListener('click', hideModal);
+            document.getElementById('saveFile').addEventListener('click', uploadFile);
+            
+            // 组件编辑器
+            document.getElementById('closeComponentModal').addEventListener('click', hideModal);
+            document.getElementById('cancelComponent').addEventListener('click', hideModal);
+            document.getElementById('saveComponent').addEventListener('click', saveComponentChanges);
+            
+            // 事件编辑器
+            document.getElementById('closeEventModal').addEventListener('click', hideModal);
+            document.getElementById('cancelEvent').addEventListener('click', hideModal);
+            document.getElementById('saveEvent').addEventListener('click', saveEventChanges);
+            document.getElementById('addEventBtn').addEventListener('click', addNewEvent);
+            document.getElementById('eventType').addEventListener('change', updateEventParams);
+            
+            // 发布模态框
+            document.getElementById('closePublishModal').addEventListener('click', hideModal);
+            document.getElementById('cancelPublish').addEventListener('click', hideModal);
+            
+            // 预览模式
+            document.getElementById('closePreview').addEventListener('click', closePreview);
+        }
+
+        // 设置拖拽功能
+        function setupDragAndDrop() {
+            const editorCanvas = document.getElementById('editorCanvas');
+            let dragItem = null;
+            let dragStartIndex = 0;
+            
+            // 触摸事件处理
+            editorCanvas.addEventListener('touchstart', handleDragStart);
+            editorCanvas.addEventListener('touchmove', handleDragOver);
+            editorCanvas.addEventListener('touchend', handleDragEnd);
+            
+            // 鼠标事件处理（用于桌面端测试）
+            editorCanvas.addEventListener('mousedown', handleDragStart);
+            editorCanvas.addEventListener('mousemove', handleDragOver);
+            editorCanvas.addEventListener('mouseup', handleDragEnd);
+            
+            function handleDragStart(e) {
+                const target = e.target.closest('.component-item');
+                if (!target) return;
+                
+                dragItem = target;
+                dragStartIndex = Array.from(editorCanvas.children).indexOf(dragItem);
+                
+                dragItem.classList.add('dragging');
+                
+                // 记录起始位置
+                const rect = dragItem.getBoundingClientRect();
+                AppState.dragStartY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                e.preventDefault();
+            }
+            
+            function handleDragOver(e) {
+                if (!dragItem) return;
+                
+                e.preventDefault();
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const deltaY = clientY - AppState.dragStartY;
+                
+                // 移动元素
+                dragItem.style.transform = `translateY(${deltaY}px)`;
+                
+                // 获取当前拖拽位置
+                const dragRect = dragItem.getBoundingClientRect();
+                const dragCenterY = dragRect.top + dragRect.height / 2;
+                
+                // 查找插入位置
+                const components = Array.from(editorCanvas.querySelectorAll('.component-item:not(.dragging)'));
+                let insertIndex = dragStartIndex;
+                
+                components.forEach((component, index) => {
+                    const rect = component.getBoundingClientRect();
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    if (dragCenterY > centerY) {
+                        insertIndex = index + 1;
+                    }
+                });
+                
+                // 移动元素到新位置
+                const currentIndex = Array.from(editorCanvas.children).indexOf(dragItem);
+                if (currentIndex !== insertIndex) {
+                    // 移除拖拽指示器
+                    const oldIndicator = editorCanvas.querySelector('.drag-indicator');
+                    if (oldIndicator) oldIndicator.remove();
+                    
+                    // 添加新的拖拽指示器
+                    const indicator = document.createElement('div');
+                    indicator.className = 'drag-indicator active';
+                    
+                    if (insertIndex >= editorCanvas.children.length) {
+                        editorCanvas.appendChild(indicator);
+                    } else {
+                        editorCanvas.insertBefore(indicator, editorCanvas.children[insertIndex]);
+                    }
+                }
+            }
+            
+            function handleDragEnd(e) {
+                if (!dragItem) return;
+                
+                e.preventDefault();
+                
+                // 获取最终位置
+                const components = Array.from(editorCanvas.querySelectorAll('.component-item:not(.dragging)'));
+                const dragRect = dragItem.getBoundingClientRect();
+                const dragCenterY = dragRect.top + dragRect.height / 2;
+                
+                let insertIndex = dragStartIndex;
+                
+                components.forEach((component, index) => {
+                    const rect = component.getBoundingClientRect();
+                    const centerY = rect.top + rect.height / 2;
+                    
+                    if (dragCenterY > centerY) {
+                        insertIndex = index + 1;
+                    }
+                });
+                
+                // 移除拖拽指示器
+                const indicator = editorCanvas.querySelector('.drag-indicator');
+                if (indicator) indicator.remove();
+                
+                // 重置样式
+                dragItem.classList.remove('dragging');
+                dragItem.style.transform = '';
+                
+                // 移动元素到新位置
+                const currentIndex = Array.from(editorCanvas.children).indexOf(dragItem);
+                if (currentIndex !== insertIndex) {
+                    if (insertIndex >= editorCanvas.children.length) {
+                        editorCanvas.appendChild(dragItem);
+                    } else {
+                        editorCanvas.insertBefore(dragItem, editorCanvas.children[insertIndex]);
+                    }
+                    
+                    // 保存组件顺序
+                    saveComponentOrder();
+                }
+                
+                dragItem = null;
+            }
+        }
+
+        // 保存组件顺序
+        function saveComponentOrder() {
+            if (!AppState.currentProject) return;
+            
+            const editorCanvas = document.getElementById('editorCanvas');
+            const components = Array.from(editorCanvas.querySelectorAll('.component-item'));
+            
+            // 更新项目中的组件顺序
+            if (!AppState.currentProject.components) {
+                AppState.currentProject.components = [];
+            }
+            
+            // 重新排序组件数组
+            const orderedComponents = [];
+            components.forEach(comp => {
+                const componentId = comp.getAttribute('data-id');
+                const existing = AppState.currentProject.components.find(c => c.id === componentId);
+                if (existing) {
+                    orderedComponents.push(existing);
+                }
+            });
+            
+            AppState.currentProject.components = orderedComponents;
+            
+            // 自动保存
+            saveProjectsToStorage();
+        }
+
+        // 显示页面
+        function showPage(page) {
+            // 隐藏所有页面
+            document.getElementById('projectPage').style.display = 'none';
+            document.getElementById('editorPage').classList.remove('active');
+            document.getElementById('databasePage').classList.remove('active');
+            document.getElementById('tableDetailPage').classList.remove('active');
+            document.getElementById('fileManagerPage').classList.remove('active');
+            document.getElementById('previewMode').classList.remove('active');
+            
+            // 更新底部选项卡
+            document.querySelectorAll('.tab-item').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示目标页面
+            switch(page) {
+                case 'project':
+                    document.getElementById('projectPage').style.display = 'block';
+                    document.querySelector('.tab-item[data-page="project"]').classList.add('active');
+                    updatePageTitle('项目列表');
+                    loadProjects();
+                    break;
+                    
+                case 'editor':
+                    if (!AppState.currentProject) {
+                        alert('请先选择或创建一个项目');
+                        showPage('project');
+                        return;
+                    }
+                    document.getElementById('editorPage').classList.add('active');
+                    document.querySelector('.tab-item[data-page="editor"]').classList.add('active');
+                    updatePageTitle(`编辑: ${AppState.currentProject.name}`);
+                    loadEditorContent();
+                    break;
+                    
+                case 'database':
+                    if (!AppState.currentProject) {
+                        alert('请先选择或创建一个项目');
+                        showPage('project');
+                        return;
+                    }
+                    document.getElementById('databasePage').classList.add('active');
+                    document.querySelector('.tab-item[data-page="database"]').classList.add('active');
+                    updatePageTitle('数据表管理');
+                    loadDatabaseTables();
+                    break;
+                    
+                case 'preview':
+                    if (!AppState.currentProject) {
+                        alert('请先选择或创建一个项目');
+                        showPage('project');
+                        return;
+                    }
+                    showPreview();
+                    break;
+                    
+                case 'files':
+                    document.getElementById('fileManagerPage').classList.add('active');
+                    document.querySelector('.tab-item[data-page="files"]').classList.add('active');
+                    updatePageTitle('文件管理');
+                    loadFiles();
+                    break;
+            }
+        }
+
+        // 处理添加按钮点击
+        function handleAddButton() {
+            const currentPage = document.querySelector('.tab-item.active').getAttribute('data-page');
+            
+            switch(currentPage) {
+                case 'project':
+                    showCreateProjectModal();
+                    break;
+                case 'editor':
+                    // 在编辑器中间添加一个默认组件
+                    addComponentToCanvas('text');
+                    break;
+                case 'database':
+                    showCreateTableModal();
+                    break;
+                case 'files':
+                    showUploadFileModal();
+                    break;
+            }
+        }
+
+        // 显示发布模态框
+        function showPublishModal() {
+            if (!AppState.currentProject) {
+                alert('请先选择或创建一个项目');
+                return;
+            }
+            
+            showModal('publishModal');
+        }
+
+        // 发布选项处理
+        window.publishOption = function(option) {
+            hideModal();
+            
+            if (option === 1) {
+                // 保存到本地存储
+                saveCurrentProject();
+            } else if (option === 2) {
+                // 导出为压缩包
+                exportAsZip();
+            }
+        };
+
+        // 导出为ZIP文件
+        function exportAsZip() {
+            if (!AppState.currentProject) return;
+            
+            // 创建项目数据对象
+            const projectData = {
+                name: AppState.currentProject.name,
+                description: AppState.currentProject.description,
+                htmlContent: AppState.currentProject.htmlContent,
+                tables: AppState.currentProject.tables || [],
+                components: AppState.currentProject.components || [],
+                createdAt: AppState.currentProject.createdAt,
+                updatedAt: new Date().toISOString()
+            };
+            
+            // 获取项目相关的文件
+            const files = JSON.parse(localStorage.getItem('mobileWebAppFiles_v3') || '[]');
+            const projectFiles = files.filter(file => 
+                !file.projectId || file.projectId === AppState.currentProject.id
+            );
+            
+            // 创建项目结构
+            const projectStructure = {
+                'project.json': JSON.stringify(projectData, null, 2),
+                'index.html': projectData.htmlContent,
+                'data/': {},
+                'files/': {}
+            };
+            
+            // 添加数据表文件
+            if (projectData.tables.length > 0) {
+                projectData.tables.forEach((table, index) => {
+                    projectStructure[`data/table_${index}.json`] = JSON.stringify(table, null, 2);
+                });
+            }
+            
+            // 添加文件信息
+            if (projectFiles.length > 0) {
+                projectFiles.forEach((file, index) => {
+                    projectStructure[`files/file_${index}.json`] = JSON.stringify(file, null, 2);
+                });
+            }
+            
+            // 在实际应用中，这里会使用JSZip库创建ZIP文件
+            // 由于代码限制，这里模拟创建和下载
+            const zipContent = JSON.stringify(projectStructure, null, 2);
+            const blob = new Blob([zipContent], { type: 'application/zip' });
+            const url = URL.createObjectURL(blob);
+            
+            // 创建下载链接
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${AppState.currentProject.name.replace(/\s+/g, '_')}_${Date.now()}.zip`;
+            a.click();
+            
+            // 清理
+            URL.revokeObjectURL(url);
+            
+            alert('项目已导出为ZIP文件！');
+        }
+
+        // 显示创建项目模态框
+        function showCreateProjectModal() {
+            showModal('createProjectModal');
+            document.getElementById('projectName').focus();
+        }
+
+        // 显示创建数据表模态框
+        function showCreateTableModal() {
+            // 重置字段列表
+            document.getElementById('fieldList').innerHTML = '';
+            
+            // 添加默认字段
+            addFieldToTableForm('id', 'text', 'ID');
+            addFieldToTableForm('name', 'text', '名称');
+            addFieldToTableForm('status', 'select', '状态', '开放,禁言');
+            
+            showModal('createTableModal');
+        }
+
+        // 添加字段到数据表表单
+        function addFieldToTableForm(fieldName = '', fieldType = 'text', fieldLabel = '', options = '') {
+            const fieldList = document.getElementById('fieldList');
+            const fieldId = 'field_' + Date.now();
+            
+            const fieldHTML = `
+                <div class="field-config-item" id="${fieldId}">
+                    <button type="button" class="field-remove-btn" onclick="removeField('${fieldId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="field-grid">
+                        <div>
+                            <label style="font-size: 0.85rem;">字段名</label>
+                            <input type="text" class="form-control" value="${fieldName}" placeholder="例如: username" onchange="updateFieldConfig('${fieldId}', 'name', this.value)">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.85rem;">字段类型</label>
+                            <select class="form-control" onchange="updateFieldConfig('${fieldId}', 'type', this.value)">
+                                ${Object.entries(FieldTypes).map(([key, type]) => `
+                                    <option value="${key}" ${fieldType === key ? 'selected' : ''}>${type.name}</option>
+                                `).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.85rem;">显示名称</label>
+                        <input type="text" class="form-control" value="${fieldLabel}" placeholder="例如: 用户名" onchange="updateFieldConfig('${fieldId}', 'label', this.value)">
+                    </div>
+                    <div id="${fieldId}_options" style="margin-top: 10px; display: ${fieldType === 'select' ? 'block' : 'none'}">
+                        <label style="font-size: 0.85rem;">选项（用逗号分隔）</label>
+                        <input type="text" class="form-control" value="${options}" placeholder="例如: 开放,禁言,关闭" onchange="updateFieldConfig('${fieldId}', 'options', this.value)">
+                    </div>
+                </div>
+            `;
+            
+            fieldList.insertAdjacentHTML('beforeend', fieldHTML);
+        }
+
+        // 移除字段
+        window.removeField = function(fieldId) {
+            const fieldElement = document.getElementById(fieldId);
+            if (fieldElement) {
+                fieldElement.remove();
+            }
+        };
+
+        // 更新字段配置
+        window.updateFieldConfig = function(fieldId, key, value) {
+            const optionsElement = document.getElementById(fieldId + '_options');
+            const typeSelect = document.querySelector(`#${fieldId} select`);
+            
+            if (key === 'type' && optionsElement) {
+                optionsElement.style.display = value === 'select' ? 'block' : 'none';
+            }
+        };
+
+        // 显示添加数据模态框
+        function showAddDataModal() {
+            if (!AppState.currentTable) return;
+            
+            const modalTitle = document.getElementById('addDataTitle');
+            const formContainer = document.getElementById('addDataForm');
+            
+            modalTitle.textContent = `添加数据到 ${AppState.currentTable.name}`;
+            formContainer.innerHTML = '';
+            
+            // 根据字段配置生成表单
+            AppState.currentTable.fields.forEach((field, index) => {
+                const fieldName = Object.keys(field)[0];
+                const fieldConfig = field[fieldName];
+                
+                let fieldHTML = '';
+                
+                switch(fieldConfig.type) {
+                    case 'text':
+                    case 'number':
+                        fieldHTML = `
+                            <div class="form-group">
+                                <label class="form-label">${fieldConfig.label || fieldName}</label>
+                                <input type="${fieldConfig.type === 'number' ? 'number' : 'text'}" 
+                                       class="form-control" 
+                                       data-field="${fieldName}"
+                                       placeholder="请输入${fieldConfig.label || fieldName}">
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'select':
+                        const options = fieldConfig.options ? fieldConfig.options.split(',') : [];
+                        fieldHTML = `
+                            <div class="form-group">
+                                <label class="form-label">${fieldConfig.label || fieldName}</label>
+                                <select class="form-control" data-field="${fieldName}">
+                                    ${options.map(option => `
+                                        <option value="${option.trim()}">${option.trim()}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'boolean':
+                        fieldHTML = `
+                            <div class="form-group">
+                                <label class="form-label">${fieldConfig.label || fieldName}</label>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span>关闭</span>
+                                    <label class="switch">
+                                        <input type="checkbox" data-field="${fieldName}">
+                                        <span class="slider"></span>
+                                    </label>
+                                    <span>开启</span>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'image':
+                    case 'video':
+                    case 'audio':
+                    case 'file':
+                        fieldHTML = `
+                            <div class="form-group">
+                                <label class="form-label">${fieldConfig.label || fieldName}</label>
+                                <input type="text" class="form-control" 
+                                       data-field="${fieldName}"
+                                       placeholder="输入URL" value="">
+                                <button type="button" class="btn btn-outline" 
+                                        style="margin-top: 8px; width: 100%;"
+                                        onclick="showPage('files'); AppState.selectedField = '${fieldName}';">
+                                    <i class="fas fa-folder-open"></i> 从文件管理选择
+                                </button>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'images':
+                        fieldHTML = `
+                            <div class="form-group">
+                                <label class="form-label">${fieldConfig.label || fieldName}</label>
+                                <div id="${fieldName}_images">
+                                    <div class="image-input">
+                                        <input type="text" class="form-control" 
+                                               placeholder="输入图片URL" 
+                                               onchange="addImageToMulti('${fieldName}', this.value)">
+                                        <button type="button" class="btn btn-outline" 
+                                                style="margin-top: 8px; width: 100%;"
+                                                onclick="showPage('files'); AppState.selectedMultiField = '${fieldName}';">
+                                            <i class="fas fa-image"></i> 从文件管理选择图片
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="${fieldName}_preview" style="margin-top: 10px;"></div>
+                            </div>
+                        `;
+                        break;
+                }
+                
+                formContainer.insertAdjacentHTML('beforeend', fieldHTML);
+            });
+            
+            showModal('addDataModal');
+        }
+
+        // 添加图片到多图字段
+        window.addImageToMulti = function(fieldName, url) {
+            if (!url) return;
+            
+            const preview = document.getElementById(`${fieldName}_preview`);
+            const imgId = 'img_' + Date.now();
+            
+            const imgHTML = `
+                <div id="${imgId}" style="display: inline-block; margin: 5px; position: relative;">
+                    <img src="${url}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                    <button type="button" style="position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; border-radius: 50%; background-color: var(--danger); color: white; border: none; font-size: 0.7rem;" onclick="removeMultiImage('${fieldName}', '${imgId}')">
+                        ×
+                    </button>
+                </div>
+            `;
+            
+            preview.insertAdjacentHTML('beforeend', imgHTML);
+        };
+
+        // 移除多图中的图片
+        window.removeMultiImage = function(fieldName, imgId) {
+            const imgElement = document.getElementById(imgId);
+            if (imgElement) {
+                imgElement.remove();
+            }
+        };
+
+        // 显示文件上传模态框
+        function showUploadFileModal() {
+            showModal('uploadFileModal');
+        }
+
+        // 上传文件
+        function uploadFile() {
+            const fileName = document.getElementById('fileName').value.trim();
+            const fileType = document.getElementById('fileType').value;
+            const fileUrl = document.getElementById('fileUrl').value.trim();
+            
+            if (!fileName) {
+                alert('请输入文件名称');
+                return;
+            }
+            
+            if (!fileUrl) {
+                alert('请输入文件URL');
+                return;
+            }
+            
+            const fileData = {
+                id: 'file_' + Date.now(),
+                name: fileName,
+                type: fileType,
+                url: fileUrl,
+                createdAt: new Date().toISOString(),
+                projectId: AppState.currentProject ? AppState.currentProject.id : null
+            };
+            
+            // 保存文件
+            saveFile(fileData);
+            
+            // 隐藏模态框
+            hideModal();
+            
+            // 重新加载文件列表
+            loadFiles();
+            
+            // 如果是从字段选择过来的，自动选择这个文件
+            if (AppState.selectedField) {
+                selectFileForInsert(fileData);
+            }
+        }
+
+        // 保存文件
+        function saveFile(fileData) {
+            let files = JSON.parse(localStorage.getItem('mobileWebAppFiles_v3') || '[]');
+            files.push(fileData);
+            localStorage.setItem('mobileWebAppFiles_v3', JSON.stringify(files));
+            return fileData;
+        }
+
+        // 加载文件
+        function loadFiles() {
+            const fileList = document.getElementById('fileList');
+            const emptyFiles = document.getElementById('emptyFiles');
+            
+            const files = JSON.parse(localStorage.getItem('mobileWebAppFiles_v3') || '[]');
+            
+            // 过滤当前项目的文件（如果当前有项目）
+            let filteredFiles = files;
+            if (AppState.currentProject) {
+                filteredFiles = files.filter(file => 
+                    !file.projectId || file.projectId === AppState.currentProject.id
+                );
+            }
+            
+            if (filteredFiles.length === 0) {
+                emptyFiles.style.display = 'block';
+                fileList.innerHTML = '';
+                return;
+            }
+            
+            emptyFiles.style.display = 'none';
+            
+            let filesHTML = '';
+            filteredFiles.forEach(file => {
+                let icon = 'fa-file';
+                if (file.type === 'image') icon = 'fa-image';
+                else if (file.type === 'video') icon = 'fa-video';
+                else if (file.type === 'audio') icon = 'fa-music';
+                
+                filesHTML += `
+                    <div class="file-item" data-id="${file.id}" onclick="selectFile('${file.id}')">
+                        <button class="file-delete-btn" onclick="deleteFile('${file.id}', event)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="file-icon">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="file-name">${file.name}</div>
+                    </div>
+                `;
+            });
+            
+            fileList.innerHTML = filesHTML;
+        }
+
+        // 删除文件
+        window.deleteFile = function(fileId, event) {
+            event.stopPropagation();
+            
+            if (confirm('确定要删除这个文件吗？')) {
+                let files = JSON.parse(localStorage.getItem('mobileWebAppFiles_v3') || '[]');
+                files = files.filter(file => file.id !== fileId);
+                localStorage.setItem('mobileWebAppFiles_v3', JSON.stringify(files));
+                
+                loadFiles();
+                alert('文件已从本地存储中删除！');
+            }
+        };
+
+        // 选择文件
+        window.selectFile = function(fileId) {
+            const files = JSON.parse(localStorage.getItem('mobileWebAppFiles_v3') || '[]');
+            const file = files.find(f => f.id === fileId);
+            
+            if (!file) return;
+            
+            AppState.selectedFile = file;
+            
+            // 如果是从字段选择过来的，自动插入
+            if (AppState.selectedField) {
+                selectFileForInsert(file);
+            }
+        };
+
+        // 选择文件插入到字段
+        window.selectFileForInsert = function(file) {
+            if (!AppState.selectedField) return;
+            
+            // 找到对应的输入框并设置值
+            const input = document.querySelector(`#addDataForm input[data-field="${AppState.selectedField}"]`);
+            if (input) {
+                input.value = file.url;
+            }
+            
+            // 重置选择状态
+            AppState.selectedField = null;
+            
+            // 返回到添加数据模态框
+            showModal('addDataModal');
+        };
+
+        // 创建新项目
+        function createNewProject() {
+            const name = document.getElementById('projectName').value.trim();
+            const description = document.getElementById('projectDescription').value.trim();
+            
+            if (!name) {
+                alert('请输入项目名称');
+                return;
+            }
+            
+            const newProject = {
+                id: 'project_' + Date.now(),
+                name,
+                description,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                htmlContent: `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${name}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fb;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>欢迎使用 ${name}</h1>
+        <p>这是一个新的项目，开始编辑吧！</p>
+    </div>
+</body>
+</html>`,
+                tables: [],
+                components: []
+            };
+            
+            AppState.projects.push(newProject);
+            saveProjectsToStorage();
+            
+            // 选择新项目
+            selectProject(newProject.id);
+            
+            // 隐藏模态框
+            hideModal();
+            
+            // 切换到编辑器
+            showPage('editor');
+        }
+
+        // 创建新数据表
+        function createNewTable() {
+            const name = document.getElementById('tableName').value.trim();
+            const description = document.getElementById('tableDescription').value.trim();
+            
+            if (!name) {
+                alert('请输入表名称');
+                return;
+            }
+            
+            // 收集字段配置
+            const fields = [];
+            const fieldElements = document.querySelectorAll('#fieldList > .field-config-item');
+            
+            if (fieldElements.length === 0) {
+                alert('请至少添加一个字段');
+                return;
+            }
+            
+            fieldElements.forEach(element => {
+                const nameInput = element.querySelector('input[placeholder="例如: username"]');
+                const typeSelect = element.querySelector('select');
+                const labelInput = element.querySelector('input[placeholder="例如: 用户名"]');
+                const optionsInput = element.querySelector('input[placeholder="例如: 开放,禁言,关闭"]');
+                
+                if (nameInput && nameInput.value.trim()) {
+                    const fieldName = nameInput.value.trim();
+                    const fieldType = typeSelect ? typeSelect.value : 'text';
+                    const fieldLabel = labelInput ? labelInput.value.trim() : '';
+                    const fieldOptions = optionsInput ? optionsInput.value.trim() : '';
+                    
+                    const fieldConfig = {
+                        type: fieldType,
+                        label: fieldLabel
+                    };
+                    
+                    if (fieldType === 'select' && fieldOptions) {
+                        fieldConfig.options = fieldOptions;
+                    }
+                    
+                    fields.push({
+                        [fieldName]: fieldConfig
+                    });
+                }
+            });
+            
+            if (fields.length === 0) {
+                alert('请至少添加一个字段');
+                return;
+            }
+            
+            const newTable = {
+                id: 'table_' + Date.now(),
+                name,
+                description,
+                fields,
+                data: [],
+                createdAt: new Date().toISOString(),
+                type: 'list'
+            };
+            
+            // 添加到当前项目
+            if (!AppState.currentProject.tables) {
+                AppState.currentProject.tables = [];
+            }
+            
+            AppState.currentProject.tables.push(newTable);
+            updateProjectData();
+            
+            // 隐藏模态框
+            hideModal();
+            
+            // 重新加载数据表列表
+            loadDatabaseTables();
+            
+            alert('数据表创建成功！');
+        }
+
+        // 保存新数据
+        function saveNewData() {
+            if (!AppState.currentTable) return;
+            
+            const formContainer = document.getElementById('addDataForm');
+            const formData = {};
+            
+            // 收集表单数据
+            AppState.currentTable.fields.forEach(field => {
+                const fieldName = Object.keys(field)[0];
+                const fieldConfig = field[fieldName];
+                
+                let value = '';
+                
+                switch(fieldConfig.type) {
+                    case 'text':
+                    case 'number':
+                    case 'image':
+                    case 'video':
+                    case 'audio':
+                    case 'file':
+                        const input = formContainer.querySelector(`input[data-field="${fieldName}"]`);
+                        value = input ? input.value : '';
+                        break;
+                        
+                    case 'select':
+                        const select = formContainer.querySelector(`select[data-field="${fieldName}"]`);
+                        value = select ? select.value : '';
+                        break;
+                        
+                    case 'boolean':
+                        const checkbox = formContainer.querySelector(`input[data-field="${fieldName}"]`);
+                        value = checkbox ? checkbox.checked : false;
+                        break;
+                        
+                    case 'images':
+                        // 收集多图数据
+                        const preview = document.getElementById(`${fieldName}_preview`);
+                        const images = [];
+                        if (preview) {
+                            const imgElements = preview.querySelectorAll('img');
+                            imgElements.forEach(img => {
+                                images.push(img.src);
+                            });
+                        }
+                        value = JSON.stringify(images);
+                        break;
+                }
+                
+                formData[fieldName] = value;
+            });
+            
+            // 添加ID和时间戳
+            formData.id = 'row_' + Date.now();
+            formData.createdAt = new Date().toISOString();
+            
+            // 添加到数据表
+            AppState.currentTable.data.push(formData);
+            
+            // 更新项目数据
+            updateProjectData();
+            
+            // 隐藏模态框
+            hideModal();
+            
+            // 重新加载数据表详情
+            loadTableDetail(AppState.currentTable.id);
+            
+            alert('数据添加成功！');
+        }
+
+        // 加载项目
+        function loadProjects() {
+            const projectList = document.getElementById('projectList');
+            const emptyProjects = document.getElementById('emptyProjects');
+            
+            if (AppState.projects.length === 0) {
+                emptyProjects.style.display = 'block';
+                projectList.innerHTML = '';
+                return;
+            }
+            
+            emptyProjects.style.display = 'none';
+            
+            let projectsHTML = '';
+            AppState.projects.forEach(project => {
+                projectsHTML += `
+                    <div class="project-card ${AppState.currentProject && AppState.currentProject.id === project.id ? 'active' : ''}" 
+                         data-id="${project.id}">
+                        <button class="project-card-delete" onclick="deleteProject('${project.id}', event)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="project-icon" onclick="selectProject('${project.id}')">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                        <div class="project-name" onclick="selectProject('${project.id}')">${project.name}</div>
+                        <div class="project-date" onclick="selectProject('${project.id}')">${formatDate(project.createdAt)}</div>
+                    </div>
+                `;
+            });
+            
+            projectList.innerHTML = projectsHTML;
+        }
+
+        // 选择项目
+        window.selectProject = function(projectId) {
+            const project = AppState.projects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            AppState.currentProject = project;
+            
+            // 更新UI
+            loadProjects();
+            
+            // 切换到编辑器
+            showPage('editor');
+        };
+
+        // 删除项目
+        window.deleteProject = function(projectId, event) {
+            event.stopPropagation();
+            
+            if (!confirm('确定要删除这个项目吗？所有相关数据表、组件和文件都将被删除！')) {
+                return;
+            }
+            
+            // 查找项目
+            const projectIndex = AppState.projects.findIndex(p => p.id === projectId);
+            if (projectIndex === -1) return;
+            
+            // 删除项目相关的文件
+            deleteProjectFiles(projectId);
+            
+            // 从数组中移除项目
+            AppState.projects.splice(projectIndex, 1);
+            
+            // 如果删除的是当前项目，清空当前项目
+            if (AppState.currentProject && AppState.currentProject.id === projectId) {
+                AppState.currentProject = null;
+            }
+            
+            // 保存更改
+            saveProjectsToStorage();
+            
+            // 重新加载项目列表
+            loadProjects();
+            
+            // 如果删除了当前项目，回到项目页面
+            if (!AppState.currentProject) {
+                showPage('project');
+            }
+            
+            alert('项目已从本地存储中删除！');
+        };
+
+        // 删除项目相关文件
+        function deleteProjectFiles(projectId) {
+            let files = JSON.parse(localStorage.getItem('mobileWebAppFiles_v3') || '[]');
+            files = files.filter(file => file.projectId !== projectId);
+            localStorage.setItem('mobileWebAppFiles_v3', JSON.stringify(files));
+        }
+
+        // 加载编辑器内容
+        function loadEditorContent() {
+            if (!AppState.currentProject) return;
+            
+            // 加载HTML内容
+            document.getElementById('htmlEditor').value = AppState.currentProject.htmlContent || '';
+            
+            // 加载可视化组件
+            loadVisualComponents();
+        }
+
+        // 加载可视化组件
+        function loadVisualComponents() {
+            const editorCanvas = document.getElementById('editorCanvas');
+            
+            // 清空画布
+            editorCanvas.innerHTML = '';
+            
+            // 添加占位符
+            const placeholder = document.createElement('div');
+            placeholder.className = 'canvas-placeholder';
+            placeholder.innerHTML = `
+                <i class="fas fa-mouse-pointer"></i>
+                <p>点击上方组件添加到画布</p>
+                <p style="font-size: 0.85rem; margin-top: 6px;">长按组件可拖动排序</p>
+            `;
+            editorCanvas.appendChild(placeholder);
+            
+            // 如果有保存的组件，加载它们
+            if (AppState.currentProject.components && AppState.currentProject.components.length > 0) {
+                AppState.currentProject.components.forEach(component => {
+                    addComponentToCanvas(component.type, component.data, component.id);
+                });
+                
+                // 移除占位符
+                placeholder.remove();
+            }
+        }
+
+        // 添加组件到画布
+        function addComponentToCanvas(type, data = {}, componentId = null) {
+            const editorCanvas = document.getElementById('editorCanvas');
+            
+            // 移除占位符
+            const placeholder = editorCanvas.querySelector('.canvas-placeholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+            
+            const id = componentId || 'comp_' + Date.now();
+            let content = '';
+            let defaultData = {};
+            
+            switch(type) {
+                case 'text':
+                    const textContent = data.text || '这是一个文字组件，点击编辑按钮修改内容';
+                    content = `<h3>${textContent}</h3>`;
+                    defaultData = { 
+                        text: textContent, 
+                        fontSize: data.fontSize || '16px', 
+                        color: data.color || '#333',
+                        events: data.events || []
+                    };
+                    break;
+                    
+                case 'image':
+                    if (data.src) {
+                        content = `<img src="${data.src}" alt="${data.alt || '图片'}" style="width: ${data.width || '100%'}; border-radius: 6px;">`;
+                    } else {
+                        content = '<div style="text-align: center;"><i class="fas fa-image" style="font-size: 32px; color: #ccc;"></i><p style="font-size: 0.9rem;">图片组件</p></div>';
+                    }
+                    defaultData = { 
+                        src: data.src || '', 
+                        alt: data.alt || '图片', 
+                        width: data.width || '100%',
+                        events: data.events || []
+                    };
+                    break;
+                    
+                case 'button':
+                    const buttonText = data.text || '按钮';
+                    const bgColor = data.bgColor || '#4361ee';
+                    const textColor = data.textColor || 'white';
+                    content = `<button style="padding: 10px 20px; background-color: ${bgColor}; color: ${textColor}; border: none; border-radius: 6px; font-size: 14px; width: 100%;">${buttonText}</button>`;
+                    defaultData = { 
+                        text: buttonText, 
+                        bgColor: bgColor, 
+                        textColor: textColor,
+                        events: data.events || []
+                    };
+                    break;
+                    
+                case 'list':
+                    content = '<h4>列表组件</h4><ul><li>列表项 1</li><li>列表项 2</li><li>列表项 3</li></ul>';
+                    if (data.items && data.items.length > 0) {
+                        content = `<h4>${data.title || '列表'}</h4><ul>${data.items.map(item => `<li>${item}</li>`).join('')}</ul>`;
+                    }
+                    defaultData = { 
+                        title: data.title || '列表',
+                        items: data.items || ['列表项 1', '列表项 2', '列表项 3'], 
+                        events: data.events || []
+                    };
+                    break;
+                    
+                case 'video':
+                    content = '<div style="text-align: center;"><i class="fas fa-video" style="font-size: 32px; color: #ccc;"></i><p style="font-size: 0.9rem;">视频组件</p></div>';
+                    if (data.src) {
+                        content = `<video src="${data.src}" ${data.controls ? 'controls' : ''} style="width: 100%; border-radius: 6px;"></video>`;
+                    }
+                    defaultData = { 
+                        src: data.src || '', 
+                        controls: data.controls !== false,
+                        events: data.events || []
+                    };
+                    break;
+                    
+                case 'carousel':
+                    content = '<div style="text-align: center;"><i class="fas fa-images" style="font-size: 32px; color: #ccc;"></i><p style="font-size: 0.9rem;">轮播组件</p></div>';
+                    if (data.images && data.images.length > 0) {
+                        content = `<div style="position: relative; width: 100%; height: 150px; overflow: hidden; border-radius: 6px;">
+                            ${data.images.map(img => `<img src="${img}" style="width: 100%; height: 100%; object-fit: cover;">`).join('')}
+                        </div>`;
+                    }
+                    defaultData = { 
+                        images: data.images || [], 
+                        events: data.events || []
+                    };
+                    break;
+            }
+            
+            // 合并传入的数据
+            const componentData = { ...defaultData, ...data, type };
+            
+            const component = document.createElement('div');
+            component.className = 'component-item';
+            component.setAttribute('data-id', id);
+            component.setAttribute('data-type', type);
+            component.innerHTML = `
+                <div class="drag-handle">
+                    <i class="fas fa-grip-vertical"></i>
+                </div>
+                <div class="component-content">
+                    ${content}
+                </div>
+                <div class="component-actions">
+                    <button class="component-action-btn edit" onclick="editComponent('${id}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="component-action-btn delete" onclick="deleteComponent('${id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            // 添加到画布
+            editorCanvas.appendChild(component);
+            
+            // 保存组件数据
+            saveComponentData(id, componentData);
+        }
+
+        // 编辑组件
+        window.editComponent = function(componentId) {
+            const component = document.querySelector(`.component-item[data-id="${componentId}"]`);
+            if (!component) return;
+            
+            const type = component.getAttribute('data-type');
+            AppState.editingComponent = componentId;
+            
+            // 显示组件属性编辑器
+            showComponentEditor(type);
+        };
+
+        // 显示组件属性编辑器
+        function showComponentEditor(type) {
+            const componentTitle = document.getElementById('componentTitle');
+            const componentForm = document.getElementById('componentForm');
+            
+            componentTitle.textContent = `编辑${getComponentName(type)}属性`;
+            componentForm.innerHTML = '';
+            
+            // 获取组件数据
+            const component = AppState.currentProject.components.find(c => c.id === AppState.editingComponent);
+            const componentData = component ? component.data : {};
+            
+            let formHTML = '';
+            
+            switch(type) {
+                case 'text':
+                    formHTML = `
+                        <div class="form-group">
+                            <label class="form-label">文本内容</label>
+                            <textarea class="form-control form-textarea" id="compText" placeholder="请输入文本内容">${componentData.text || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">字体大小</label>
+                            <input type="text" class="form-control" id="compFontSize" placeholder="例如: 16px" value="${componentData.fontSize || '16px'}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">文本颜色</label>
+                            <input type="color" class="form-control" id="compColor" value="${componentData.color || '#333333'}">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-outline" style="width: 100%;" onclick="showEventEditor()">
+                                <i class="fas fa-bolt"></i> 配置事件
+                            </button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'button':
+                    formHTML = `
+                        <div class="form-group">
+                            <label class="form-label">按钮文本</label>
+                            <input type="text" class="form-control" id="compText" placeholder="请输入按钮文本" value="${componentData.text || '按钮'}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">背景颜色</label>
+                            <input type="color" class="form-control" id="compBgColor" value="${componentData.bgColor || '#4361ee'}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">文本颜色</label>
+                            <input type="color" class="form-control" id="compTextColor" value="${componentData.textColor || '#ffffff'}">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-outline" style="width: 100%;" onclick="showEventEditor()">
+                                <i class="fas fa-bolt"></i> 配置事件
+                            </button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'image':
+                    formHTML = `
+                        <div class="form-group">
+                            <label class="form-label">图片URL</label>
+                            <input type="text" class="form-control" id="compSrc" placeholder="请输入图片URL" value="${componentData.src || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">替代文本</label>
+                            <input type="text" class="form-control" id="compAlt" placeholder="请输入替代文本" value="${componentData.alt || '图片'}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">宽度</label>
+                            <input type="text" class="form-control" id="compWidth" placeholder="例如: 100% 或 300px" value="${componentData.width || '100%'}">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-outline" style="width: 100%;" onclick="showEventEditor()">
+                                <i class="fas fa-bolt"></i> 配置事件
+                            </button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'list':
+                    const items = componentData.items ? componentData.items.join('\n') : '';
+                    formHTML = `
+                        <div class="form-group">
+                            <label class="form-label">列表标题</label>
+                            <input type="text" class="form-control" id="compTitle" placeholder="请输入列表标题" value="${componentData.title || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">列表项（每行一项）</label>
+                            <textarea class="form-control form-textarea" id="compItems" placeholder="请输入列表项，每行一项">${items}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-outline" style="width: 100%;" onclick="showEventEditor()">
+                                <i class="fas fa-bolt"></i> 配置事件
+                            </button>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            componentForm.innerHTML = formHTML;
+            
+            // 保存当前组件的事件数据
+            if (componentData.events) {
+                AppState.editingEvents = componentData.events;
+            } else {
+                AppState.editingEvents = [];
+            }
+            
+            showModal('componentModal');
+        }
+
+        // 显示事件编辑器
+        window.showEventEditor = function() {
+            // 先保存组件属性的修改
+            saveComponentChangesTemp();
+            
+            // 加载事件列表
+            loadEventList();
+            
+            // 显示事件编辑器
+            hideModal();
+            showModal('eventModal');
+        };
+
+        // 临时保存组件更改
+        function saveComponentChangesTemp() {
+            if (!AppState.editingComponent) return;
+            
+            const component = AppState.currentProject.components.find(c => c.id === AppState.editingComponent);
+            if (!component) return;
+            
+            const type = component.data.type;
+            
+            switch(type) {
+                case 'text':
+                    component.data.text = document.getElementById('compText').value;
+                    component.data.fontSize = document.getElementById('compFontSize').value;
+                    component.data.color = document.getElementById('compColor').value;
+                    break;
+                    
+                case 'button':
+                    component.data.text = document.getElementById('compText').value;
+                    component.data.bgColor = document.getElementById('compBgColor').value;
+                    component.data.textColor = document.getElementById('compTextColor').value;
+                    break;
+                    
+                case 'image':
+                    component.data.src = document.getElementById('compSrc').value;
+                    component.data.alt = document.getElementById('compAlt').value;
+                    component.data.width = document.getElementById('compWidth').value;
+                    break;
+                    
+                case 'list':
+                    component.data.title = document.getElementById('compTitle').value;
+                    const itemsText = document.getElementById('compItems').value;
+                    component.data.items = itemsText.split('\n').filter(item => item.trim() !== '');
+                    break;
+            }
+            
+            // 保存事件
+            component.data.events = AppState.editingEvents;
+            
+            // 更新组件显示
+            updateComponentDisplay(AppState.editingComponent, component.data);
+        }
+
+        // 保存组件更改
+        function saveComponentChanges() {
+            saveComponentChangesTemp();
+            updateProjectData();
+            alert('组件属性已保存！');
+            hideModal();
+        }
+
+        // 更新组件显示
+        function updateComponentDisplay(componentId, data) {
+            const component = document.querySelector(`.component-item[data-id="${componentId}"]`);
+            if (!component) return;
+            
+            const type = data.type;
+            let content = '';
+            
+            switch(type) {
+                case 'text':
+                    content = `<h3 style="font-size: ${data.fontSize}; color: ${data.color};">${data.text}</h3>`;
+                    break;
+                    
+                case 'image':
+                    if (data.src) {
+                        content = `<img src="${data.src}" alt="${data.alt}" style="width: ${data.width}; border-radius: 6px;">`;
+                    } else {
+                        content = '<div style="text-align: center;"><i class="fas fa-image" style="font-size: 32px; color: #ccc;"></i><p style="font-size: 0.9rem;">图片组件</p></div>';
+                    }
+                    break;
+                    
+                case 'button':
+                    content = `<button style="padding: 10px 20px; background-color: ${data.bgColor}; color: ${data.textColor}; border: none; border-radius: 6px; font-size: 14px; width: 100%;">${data.text}</button>`;
+                    break;
+                    
+                case 'list':
+                    if (data.items && data.items.length > 0) {
+                        content = `<h4>${data.title || '列表'}</h4><ul>${data.items.map(item => `<li>${item}</li>`).join('')}</ul>`;
+                    } else {
+                        content = '<h4>列表组件</h4><ul><li>列表项 1</li><li>列表项 2</li><li>列表项 3</li></ul>';
+                    }
+                    break;
+            }
+            
+            const contentElement = component.querySelector('.component-content');
+            if (contentElement) {
+                contentElement.innerHTML = content;
+            }
+        }
+
+        // 删除组件
+        window.deleteComponent = function(componentId) {
+            if (confirm('确定要删除这个组件吗？')) {
+                const component = document.querySelector(`.component-item[data-id="${componentId}"]`);
+                if (component) {
+                    component.remove();
+                    
+                    // 从项目数据中移除
+                    if (AppState.currentProject.components) {
+                        AppState.currentProject.components = AppState.currentProject.components.filter(c => c.id !== componentId);
+                        updateProjectData();
+                    }
+                    
+                    // 检查是否还有组件
+                    const remainingComponents = document.querySelectorAll('.component-item');
+                    if (remainingComponents.length === 0) {
+                        const editorCanvas = document.getElementById('editorCanvas');
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'canvas-placeholder';
+                        placeholder.innerHTML = `
+                            <i class="fas fa-mouse-pointer"></i>
+                            <p>点击上方组件添加到画布</p>
+                            <p style="font-size: 0.85rem; margin-top: 6px;">长按组件可拖动排序</p>
+                        `;
+                        editorCanvas.appendChild(placeholder);
+                    }
+                    
+                    alert('组件已删除！');
+                }
+            }
+        };
+
+        // 保存组件数据
+        function saveComponentData(componentId, data) {
+            if (!AppState.currentProject.components) {
+                AppState.currentProject.components = [];
+            }
+            
+            // 查找现有组件
+            const existingIndex = AppState.currentProject.components.findIndex(c => c.id === componentId);
+            
+            if (existingIndex >= 0) {
+                // 更新现有组件
+                AppState.currentProject.components[existingIndex].data = data;
+            } else {
+                // 添加新组件
+                AppState.currentProject.components.push({
+                    id: componentId,
+                    type: data.type,
+                    data: data
+                });
+            }
+            
+            // 保存项目
+            updateProjectData();
+        }
+
+        // 切换编辑器标签
+        function switchEditorTab(tab) {
+            const htmlTabBtn = document.getElementById('htmlTabBtn');
+            const visualTabBtn = document.getElementById('visualTabBtn');
+            const htmlEditor = document.getElementById('htmlEditor');
+            const visualEditor = document.getElementById('visualEditor');
+            
+            if (tab === 'html') {
+                htmlTabBtn.classList.add('active');
+                visualTabBtn.classList.remove('active');
+                htmlEditor.style.display = 'block';
+                visualEditor.classList.remove('active');
+            } else {
+                htmlTabBtn.classList.remove('active');
+                visualTabBtn.classList.add('active');
+                htmlEditor.style.display = 'none';
+                visualEditor.classList.add('active');
+            }
+        }
+
+        // 加载数据库表
+        function loadDatabaseTables() {
+            const tableList = document.getElementById('tableList');
+            const emptyTables = document.getElementById('emptyTables');
+            
+            if (!AppState.currentProject || !AppState.currentProject.tables || AppState.currentProject.tables.length === 0) {
+                emptyTables.style.display = 'block';
+                tableList.innerHTML = '';
+                return;
+            }
+            
+            emptyTables.style.display = 'none';
+            
+            let tablesHTML = '';
+            AppState.currentProject.tables.forEach(table => {
+                const fieldCount = table.fields ? table.fields.length : 0;
+                const dataCount = table.data ? table.data.length : 0;
+                
+                tablesHTML += `
+                    <div class="table-card" data-id="${table.id}">
+                        <button class="table-delete-btn" onclick="deleteTable('${table.id}', event)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="table-header" onclick="openTableDetail('${table.id}')">
+                            <div class="table-name">${table.name}</div>
+                            <div class="table-type">${table.type === 'config' ? '配置表' : '列表'}</div>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--gray); margin-bottom: 12px;" onclick="openTableDetail('${table.id}')">${table.description || '暂无描述'}</p>
+                        <div class="table-fields" onclick="openTableDetail('${table.id}')">
+                            <span class="field-badge">${fieldCount} 个字段</span>
+                            <span class="field-badge">${dataCount} 条数据</span>
+                        </div>
+                        <div class="table-actions">
+                            <button class="table-action-btn" style="background-color: var(--primary); color: white;" onclick="openTableDetail('${table.id}')">
+                                <i class="fas fa-eye"></i> 查看
+                            </button>
+                            <button class="table-action-btn" style="background-color: var(--success); color: white;" onclick="addDataToTable('${table.id}')">
+                                <i class="fas fa-plus"></i> 添加
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            tableList.innerHTML = tablesHTML;
+        }
+
+        // 打开数据表详情
+        window.openTableDetail = function(tableId) {
+            if (!AppState.currentProject || !AppState.currentProject.tables) return;
+            
+            const table = AppState.currentProject.tables.find(t => t.id === tableId);
+            if (!table) return;
+            
+            AppState.currentTable = table;
+            
+            // 更新页面
+            document.getElementById('databasePage').classList.remove('active');
+            document.getElementById('tableDetailPage').classList.add('active');
+            
+            // 更新标题
+            document.getElementById('tableDetailTitle').textContent = table.name;
+            document.getElementById('tableDetailDesc').textContent = table.description || '';
+            
+            // 加载数据
+            loadTableDetail(tableId);
+        };
+
+        // 添加数据到表
+        window.addDataToTable = function(tableId) {
+            const table = AppState.currentProject.tables.find(t => t.id === tableId);
+            if (!table) return;
+            
+            AppState.currentTable = table;
+            showAddDataModal();
+        };
+
+        // 删除数据表
+        window.deleteTable = function(tableId, event) {
+            event.stopPropagation();
+            
+            if (!confirm('确定要删除这个数据表吗？所有数据都将丢失！')) {
+                return;
+            }
+            
+            if (!AppState.currentProject.tables) return;
+            
+            const tableIndex = AppState.currentProject.tables.findIndex(t => t.id === tableId);
+            if (tableIndex >= 0) {
+                AppState.currentProject.tables.splice(tableIndex, 1);
+                updateProjectData();
+                loadDatabaseTables();
+                alert('数据表已删除！');
+            }
+        };
+
+        // 加载数据表详情
+        function loadTableDetail(tableId) {
+            const tableDataContent = document.getElementById('tableDataContent');
+            const emptyTableData = document.getElementById('emptyTableData');
+            
+            if (!AppState.currentTable || !AppState.currentTable.data || AppState.currentTable.data.length === 0) {
+                emptyTableData.style.display = 'block';
+                tableDataContent.innerHTML = '';
+                return;
+            }
+            
+            emptyTableData.style.display = 'none';
+            
+            // 创建表格
+            let tableHTML = '<div style="overflow-x: auto;">';
+            tableHTML += '<table class="data-table">';
+            tableHTML += '<thead><tr>';
+            
+            // 表头
+            AppState.currentTable.fields.forEach(field => {
+                const fieldName = Object.keys(field)[0];
+                const fieldConfig = field[fieldName];
+                tableHTML += `<th>${fieldConfig.label || fieldName}</th>`;
+            });
+            
+            tableHTML += '<th>操作</th></tr></thead>';
+            tableHTML += '<tbody>';
+            
+            // 数据行
+            AppState.currentTable.data.forEach((row, index) => {
+                tableHTML += '<tr>';
+                
+                AppState.currentTable.fields.forEach(field => {
+                    const fieldName = Object.keys(field)[0];
+                    const fieldConfig = field[fieldName];
+                    const value = row[fieldName] || '';
+                    
+                    tableHTML += `<td class="field-value ${fieldConfig.type === 'boolean' ? (value ? 'boolean-true' : 'boolean-false') : ''}">`;
+                    
+                    switch(fieldConfig.type) {
+                        case 'boolean':
+                            tableHTML += value ? '是' : '否';
+                            break;
+                        case 'image':
+                            tableHTML += value ? `<img src="${value}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">` : '-';
+                            break;
+                        case 'video':
+                        case 'audio':
+                        case 'file':
+                            tableHTML += value ? `<a href="${value}" target="_blank">查看文件</a>` : '-';
+                            break;
+                        case 'images':
+                            try {
+                                const images = JSON.parse(value);
+                                tableHTML += images.length ? `${images.length} 张图片` : '-';
+                            } catch {
+                                tableHTML += '-';
+                            }
+                            break;
+                        default:
+                            tableHTML += value || '-';
+                    }
+                    
+                    tableHTML += '</td>';
+                });
+                
+                tableHTML += `
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="editTableData('${tableId}', ${index})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline" style="margin-left: 4px;" onclick="deleteTableData('${tableId}', ${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tableHTML += '</tr>';
+            });
+            
+            tableHTML += '</tbody></table></div>';
+            
+            tableDataContent.innerHTML = tableHTML;
+        }
+
+        // 编辑数据
+        window.editTableData = function(tableId, rowIndex) {
+            // 在实际实现中，这里会打开编辑表单
+            // 为简化，我们在这里显示一个提示
+            alert(`编辑第 ${rowIndex + 1} 行数据\n\n在实际版本中，这里会打开编辑表单，允许修改字段值。`);
+        };
+
+        // 删除数据
+        window.deleteTableData = function(tableId, rowIndex) {
+            if (confirm('确定要删除这条数据吗？')) {
+                const table = AppState.currentProject.tables.find(t => t.id === tableId);
+                if (table && table.data) {
+                    table.data.splice(rowIndex, 1);
+                    updateProjectData();
+                    loadTableDetail(tableId);
+                    alert('数据已删除！');
+                }
+            }
+        };
+
+        // 保存当前项目
+        function saveCurrentProject() {
+            if (!AppState.currentProject) {
+                alert('请先选择或创建一个项目');
+                return;
+            }
+            
+            // 更新HTML内容
+            if (document.getElementById('editorPage').classList.contains('active')) {
+                AppState.currentProject.htmlContent = document.getElementById('htmlEditor').value;
+            }
+            
+            // 更新时间
+            AppState.currentProject.updatedAt = new Date().toISOString();
+            
+            // 保存到本地存储
+            saveProjectsToStorage();
+            
+            alert('项目已保存到本地存储！');
+        }
+
+        // 显示预览
+        function showPreview() {
+            const previewContent = document.getElementById('previewContent');
+            
+            // 根据当前编辑器模式显示预览
+            if (document.getElementById('htmlTabBtn').classList.contains('active')) {
+                // HTML模式预览
+                previewContent.innerHTML = AppState.currentProject.htmlContent || '<p style="text-align: center; padding: 40px; color: #666;">暂无内容</p>';
+            } else {
+                // 可视化模式预览
+                previewContent.innerHTML = '';
+                
+                // 复制画布内容到预览
+                const editorCanvas = document.getElementById('editorCanvas');
+                const components = editorCanvas.querySelectorAll('.component-item');
+                
+                if (components.length === 0) {
+                    previewContent.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">暂无内容，请添加组件</p>';
+                } else {
+                    components.forEach(component => {
+                        const clone = component.cloneNode(true);
+                        clone.classList.remove('component-item');
+                        clone.classList.remove('selected');
+                        clone.classList.remove('dragging');
+                        
+                        // 移除编辑按钮和拖拽手柄
+                        const actions = clone.querySelector('.component-actions');
+                        if (actions) actions.remove();
+                        
+                        const handle = clone.querySelector('.drag-handle');
+                        if (handle) handle.remove();
+                        
+                        previewContent.appendChild(clone);
+                    });
+                }
+            }
+            
+            // 显示预览模式
+            document.getElementById('previewMode').classList.add('active');
+            updatePageTitle('预览模式');
+        }
+
+        // 关闭预览
+        function closePreview() {
+            document.getElementById('previewMode').classList.remove('active');
+            updatePageTitle(document.querySelector('.tab-item.active').getAttribute('data-page'));
+        }
+
+        // 事件编辑器功能
+        function loadEventList() {
+            const eventListContainer = document.getElementById('eventListContainer');
+            eventListContainer.innerHTML = '';
+            
+            if (AppState.editingEvents.length === 0) {
+                eventListContainer.innerHTML = '<p style="text-align: center; color: var(--gray); padding: 20px; font-size: 0.9rem;">暂无事件</p>';
+                return;
+            }
+            
+            AppState.editingEvents.forEach((event, index) => {
+                const eventHTML = `
+                    <div class="event-item">
+                        <button class="event-remove-btn" onclick="removeEvent(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="event-type">${EventTypes[event.type]?.name || event.type}</div>
+                        <div class="event-desc">${getEventDescription(event)}</div>
+                    </div>
+                `;
+                eventListContainer.insertAdjacentHTML('beforeend', eventHTML);
+            });
+        }
+
+        function getEventDescription(event) {
+            switch(event.type) {
+                case 'jump':
+                    return `跳转到: ${event.target || '未设置'}`;
+                case 'modify':
+                    return `修改变量: ${event.variable || '未设置'}`;
+                case 'database':
+                    return `操作数据表: ${event.action || '未设置'}`;
+                case 'upload':
+                    return '上传文件';
+                case 'login':
+                    return '登录/注册操作';
+                default:
+                    return '未知事件';
+            }
+        }
+
+        function updateEventParams() {
+            const eventType = document.getElementById('eventType').value;
+            const paramsContainer = document.getElementById('eventParamsContainer');
+            
+            let paramsHTML = '';
+            
+            switch(eventType) {
+                case 'jump':
+                    paramsHTML = `
+                        <div class="form-group">
+                            <label class="form-label">目标页面或链接</label>
+                            <input type="text" class="form-control" id="eventTarget" placeholder="输入页面名称或URL">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'modify':
+                    paramsHTML = `
+                        <div class="form-group">
+                            <label class="form-label">变量名</label>
+                            <input type="text" class="form-control" id="eventVariable" placeholder="例如: $function_listChildInfo.value">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">新值</label>
+                            <input type="text" class="form-control" id="eventValue" placeholder="输入新值">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'database':
+                    paramsHTML = `
+                        <div class="form-group">
+                            <label class="form-label">操作类型</label>
+                            <select class="form-control" id="eventAction">
+                                <option value="query">查询</option>
+                                <option value="add">添加</option>
+                                <option value="update">修改</option>
+                                <option value="delete">删除</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">数据表</label>
+                            <input type="text" class="form-control" id="eventTable" placeholder="输入数据表名称">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'upload':
+                    paramsHTML = `
+                        <div class="form-group">
+                            <label class="form-label">文件类型</label>
+                            <select class="form-control" id="eventFileType">
+                                <option value="image">图片</option>
+                                <option value="video">视频</option>
+                                <option value="audio">音频</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'login':
+                    paramsHTML = `
+                        <div class="form-group">
+                            <label class="form-label">操作类型</label>
+                            <select class="form-control" id="eventLoginType">
+                                <option value="login">登录</option>
+                                <option value="register">注册</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            paramsContainer.innerHTML = paramsHTML;
+        }
+
+        function addNewEvent() {
+            const eventType = document.getElementById('eventType').value;
+            if (!eventType) {
+                alert('请选择事件类型');
+                return;
+            }
+            
+            const newEvent = { type: eventType };
+            
+            // 收集事件参数
+            switch(eventType) {
+                case 'jump':
+                    newEvent.target = document.getElementById('eventTarget').value;
+                    break;
+                    
+                case 'modify':
+                    newEvent.variable = document.getElementById('eventVariable').value;
+                    newEvent.value = document.getElementById('eventValue').value;
+                    break;
+                    
+                case 'database':
+                    newEvent.action = document.getElementById('eventAction').value;
+                    newEvent.table = document.getElementById('eventTable').value;
+                    break;
+                    
+                case 'upload':
+                    newEvent.fileType = document.getElementById('eventFileType').value;
+                    break;
+                    
+                case 'login':
+                    newEvent.loginType = document.getElementById('eventLoginType').value;
+                    break;
+            }
+            
+            AppState.editingEvents.push(newEvent);
+            loadEventList();
+            
+            // 清空表单
+            document.getElementById('eventType').value = '';
+            document.getElementById('eventParamsContainer').innerHTML = '';
+        }
+
+        window.removeEvent = function(index) {
+            AppState.editingEvents.splice(index, 1);
+            loadEventList();
+        };
+
+        function saveEventChanges() {
+            // 事件已经实时保存到 AppState.editingEvents
+            // 返回到组件编辑器
+            hideModal();
+            showModal('componentModal');
+        }
+
+        // 保存项目到本地存储
+        function saveProjectsToStorage() {
+            localStorage.setItem('mobileWebAppProjects_v3', JSON.stringify(AppState.projects));
+        }
+
+        // 更新项目数据
+        function updateProjectData() {
+            if (AppState.currentProject) {
+                AppState.currentProject.updatedAt = new Date().toISOString();
+                saveProjectsToStorage();
+            }
+        }
+
+        // 显示模态框
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        // 隐藏模态框
+        function hideModal() {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+
+        // 更新页面标题
+        function updatePageTitle(title) {
+            document.getElementById('pageTitle').textContent = title;
+        }
+
+        // 获取组件名称
+        function getComponentName(type) {
+            const names = {
+                text: '文字',
+                image: '图片',
+                video: '视频',
+                button: '按钮',
+                list: '列表',
+                carousel: '轮播'
+            };
+            return names[type] || '组件';
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            
+            // 如果是今天
+            if (diff < 24 * 60 * 60 * 1000) {
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                return `今天 ${hours}:${minutes}`;
+            }
+            
+            // 如果是昨天
+            if (diff < 2 * 24 * 60 * 60 * 1000) {
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                return `昨天 ${hours}:${minutes}`;
+            }
+            
+            // 其他情况
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${month}-${day} ${hours}:${minutes}`;
+        }
+    </script>
+</body>
+</html>
