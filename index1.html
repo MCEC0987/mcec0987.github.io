@@ -815,7 +815,7 @@ setInterval(function() {
                     <v-card-text>
                         <v-tabs v-model="settingsTab" class="mb-4" :color="primaryColor">
                             <v-tab value="theme">主题</v-tab>
-                            <v-tab value="search">搜索</v-tab>
+                            <v-tab value="search">搜索/显示</v-tab>
                             <v-tab value="layout">布局</v-tab>
                             <v-tab value="data">数据管理</v-tab>
                         </v-tabs>
@@ -1136,7 +1136,16 @@ setInterval(function() {
                 { id: 14, name: 'Coursera', desc: '在线课程', icon: 'mdi-school', url: 'https://www.coursera.org', color: 'indigo', category: 'edu' },
                 { id: 15, name: '临时邮箱', desc: '邮箱', icon: 'mdi-email', url: 'fen/index.html', color: 'white', category: 'aaa' },
                 { id: 16, name: '鲸鱼壁纸', desc: '壁纸分享', icon: 'mdi-image-area', url: 'fen/index2.html', color: 'white', category: 'aaa' },
-                { id: 17, name: 'Aaa导航页', desc: '导航工具', icon: 'mdi-home', url: 'fen/index3.html', color: 'white', category: 'aaa' }
+                { id: 17, name: 'Aaa导航页', desc: '导航工具', icon: 'mdi-home', url: 'fen/index3.html', color: 'white', category: 'aaa' },
+                { id: 18, name: '手机端Web应用构建器', desc: '在手机端构建Web应用', icon: 'mdi-earth', url: 'fen/手机端Web应用构建器.html', color: 'white', category: 'aaa' },
+                { id: 19, name: '小乌龟网页取源', desc: '一键获取网页源代码', icon: 'mdi-spider', url: 'fen/source-code.html', color: 'white', category: 'aaa' },
+                { id: 20, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'aaa' },
+                { id: 21, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'aaa' },
+                { id: 22, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'aaa' },
+                { id: 23, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'aaa' },
+                { id: 24, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'aaa' },
+                { id: 25, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'aaa' },
+                { id: 26, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'aaa' },
             ]);
             
             // 搜索引擎选项
@@ -1155,6 +1164,7 @@ setInterval(function() {
                 { name: '橙色', value: 'orange' },
                 { name: '紫色', value: 'purple' },
                 { name: '青色', value: 'teal' },
+                { name: '粉色', value: 'pink' },
             ]);
             
             // 计算属性
@@ -1590,6 +1600,7 @@ setInterval(function() {
                         purple: '#9C27B0',
                         teal: '#009688',
                         indigo: '#3F51B5',
+                        pink: '#dd5784',
                     }
                 },
                 dark: {
@@ -1602,6 +1613,7 @@ setInterval(function() {
                         purple: '#9C27B0',
                         teal: '#009688',
                         indigo: '#3F51B5',
+                        pink: '#ff6699',
                     }
                 }
             }
