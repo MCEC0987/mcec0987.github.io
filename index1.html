@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
+ <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Aaa导航</title>
@@ -147,36 +147,35 @@
     .v-theme--dark .storage-info { background-color: #333; }
     .no-data { text-align: center; padding: 40px 20px; color: #999; }
   </style>
-</head>
-<body>
-<div id="app">
-  <v-app :theme="theme">
+ </head>
+ <body>
+  <div id="app">
+   <v-app :theme="theme">
     <v-app-bar :color="primaryColor" density="compact" elevation="1">
-      <v-app-bar-title>
-        <v-icon icon="mdi-compass" class="mr-2"></v-icon> Aaa导航
-      </v-app-bar-title>
-      <v-spacer></v-spacer>
-      <v-btn icon @click="toggleDarkMode" variant="text" :title="darkMode ? '切换浅色模式' : '切换深色模式'">
-        <v-icon :icon="darkMode ? 'mdi-weather-sunny' : 'mdi-weather-night'"></v-icon>
-      </v-btn>
+     <v-app-bar-title>
+      <v-icon icon="mdi-compass" class="mr-2"></v-icon> Aaa导航
+     </v-app-bar-title>
+     <v-spacer></v-spacer>
+     <v-btn icon @click="toggleDarkMode" variant="text" :title="darkMode ? '切换浅色模式' : '切换深色模式'">
+      <v-icon :icon="darkMode ? 'mdi-weather-sunny' : 'mdi-weather-night'"></v-icon>
+     </v-btn>
     </v-app-bar>
-
     <v-main>
-      <div class="page-content" :class="{'single-column': layout === 'single'}">
-        <!-- 首页 -->
-        <div v-if="activeTab === 'home'">
-          <h2 class="mb-3 text-h6 text-md-h5">首页</h2><v-divider></v-divider>
-          <br>
-          <div class="carousel-container" :class="{ hidden: !carouselEnabled }">
-            <v-carousel v-if="carouselEnabled" height="auto" hide-delimiter-background show-arrows="hover" cycle :interval="carouselInterval">
-              <v-carousel-item v-for="(slide, index) in carouselSlides" :key="index" :src="slide.image" cover class="carousel-item" @click="openLink(slide.url)">
-                <div class="carousel-item-content">
-                  <h3 class="carousel-title">{{ slide.title }}</h3>
-                  <p class="carousel-desc">{{ slide.description }}</p>
-                </div>
-              </v-carousel-item>
-            </v-carousel> <!-- 滚动文字 -->
-            <marquee direction="left" scrollamount="5" style="
+     <div class="page-content" :class="{'single-column': layout === 'single'}">
+      <!-- 首页 -->
+      <div v-if="activeTab === 'home'">
+       <h2 class="mb-3 text-h6 text-md-h5">首页</h2><v-divider></v-divider>
+       <br>
+       <div class="carousel-container" :class="{ hidden: !carouselEnabled }">
+        <v-carousel v-if="carouselEnabled" height="auto" hide-delimiter-background show-arrows="hover" cycle :interval="carouselInterval">
+         <v-carousel-item v-for="(slide, index) in carouselSlides" :key="index" :src="slide.image" cover class="carousel-item" @click="openLink(slide.url)">
+          <div class="carousel-item-content">
+           <h3 class="carousel-title">{{ slide.title }}</h3>
+           <p class="carousel-desc">{{ slide.description }}</p>
+          </div>
+         </v-carousel-item>
+        </v-carousel> <!-- 滚动文字 -->
+        <marquee direction="left" scrollamount="5" style="
   display:block;
   color:#2563eb;
   padding:8px;
@@ -185,166 +184,212 @@
   mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
 ">
-  📢我们的域名<a href="https://aaa-nb-520.cc.cd">aaa-nb-520.cc.cd</a> -        🔔万一呢？我是说万一 -
-</marquee>
-
-          </div>
-          <div class="search-container" :class="{ 'no-carousel': !carouselEnabled }" v-show="showSearch">
-            <v-text-field v-model="searchQuery" :placeholder="'在 ' + getSearchEngineName() + ' 中搜索'" variant="outlined" class="search-box" @keyup.enter="performSearch" clearable hide-details density="comfortable">
-              <template v-slot:prepend-inner><v-icon icon="mdi-magnify"></v-icon></template>
-              <template v-slot:append>
-                <v-btn icon :color="primaryColor" @click="performSearch" variant="tonal"><v-icon>mdi-send</v-icon></v-btn>
-              </template>
-            </v-text-field>
-          </div>
-          <div v-if="showCategories" class="categories-container">
-            <div class="category-header" :style="{ backgroundColor: primaryColor + '20', color: primaryColor }" @click="toggleCategories">
-              <div class="category-title">
-                <v-icon>mdi-filter</v-icon> <span class="text-body-1 text-md-h6">常用分类</span>
-                <v-chip size="small" variant="flat">{{ categories.length }}</v-chip>
+         📢我们的域名<a href="https://aaa-nb-520.cc.cd">aaa-nb-520.cc.cd</a> - 🔔万一呢？我是说万一 -
+        </marquee>
+       </div>
+       <div class="search-container" :class="{ 'no-carousel': !carouselEnabled }" v-show="showSearch">
+        <v-text-field v-model="searchQuery" :placeholder="'在 ' + getSearchEngineName() + ' 中搜索'" variant="outlined" class="search-box" @keyup.enter="performSearch" clearable hide-details density="comfortable">
+         <template v-slot:prepend-inner>
+          <v-icon icon="mdi-magnify"></v-icon>
+         </template>
+         <template v-slot:append>
+          <v-btn icon :color="primaryColor" @click="performSearch" variant="tonal">
+           <v-icon>
+            mdi-send
+           </v-icon>
+          </v-btn>
+         </template>
+        </v-text-field>
+       </div>
+       <div v-if="showCategories" class="categories-container">
+        <div class="category-header" :style="{ backgroundColor: primaryColor + '20', color: primaryColor }" @click="toggleCategories">
+         <div class="category-title">
+          <v-icon>
+           mdi-filter
+          </v-icon> <span class="text-body-1 text-md-h6">常用分类</span> <v-chip size="small" variant="flat">
+           {{ categories.length }}
+          </v-chip>
+         </div><v-icon class="category-toggle" :class="{ expanded: categoriesExpanded }">
+          mdi-chevron-down
+         </v-icon>
+        </div>
+        <div class="category-grid" :class="{ collapsed: !categoriesExpanded }">
+         <v-card v-for="category in categories" :key="category.id" class="category-card" :color="category.color" variant="flat" @click="selectCategory(category)">
+          <v-card-text class="text-center pa-3 pa-md-4">
+           <v-icon size="large" class="category-icon">
+            {{ category.icon }}
+           </v-icon>
+           <div class="text-caption text-md-body-2">
+            {{ category.name }}
+           </div>
+          </v-card-text>
+         </v-card>
+        </div>
+       </div>
+       <div class="quick-nav-anchor" id="quick-nav">
+        <h2 class="mb-3 text-h6 text-md-h5">快速导航</h2>
+        <p class="text-grey mb-4 text-caption text-md-body-2">点击按钮跳转，长按按钮收藏</p>
+        <div v-if="activeCategory" class="mb-4 d-flex align-center">
+         <v-chip :color="activeCategory.color" variant="outlined" @click="clearCategoryFilter" closable @click:close="clearCategoryFilter" class="mr-2">
+          <v-icon start>
+           {{ activeCategory.icon }}
+          </v-icon> {{ activeCategory.name }}
+         </v-chip> <v-btn variant="text" size="small" @click="scrollToTop">
+          <v-icon start>
+           mdi-arrow-up
+          </v-icon> 回到顶部
+         </v-btn>
+        </div>
+        <div v-if="filteredLinks.length > 0" class="link-grid" :class="{'single-column': layout === 'single', 'mobile-optimized': isMobile}">
+         <v-card v-for="link in filteredLinks" :key="link.id" class="link-card" :color="link.color || primaryColor" variant="flat" @click="openLink(link.url)" @touchstart="startLongPress(link)" @touchend="endLongPress" @mousedown="startLongPress(link)" @mouseup="endLongPress" @mouseleave="endLongPress">
+          <v-card-text class="text-center pa-4 pa-md-6">
+           <v-icon size="large" class="mb-2">
+            {{ link.icon }}
+           </v-icon>
+           <div class="text-body-2 text-md-h6">
+            {{ link.name }}
+           </div>
+           <div class="text-caption mt-1">
+            {{ link.desc }}
+           </div>
+          </v-card-text>
+          <v-btn v-if="isFavorite(link.id)" icon variant="plain" size="small" class="favorite-icon" color="yellow-darken-3" @click.stop="toggleFavorite(link)">
+           <v-icon size="small">
+            mdi-star
+           </v-icon>
+          </v-btn>
+          <v-btn v-else icon variant="plain" size="small" class="favorite-icon" @click.stop="toggleFavorite(link)">
+           <v-icon size="small">
+            mdi-star-outline
+           </v-icon>
+          </v-btn>
+          <v-overlay v-model="link.id === longPressLinkId" class="align-center justify-center" contained scrim="primary" persistent>
+           <v-alert type="success" title="已收藏" text="链接已添加到收藏夹" v-if="isFavorite(link.id)"></v-alert>
+           <v-alert type="info" title="收藏提示" text="长按按钮可收藏此链接" v-else></v-alert>
+          </v-overlay>
+         </v-card>
+        </div>
+        <div v-else-if="activeCategory" class="no-data">
+         <v-icon size="x-large" class="mb-3">
+          mdi-filter-off
+         </v-icon>
+         <h3 class="text-h6 mb-2">该分类下暂无链接</h3><v-btn variant="outlined" :color="primaryColor" @click="clearCategoryFilter" class="mb-2">
+          显示所有链接
+         </v-btn> <v-btn variant="text" :color="primaryColor" @click="scrollToTop">
+          <v-icon start>
+           mdi-arrow-up
+          </v-icon> 回到顶部
+         </v-btn>
+        </div>
+       </div>
+      </div><!-- 收藏页 -->
+      <div v-if="activeTab === 'favorites'">
+       <h2 class="mb-3 text-h6 text-md-h5">我的收藏</h2><v-divider></v-divider>
+       <br>
+       <div v-if="favoriteLinks.length > 0">
+        <div class="link-grid" :class="{'single-column': layout === 'single', 'mobile-optimized': isMobile}">
+         <v-card v-for="link in favoriteLinks" :key="link.id" class="link-card" :color="link.color || primaryColor" variant="flat" @click="openLink(link.url)">
+          <v-card-text class="text-center pa-4 pa-md-6">
+           <v-icon size="large" class="mb-2">
+            {{ link.icon }}
+           </v-icon>
+           <div class="text-body-2 text-md-h6">
+            {{ link.name }}
+           </div>
+           <div class="text-caption mt-1">
+            {{ link.desc }}
+           </div>
+          </v-card-text>
+          <v-btn icon variant="plain" size="small" class="favorite-icon" color="yellow-darken-3" @click.stop="toggleFavorite(link)">
+           <v-icon size="small">
+            mdi-star
+           </v-icon>
+          </v-btn>
+         </v-card>
+        </div>
+       </div>
+       <div v-else class="no-data">
+        <v-icon size="x-large" class="mb-3">
+         mdi-star-off
+        </v-icon>
+        <h3 class="text-h6 mb-2">暂无收藏</h3>
+        <p class="text-caption text-md-body-2">在首页长按链接按钮可添加到收藏</p>
+       </div>
+      </div><!-- 消息页 -->
+      <div v-if="activeTab === 'messages'">
+       <v-row class="mb-4 align-center">
+        <v-col cols="12" sm="6">
+         <h2 class="mb-0 text-h6 text-md-h5">消息中心</h2>
+         <p class="text-grey mb-0 text-caption text-md-body-2">您有 {{ unreadCount }} 条未读消息</p>
+        </v-col>
+        <v-col cols="12" sm="6" class="text-right">
+         <v-btn variant="outlined" :color="primaryColor" size="small" class="mr-2" @click="markAllAsRead">
+          <v-icon start>
+           mdi-check-all
+          </v-icon> 全部已读
+         </v-btn>
+         <v-btn variant="outlined" :color="primaryColor" size="small" @click="loadDefaultMessages">
+          <v-icon start>
+           mdi-refresh
+          </v-icon> 刷新消息
+         </v-btn>
+        </v-col>
+       </v-row> <v-divider></v-divider>
+       <br>
+       <div v-if="messages.length > 0">
+        <v-card v-for="message in messages" :key="message.id" class="message-card mb-3" :class="{ 'unread': !message.read }" @click="openMessage(message)">
+         <v-card-text class="pa-4">
+          <div class="d-flex align-start">
+           <v-avatar :color="message.senderColor || primaryColor" size="40" class="mr-3">
+            <v-icon :icon="message.senderIcon || 'mdi-account'" color="white"></v-icon>
+           </v-avatar>
+           <div style="flex: 1; min-width: 0;">
+            <div class="d-flex justify-space-between align-start mb-1">
+             <div>
+              <h3 class="text-body-1 text-md-h6 mb-1">{{ message.title }}</h3>
+              <div class="message-sender text-caption text-md-body-2">
+               <v-icon size="small" class="mr-1">
+                {{ message.senderIcon || 'mdi-account' }}
+               </v-icon> {{ message.sender }}
               </div>
-              <v-icon class="category-toggle" :class="{ expanded: categoriesExpanded }">mdi-chevron-down</v-icon>
+             </div>
+             <div class="message-time text-caption">
+              {{ formatTime(message.time) }}
+             </div>
             </div>
-            <div class="category-grid" :class="{ collapsed: !categoriesExpanded }">
-              <v-card v-for="category in categories" :key="category.id" class="category-card" :color="category.color" variant="flat" @click="selectCategory(category)">
-                <v-card-text class="text-center pa-3 pa-md-4">
-                  <v-icon size="large" class="category-icon">{{ category.icon }}</v-icon>
-                  <div class="text-caption text-md-body-2">{{ category.name }}</div>
-                </v-card-text>
-              </v-card>
+            <div class="message-content-preview text-caption text-md-body-2 text-grey-darken-1">
+             {{ message.content }}
             </div>
+           </div>
           </div>
-          <div class="quick-nav-anchor" id="quick-nav">
-            <h2 class="mb-3 text-h6 text-md-h5">快速导航</h2>
-            <p class="text-grey mb-4 text-caption text-md-body-2">点击按钮跳转，长按按钮收藏</p>
-            <div v-if="activeCategory" class="mb-4 d-flex align-center">
-              <v-chip :color="activeCategory.color" variant="outlined" @click="clearCategoryFilter" closable @click:close="clearCategoryFilter" class="mr-2">
-                <v-icon start>{{ activeCategory.icon }}</v-icon> {{ activeCategory.name }}
-              </v-chip>
-              <v-btn variant="text" size="small" @click="scrollToTop"><v-icon start>mdi-arrow-up</v-icon> 回到顶部</v-btn>
-            </div>
-            <div v-if="filteredLinks.length > 0" class="link-grid" :class="{'single-column': layout === 'single', 'mobile-optimized': isMobile}">
-              <v-card v-for="link in filteredLinks" :key="link.id" class="link-card" :color="link.color || primaryColor" variant="flat" @click="openLink(link.url)"
-                @touchstart="startLongPress(link)" @touchend="endLongPress" @mousedown="startLongPress(link)" @mouseup="endLongPress" @mouseleave="endLongPress">
-                <v-card-text class="text-center pa-4 pa-md-6">
-                  <v-icon size="large" class="mb-2">{{ link.icon }}</v-icon>
-                  <div class="text-body-2 text-md-h6">{{ link.name }}</div>
-                  <div class="text-caption mt-1">{{ link.desc }}</div>
-                </v-card-text>
-                <v-btn v-if="isFavorite(link.id)" icon variant="plain" size="small" class="favorite-icon" color="yellow-darken-3" @click.stop="toggleFavorite(link)">
-                  <v-icon size="small">mdi-star</v-icon>
-                </v-btn>
-                <v-btn v-else icon variant="plain" size="small" class="favorite-icon" @click.stop="toggleFavorite(link)">
-                  <v-icon size="small">mdi-star-outline</v-icon>
-                </v-btn>
-                <v-overlay v-model="link.id === longPressLinkId" class="align-center justify-center" contained scrim="primary" persistent>
-                  <v-alert type="success" title="已收藏" text="链接已添加到收藏夹" v-if="isFavorite(link.id)"></v-alert>
-                  <v-alert type="info" title="收藏提示" text="长按按钮可收藏此链接" v-else></v-alert>
-                </v-overlay>
-              </v-card>
-            </div>
-            <div v-else-if="activeCategory" class="no-data">
-              <v-icon size="x-large" class="mb-3">mdi-filter-off</v-icon>
-              <h3 class="text-h6 mb-2">该分类下暂无链接</h3>
-              <v-btn variant="outlined" :color="primaryColor" @click="clearCategoryFilter" class="mb-2">显示所有链接</v-btn>
-              <v-btn variant="text" :color="primaryColor" @click="scrollToTop"><v-icon start>mdi-arrow-up</v-icon> 回到顶部</v-btn>
-            </div>
-          </div>
-        </div>
-
-        <!-- 收藏页 -->
-        <div v-if="activeTab === 'favorites'">
-          <h2 class="mb-3 text-h6 text-md-h5">我的收藏</h2><v-divider></v-divider><br>
-          <div v-if="favoriteLinks.length > 0">
-            <div class="link-grid" :class="{'single-column': layout === 'single', 'mobile-optimized': isMobile}">
-              <v-card v-for="link in favoriteLinks" :key="link.id" class="link-card" :color="link.color || primaryColor" variant="flat" @click="openLink(link.url)">
-                <v-card-text class="text-center pa-4 pa-md-6">
-                  <v-icon size="large" class="mb-2">{{ link.icon }}</v-icon>
-                  <div class="text-body-2 text-md-h6">{{ link.name }}</div>
-                  <div class="text-caption mt-1">{{ link.desc }}</div>
-                </v-card-text>
-                <v-btn icon variant="plain" size="small" class="favorite-icon" color="yellow-darken-3" @click.stop="toggleFavorite(link)">
-                  <v-icon size="small">mdi-star</v-icon>
-                </v-btn>
-              </v-card>
-            </div>
-          </div>
-          <div v-else class="no-data">
-            <v-icon size="x-large" class="mb-3">mdi-star-off</v-icon>
-            <h3 class="text-h6 mb-2">暂无收藏</h3>
-            <p class="text-caption text-md-body-2">在首页长按链接按钮可添加到收藏</p>
-          </div>
-        </div>
-
-        <!-- 消息页 -->
-        <div v-if="activeTab === 'messages'">
-          <v-row class="mb-4 align-center">
-            <v-col cols="12" sm="6">
-              <h2 class="mb-0 text-h6 text-md-h5">消息中心</h2>
-              <p class="text-grey mb-0 text-caption text-md-body-2">您有 {{ unreadCount }} 条未读消息</p>
-            </v-col>
-            <v-col cols="12" sm="6" class="text-right">
-              <v-btn variant="outlined" :color="primaryColor" size="small" class="mr-2" @click="markAllAsRead">
-                <v-icon start>mdi-check-all</v-icon> 全部已读
-              </v-btn>
-              <v-btn variant="outlined" :color="primaryColor" size="small" @click="loadDefaultMessages">
-                <v-icon start>mdi-refresh</v-icon> 刷新消息
-              </v-btn>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider><br>
-          
-          <div v-if="messages.length > 0">
-            <v-card v-for="message in messages" :key="message.id" class="message-card mb-3" :class="{ 'unread': !message.read }" @click="openMessage(message)">
-              <v-card-text class="pa-4">
-                <div class="d-flex align-start">
-                  <v-avatar :color="message.senderColor || primaryColor" size="40" class="mr-3">
-                    <v-icon :icon="message.senderIcon || 'mdi-account'" color="white"></v-icon>
-                  </v-avatar>
-                  <div style="flex: 1; min-width: 0;">
-                    <div class="d-flex justify-space-between align-start mb-1">
-                      <div>
-                        <h3 class="text-body-1 text-md-h6 mb-1">{{ message.title }}</h3>
-                        <div class="message-sender text-caption text-md-body-2">
-                          <v-icon size="small" class="mr-1">{{ message.senderIcon || 'mdi-account' }}</v-icon>
-                          {{ message.sender }}
-                        </div>
-                      </div>
-                      <div class="message-time text-caption">{{ formatTime(message.time) }}</div>
-                    </div>
-                    <div class="message-content-preview text-caption text-md-body-2 text-grey-darken-1">
-                      {{ message.content }}
-                    </div>
-                  </div>
-                </div>
-                <div v-if="!message.read" class="message-unread-dot"></div>
-              </v-card-text>
-            </v-card>
-          </div>
-          <div v-else class="no-data">
-            <v-icon size="x-large" class="mb-3">mdi-email-outline</v-icon>
-            <h3 class="text-h6 mb-2">暂无消息</h3>
-            <p class="text-caption text-md-body-2">点击"刷新消息"按钮加载默认消息</p>
-            <v-btn variant="outlined" :color="primaryColor" @click="loadDefaultMessages" class="mt-2">
-              <v-icon start>mdi-refresh</v-icon> 加载默认消息
-            </v-btn>
-          </div>
-        </div>
-
-        <!-- 其他页 -->
-        <div v-if="activeTab === 'other'">
-          <h2 class="mb-3 text-h6 text-md-h5">其他</h2><v-divider></v-divider><br>
-          <v-list lines="two" class="mb-4">
-            <v-list-item prepend-icon="mdi-email" title="联系我们" subtitle="发送反馈或联系我们" @click="showContactDialog = true"></v-list-item>
-            <v-list-item prepend-icon="mdi-information" title="关于" subtitle="关于小站的信息" @click="showAboutDialog = true"></v-list-item>
-            <v-list-item prepend-icon="mdi-cog" title="设置" subtitle="主题、布局和数据管理" @click="showSettingsDialog = true"></v-list-item>
-            <v-list-item prepend-icon="mdi-currency-usd" title="打赏" subtitle="支持开发者" @click="showRewardDialog = true"></v-list-item>
-            <v-list-item prepend-icon="mdi-account" title="开发者" subtitle="查看开发者信息" @click="showDeveloperDialog = true"></v-list-item>
-            <v-list-item prepend-icon="mdi-bullhorn" title="公告" subtitle="查看最新公告" @click="showAnnouncementDialog = true"></v-list-item>
-          </v-list>
-          <v-divider></v-divider><br>
-          <span id="runtime_span"></span>
-          <script type="text/javascript">
+          <div v-if="!message.read" class="message-unread-dot"></div>
+         </v-card-text>
+        </v-card>
+       </div>
+       <div v-else class="no-data">
+        <v-icon size="x-large" class="mb-3">
+         mdi-email-outline
+        </v-icon>
+        <h3 class="text-h6 mb-2">暂无消息</h3>
+        <p class="text-caption text-md-body-2">点击"刷新消息"按钮加载默认消息</p><v-btn variant="outlined" :color="primaryColor" @click="loadDefaultMessages" class="mt-2">
+         <v-icon start>
+          mdi-refresh
+         </v-icon> 加载默认消息
+        </v-btn>
+       </div>
+      </div><!-- 其他页 -->
+      <div v-if="activeTab === 'other'">
+       <h2 class="mb-3 text-h6 text-md-h5">其他</h2><v-divider></v-divider>
+       <br><v-list lines="two" class="mb-4">
+        <v-list-item prepend-icon="mdi-email" title="联系我们" subtitle="发送反馈或联系我们" @click="showContactDialog = true"></v-list-item>
+        <v-list-item prepend-icon="mdi-information" title="关于" subtitle="关于小站的信息" @click="showAboutDialog = true"></v-list-item>
+        <v-list-item prepend-icon="mdi-cog" title="设置" subtitle="主题、布局和数据管理" @click="showSettingsDialog = true"></v-list-item>
+        <v-list-item prepend-icon="mdi-currency-usd" title="打赏" subtitle="支持开发者" @click="showRewardDialog = true"></v-list-item>
+        <v-list-item prepend-icon="mdi-account" title="开发者" subtitle="查看开发者信息" @click="showDeveloperDialog = true"></v-list-item>
+        <v-list-item prepend-icon="mdi-bullhorn" title="公告" subtitle="查看最新公告" @click="showAnnouncementDialog = true"></v-list-item>
+       </v-list> <v-divider></v-divider>
+       <br><span id="runtime_span"></span>
+       <script type="text/javascript">
             function show_runtime(){
               window.setTimeout("show_runtime()",1000);
               X=new Date("3/14/2026 00:00:00");
@@ -362,7 +407,7 @@
             }
             show_runtime();
           </script>
-          <script>
+       <script>
             Date.prototype.format = function (fmt) {
               var o = { "y+": this.getFullYear(), "M+": this.getMonth()+1, "d+": this.getDate(), "h+": this.getHours(), "m+": this.getMinutes(), "s+": this.getSeconds() };
               if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4-RegExp.$1.length));
@@ -371,127 +416,166 @@
             }
             setInterval(function() { document.getElementById('dateTime').innerHTML = (new Date()).format('yyyy-MM-dd hh:mm:ss'); }, 1000);
           </script>
-          <br><span>当前时间：</span><span id="dateTime"></span>
-          <p>有null人来过</p>
-          <p>累计盈利：-14</p>
-          <br><v-divider></v-divider><br>
-        </div>
+       <br><span>当前时间：</span><span id="dateTime"></span>
+       <p>有null人来过</p>
+       <p>累计盈利：-14</p>
+       <br><v-divider></v-divider>
+       <br>
       </div>
+     </div>
     </v-main>
-
     <v-bottom-navigation v-model="activeTab" grow :color="primaryColor" elevation="2">
-      <v-btn value="home" class="position-relative">
-        <v-icon>mdi-home</v-icon> 首页
-      </v-btn>
-      <v-btn value="favorites" class="position-relative">
-        <v-icon>mdi-star</v-icon> 收藏
-        <v-badge v-if="favoriteLinks.length > 0" :content="favoriteLinks.length" color="blue" class="favorite-badge" inline></v-badge>
-      </v-btn>
-      <v-btn value="messages" class="position-relative">
-        <v-icon>mdi-email</v-icon> 消息
-        <v-badge v-if="unreadCount > 0" :content="unreadCount" color="red" class="favorite-badge" inline></v-badge>
-      </v-btn>
-      <v-btn value="other">
-        <v-icon>mdi-minecraft</v-icon> 更多
-      </v-btn>
-    </v-bottom-navigation>
-
-    <!-- 消息详情对话框 -->
+     <v-btn value="home" class="position-relative">
+      <v-icon>
+       mdi-home
+      </v-icon> 首页
+     </v-btn>
+     <v-btn value="favorites" class="position-relative">
+      <v-icon>
+       mdi-star
+      </v-icon> 收藏 
+      <v-badge v-if="favoriteLinks.length > 0" :content="favoriteLinks.length" color="blue" class="favorite-badge" inline></v-badge>
+     </v-btn>
+     <v-btn value="messages" class="position-relative">
+      <v-icon>
+       mdi-email
+      </v-icon> 消息 
+      <v-badge v-if="unreadCount > 0" :content="unreadCount" color="red" class="favorite-badge" inline></v-badge>
+     </v-btn>
+     <v-btn value="other">
+      <v-icon>
+       mdi-minecraft
+      </v-icon> 更多
+     </v-btn>
+    </v-bottom-navigation> <!-- 消息详情对话框 -->
     <v-dialog v-model="showMessageDialog" fullscreen scrollable hide-overlay transition="dialog-bottom-transition">
-      <v-card>
-        <v-toolbar dark :color="primaryColor">
-          <v-btn icon dark @click="showMessageDialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>消息详情</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn v-if="selectedMessage && !selectedMessage.read" @click="markMessageAsRead(selectedMessage)" variant="text">
-            <v-icon start>mdi-check</v-icon> 标记为已读
-          </v-btn>
-        </v-toolbar>
-        <v-card-text style="overflow-y: auto; max-height: calc(100vh - 64px); padding: 24px;">
-          <div v-if="selectedMessage">
-            <h1 class="text-h4 text-md-h3 mb-4">{{ selectedMessage.title }}</h1>
-            <div class="d-flex align-center mb-6">
-              <v-avatar :color="selectedMessage.senderColor || primaryColor" size="48" class="mr-3">
-                <v-icon :icon="selectedMessage.senderIcon || 'mdi-account'" color="white"></v-icon>
-              </v-avatar>
-              <div>
-                <div class="text-h6">{{ selectedMessage.sender }}</div>
-                <div class="text-grey">{{ formatTime(selectedMessage.time) }}</div>
-              </div>
-              <v-chip v-if="!selectedMessage.read" color="red" class="ml-3" size="small">未读</v-chip>
-              <v-chip v-else color="green" class="ml-3" size="small">已读</v-chip>
-            </div>
-            <v-divider class="mb-6"></v-divider>
-            <div class="message-content text-body-1 text-md-h6" style="white-space: pre-wrap; line-height: 1.6;">
-              {{ selectedMessage.content }}
-            </div>
-            <v-divider class="my-6"></v-divider>
-            <div v-if="selectedMessage.actions && selectedMessage.actions.length > 0" class="mt-6">
-              <h3 class="text-h6 mb-3">相关操作</h3>
-              <div class="d-flex flex-wrap gap-3">
-                <v-btn v-for="(action, index) in selectedMessage.actions" :key="index" :color="action.color || primaryColor" :variant="action.variant || 'outlined'" @click="handleMessageAction(action)">
-                  <v-icon v-if="action.icon" start>{{ action.icon }}</v-icon>
-                  {{ action.text }}
-                </v-btn>
-              </div>
-            </div>
+     <v-card>
+      <v-toolbar dark :color="primaryColor">
+       <v-btn icon dark @click="showMessageDialog = false">
+        <v-icon>
+         mdi-close
+        </v-icon>
+       </v-btn>
+       <v-toolbar-title>
+        消息详情
+       </v-toolbar-title>
+       <v-spacer></v-spacer>
+       <v-btn v-if="selectedMessage &amp;&amp; !selectedMessage.read" @click="markMessageAsRead(selectedMessage)" variant="text">
+        <v-icon start>
+         mdi-check
+        </v-icon> 标记为已读
+       </v-btn>
+      </v-toolbar>
+      <v-card-text style="overflow-y: auto; max-height: calc(100vh - 64px); padding: 24px;">
+       <div v-if="selectedMessage">
+        <h1 class="text-h4 text-md-h3 mb-4">{{ selectedMessage.title }}</h1>
+        <div class="d-flex align-center mb-6">
+         <v-avatar :color="selectedMessage.senderColor || primaryColor" size="48" class="mr-3">
+          <v-icon :icon="selectedMessage.senderIcon || 'mdi-account'" color="white"></v-icon>
+         </v-avatar>
+         <div>
+          <div class="text-h6">
+           {{ selectedMessage.sender }}
           </div>
-          <div v-else class="text-center py-12">
-            <v-icon size="x-large" class="mb-3">mdi-alert-circle</v-icon>
-            <h3 class="text-h6">消息加载失败</h3>
-            <p>无法加载消息内容，请稍后重试。</p>
+          <div class="text-grey">
+           {{ formatTime(selectedMessage.time) }}
           </div>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
-    <!-- 打赏对话框 -->
+         </div><v-chip v-if="!selectedMessage.read" color="red" class="ml-3" size="small">
+          未读
+         </v-chip> <v-chip v-else color="green" class="ml-3" size="small">
+          已读
+         </v-chip>
+        </div><v-divider class="mb-6"></v-divider>
+        <div class="message-content text-body-1 text-md-h6" style="white-space: pre-wrap; line-height: 1.6;">
+         {{ selectedMessage.content }}
+        </div><v-divider class="my-6"></v-divider>
+        <div v-if="selectedMessage.actions &amp;&amp; selectedMessage.actions.length > 0" class="mt-6">
+         <h3 class="text-h6 mb-3">相关操作</h3>
+         <div class="d-flex flex-wrap gap-3">
+          <v-btn v-for="(action, index) in selectedMessage.actions" :key="index" :color="action.color || primaryColor" :variant="action.variant || 'outlined'" @click="handleMessageAction(action)">
+           <v-icon v-if="action.icon" start>
+            {{ action.icon }}
+           </v-icon> {{ action.text }}
+          </v-btn>
+         </div>
+        </div>
+       </div>
+       <div v-else class="text-center py-12">
+        <v-icon size="x-large" class="mb-3">
+         mdi-alert-circle
+        </v-icon>
+        <h3 class="text-h6">消息加载失败</h3>
+        <p>无法加载消息内容，请稍后重试。</p>
+       </div>
+      </v-card-text>
+     </v-card>
+    </v-dialog> <!-- 打赏对话框 -->
     <v-dialog v-model="showRewardDialog" width="90%" max-width="500">
-      <v-card>
-        <v-card-title class="headline">打赏支持</v-card-title>
-        <v-card-text>
-          <p>如果您觉得这个小站对您有帮助，欢迎通过以下方式支持开发者：</p>
-          <div class="text-center">
-            <img src="ewm.png" style="width:100%; height:auto; max-width:100%; display:block; margin:0 auto;">
-            <v-btn :color="primaryColor" variant="outlined" block class="mb-2" @click="openRewardLink">
-              <v-icon start>mdi-currency-usd</v-icon> 前往打赏页面
-            </v-btn>
-          </div>
-        </v-card-text>
-        <v-card-actions><v-spacer></v-spacer><v-btn :color="primaryColor" @click="showRewardDialog = false">关闭</v-btn></v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- 联系我们对话框 -->
+     <v-card>
+      <v-card-title class="headline">
+       打赏支持
+      </v-card-title>
+      <v-card-text>
+       <p>如果您觉得这个小站对您有帮助，欢迎通过以下方式支持开发者：</p>
+       <div class="text-center">
+        <img src="ewm.png" style="width:100%; height:auto; max-width:100%; display:block; margin:0 auto;"> <v-btn :color="primaryColor" variant="outlined" block class="mb-2" @click="openRewardLink">
+         <v-icon start>
+          mdi-currency-usd
+         </v-icon> 前往打赏页面
+        </v-btn>
+       </div>
+      </v-card-text>
+      <v-card-actions>
+       <v-spacer></v-spacer>
+       <v-btn :color="primaryColor" @click="showRewardDialog = false">
+        关闭
+       </v-btn>
+      </v-card-actions>
+     </v-card>
+    </v-dialog> <!-- 联系我们对话框 -->
     <v-dialog v-model="showContactDialog" width="90%" max-width="500">
-      <v-card>
-        <v-card-title class="headline">联系我们</v-card-title>
-        <v-card-text>
-          <p>如果您有任何问题或反馈，请通过以下方式联系我们：</p>
-          <v-list>
-            <v-list-item prepend-icon="mdi-email"><v-list-item-title>邮箱</v-list-item-title><v-list-item-subtitle>MC_EC_0987@outlook.com</v-list-item-subtitle></v-list-item>
-          </v-list>
-        </v-card-text>
-        <v-card-actions><v-spacer></v-spacer><v-btn :color="primaryColor" @click="showContactDialog = false">关闭</v-btn></v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- 关于对话框 -->
+     <v-card>
+      <v-card-title class="headline">
+       联系我们
+      </v-card-title>
+      <v-card-text>
+       <p>如果您有任何问题或反馈，请通过以下方式联系我们：</p>
+       <v-list>
+        <v-list-item prepend-icon="mdi-email">
+         <v-list-item-title>
+          邮箱
+         </v-list-item-title>
+         <v-list-item-subtitle>
+          MC_EC_0987@outlook.com
+         </v-list-item-subtitle>
+        </v-list-item>
+       </v-list>
+      </v-card-text>
+      <v-card-actions>
+       <v-spacer></v-spacer>
+       <v-btn :color="primaryColor" @click="showContactDialog = false">
+        关闭
+       </v-btn>
+      </v-card-actions>
+     </v-card>
+    </v-dialog> <!-- 关于对话框 -->
     <v-dialog v-model="showAboutDialog" width="90%" max-width="500">
-      <v-card>
-        <v-card-title class="headline">关于</v-card-title>
-        <v-card-text>
-          <div class="text-center mb-4">
-            <v-icon size="x-large" :color="primaryColor" class="mb-2">mdi-compass</v-icon>
-            <h3 class="text-h5">Aaa导航助手 - 增强版</h3>
-            <p>版本 2.2.0</p>
-          </div>
-          <h3>用于导航Aaa开发的工具</h3>
-          <p class="mt-2"></p><br>
-          <p>这是一个基于Vuetify开发的导航页，提供快速访问常用网站、收藏管理、分类筛选、轮播图和搜索等功能。</p>
-      <!--    <p class="mt-2">新增功能：</p>
+     <v-card>
+      <v-card-title class="headline">
+       关于
+      </v-card-title>
+      <v-card-text>
+       <div class="text-center mb-4">
+        <v-icon size="x-large" :color="primaryColor" class="mb-2">
+         mdi-compass
+        </v-icon>
+        <h3 class="text-h5">Aaa导航助手 - 增强版</h3>
+        <p>版本 2.2.0</p>
+       </div>
+       <h3>用于导航Aaa开发的工具</h3>
+       <p class="mt-2"></p>
+       <br>
+       <p>这是一个基于Vuetify开发的导航页，提供快速访问常用网站、收藏管理、分类筛选、轮播图和搜索等功能。</p><!--    <p class="mt-2">新增功能：</p>
           <ul>
             <li>顶部轮播图，支持点击跳转</li>
             <li>分类折叠功能，默认折叠节省空间</li>
@@ -502,219 +586,265 @@
           </ul>
           <p class="mt-2">修复问题：</p>
           <ul><li>修复了"启用轮播图"开关无效的bug</li></ul> -->
-          <p class="mt-2">开发时间：2026年</p>
-          <p>当前是丙午马年，祝您新春快乐！</p>
-        </v-card-text>
-        <v-card-actions><v-spacer></v-spacer><v-btn :color="primaryColor" @click="showAboutDialog = false">关闭</v-btn></v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- 设置对话框 -->
+       <p class="mt-2">开发时间：2026年</p>
+       <p>当前是丙午马年，祝您新春快乐！</p>
+      </v-card-text>
+      <v-card-actions>
+       <v-spacer></v-spacer>
+       <v-btn :color="primaryColor" @click="showAboutDialog = false">
+        关闭
+       </v-btn>
+      </v-card-actions>
+     </v-card>
+    </v-dialog> <!-- 设置对话框 -->
     <v-dialog v-model="showSettingsDialog" width="90%" max-width="600" scrollable>
-      <v-card>
-        <v-card-title class="headline">设置</v-card-title> <h6>设置选项可左右滑动查看更多</h6>
-        <v-card-text>
-          <v-tabs v-model="settingsTab" class="mb-4" :color="primaryColor">
-            <v-tab value="theme">主题</v-tab>
-            <v-tab value="search">搜索/显示</v-tab>
-            <v-tab value="layout">布局</v-tab>
-            <v-tab value="data">数据管理</v-tab>
-            <v-tab value="messages">消息设置</v-tab>
-          </v-tabs>
-          <v-window v-model="settingsTab">
-            <v-window-item value="theme">
-              <h3 class="text-h6 mb-4">主题设置</h3>
-              <v-switch v-model="darkMode" label="深色模式" :color="primaryColor" hide-details class="mb-4" @change="toggleDarkMode"></v-switch>
-              <div class="mb-6">
-                <p class="mb-2">主题颜色</p>
-                <div class="d-flex flex-wrap gap-2">
-                  <v-btn v-for="color in themeColors" :key="color.name" :color="color.value" icon size="large" @click="primaryColor = color.value" :variant="primaryColor === color.value ? 'flat' : 'outlined'">
-                    <v-icon v-if="primaryColor === color.value">mdi-check</v-icon>
-                  </v-btn>
-                </div>
-                <p class="text-caption mt-2 text-grey">当前主题颜色：{{ getColorName(primaryColor) }}</p>
-              </div>
-            </v-window-item>
-            <v-window-item value="search">
-              <h3 class="text-h6 mb-4">搜索/显示设置</h3>
-              <div class="mb-6">
-                <v-switch v-model="showSearch" label="显示搜索框" :color="primaryColor" hide-details class="mb-4"></v-switch>
-                <p class="text-caption text-grey">控制首页搜索框的显示与隐藏</p>
-              </div>
-              <div class="mb-6">
-                <p class="mb-2">默认搜索引擎</p>
-                <v-select v-model="searchEngine" :items="searchEngineOptions" item-title="name" item-value="value" variant="outlined" :color="primaryColor" hide-details></v-select>
-                <p class="text-caption mt-2 text-grey">当前搜索引擎：{{ getSearchEngineName() }}</p>
-              </div>
-              <div class="mb-6">
-                <v-switch v-model="showCategories" label="显示分类" :color="primaryColor" hide-details class="mb-4"></v-switch>
-                <p class="text-caption text-grey">控制是否在首页显示分类区域</p>
-              </div>
-              <div class="mb-6">
-                <v-switch v-model="categoriesExpanded" label="默认展开分类" :color="primaryColor" hide-details class="mb-4"></v-switch>
-                <p class="text-caption text-grey">控制分类区域是否默认展开</p>
-              </div>
-              <div class="mb-4">
-                <p class="mb-2">轮播图设置</p>
-                <v-switch v-model="carouselEnabled" label="启用轮播图" :color="primaryColor" hide-details class="mb-4" @change="onCarouselEnabledChange"></v-switch>
-                <v-text-field v-model="carouselInterval" label="轮播间隔（毫秒）" type="number" variant="outlined" :color="primaryColor" hide-details class="mb-2" :disabled="!carouselEnabled"></v-text-field>
-                <p class="text-caption text-grey">当前间隔：{{ carouselInterval }} 毫秒</p>
-                <p class="text-caption text-grey mt-1" v-if="!carouselEnabled">轮播图当前已禁用</p>
-              </div>
-            </v-window-item>
-            <v-window-item value="layout">
-              <h3 class="text-h6 mb-4">布局设置</h3>
-              <v-radio-group v-model="layout" class="mb-6" :color="primaryColor">
-                <v-radio label="单列布局" value="single" :color="primaryColor"></v-radio>
-                <v-radio label="双列布局" value="double" :color="primaryColor"></v-radio>
-              </v-radio-group>
-              <div class="layout-preview">
-                <div v-if="layout === 'single'" class="single-layout-preview">
-                  <div class="preview-item" style="height: 40px; margin-bottom: 8px; background-color: #e0e0e0;"></div>
-                  <div class="preview-item" style="height: 80px; margin-bottom: 8px; background-color: #bdbdbd;"></div>
-                  <div class="preview-item" style="height: 80px; margin-bottom: 8px; background-color: #bdbdbd;"></div>
-                  <div class="preview-item" style="height: 80px; background-color: #bdbdbd;"></div>
-                </div>
-                <div v-else class="double-layout-preview">
-                  <div class="d-flex gap-2 mb-2">
-                    <div class="preview-item flex-grow-1" style="height: 80px; background-color: #bdbdbd;"></div>
-                    <div class="preview-item flex-grow-1" style="height: 80px; background-color: #bdbdbd;"></div>
-                  </div>
-                  <div class="d-flex gap-2">
-                    <div class="preview-item flex-grow-1" style="height: 80px; background-color: #bdbdbd;"></div>
-                    <div class="preview-item flex-grow-1" style="height: 80px; background-color: #bdbdbd;"></div>
-                  </div>
-                </div>
-              </div>
-            </v-window-item>
-            <v-window-item value="data">
-              <h3 class="text-h6 mb-4">数据管理</h3>
-              <div class="storage-info">
-                <p class="mb-2">数据占用</p>
-                <v-progress-linear v-model="storageUsage" :color="primaryColor" height="20" class="mb-2">
-                  <template v-slot:default="{ value }"><strong>{{ Math.ceil(value) }}%</strong></template>
-                </v-progress-linear>
-                <p class="text-caption">已使用 {{ Math.ceil(storageSize / 1024) }} KB / 5 MB</p>
-              </div>
-              <div class="mt-6">
-                <v-btn :color="primaryColor" variant="outlined" block class="mb-3" @click="exportData">
-                  <v-icon start>mdi-export</v-icon> 导出数据
-                </v-btn>
-                <v-btn :color="primaryColor" variant="outlined" block class="mb-3" @click="importData">
-                  <v-icon start>mdi-import</v-icon> 导入数据
-                </v-btn>
-                <v-btn color="error" variant="outlined" block @click="showClearDialog = true">
-                  <v-icon start>mdi-delete</v-icon> 清除所有数据
-                </v-btn>
-              </div>
-            </v-window-item>
-            <v-window-item value="messages">
-              <h3 class="text-h6 mb-4">消息设置</h3>
-              <div class="mb-6">
-                <p class="mb-2">消息通知</p>
-                <v-switch v-model="messageSettings.enableNotifications" label="启用消息通知" :color="primaryColor" hide-details class="mb-4"></v-switch>
-                <v-switch v-model="messageSettings.autoCheckTime" label="根据时间自动推送消息" :color="primaryColor" hide-details class="mb-4"></v-switch>
-                <p class="text-caption text-grey">根据当前时间自动推送相关提醒消息</p>
-              </div>
-              <div class="mb-4">
-                <p class="mb-2">消息管理</p>
-                <v-btn :color="primaryColor" variant="outlined" block class="mb-2" @click="loadDefaultMessages">
-                  <v-icon start>mdi-refresh</v-icon> 重新加载默认消息
-                </v-btn>
-                <v-btn :color="primaryColor" variant="outlined" block class="mb-2" @click="markAllAsRead">
-                  <v-icon start>mdi-check-all</v-icon> 标记所有消息为已读
-                </v-btn>
-                <v-btn color="error" variant="outlined" block @click="clearAllMessages">
-                  <v-icon start>mdi-delete</v-icon> 清除所有消息
-                </v-btn>
-              </div>
-              <div class="mt-4">
-                <p class="mb-2 text-grey">当前消息统计</p>
-                <v-list>
-                  <v-list-item>
-                    <v-list-item-title>总消息数</v-list-item-title>
-                    <v-list-item-subtitle>{{ messages.length }}</v-list-item-subtitle>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-title>未读消息数</v-list-item-title>
-                    <v-list-item-subtitle>{{ unreadCount }}</v-list-item-subtitle>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-title>最后更新时间</v-list-item-title>
-                    <v-list-item-subtitle>{{ messageLastUpdate ? formatTime(messageLastUpdate) : '从未更新' }}</v-list-item-subtitle>
-                  </v-list-item>
-                </v-list>
-              </div>
-            </v-window-item>
-          </v-window>
-        </v-card-text>
-        <v-card-actions><v-spacer></v-spacer><v-btn :color="primaryColor" @click="showSettingsDialog = false">关闭</v-btn></v-card-actions>
-      </v-card>
-    </v-dialog>
+     <v-card>
+      <v-card-title class="headline">
+       设置
+      </v-card-title>
+      <h6>设置选项可左右滑动查看更多</h6>
+      <v-card-text>
+       <v-tabs v-model="settingsTab" class="mb-4" :color="primaryColor">
+        <v-tab value="theme">
+         主题
+        </v-tab>
+        <v-tab value="search">
+         搜索/显示
+        </v-tab>
+        <v-tab value="layout">
+         布局
+        </v-tab>
+        <v-tab value="data">
+         数据管理
+        </v-tab>
+        <v-tab value="messages">
+         消息设置
+        </v-tab>
+       </v-tabs>
+       <v-window v-model="settingsTab">
+        <v-window-item value="theme">
+         <h3 class="text-h6 mb-4">主题设置</h3>
+         <v-switch v-model="darkMode" label="深色模式" :color="primaryColor" hide-details class="mb-4" @change="toggleDarkMode"></v-switch>
+         <div class="mb-6">
+          <p class="mb-2">主题颜色</p>
+          <div class="d-flex flex-wrap gap-2">
+           <v-btn v-for="color in themeColors" :key="color.name" :color="color.value" icon size="large" @click="primaryColor = color.value" :variant="primaryColor === color.value ? 'flat' : 'outlined'">
+            <v-icon v-if="primaryColor === color.value">
+             mdi-check
+            </v-icon>
+           </v-btn>
+          </div>
+          <p class="text-caption mt-2 text-grey">当前主题颜色：{{ getColorName(primaryColor) }}</p>
+         </div>
+        </v-window-item>
+        <v-window-item value="search">
+         <h3 class="text-h6 mb-4">搜索/显示设置</h3>
+         <div class="mb-6">
+          <v-switch v-model="showSearch" label="显示搜索框" :color="primaryColor" hide-details class="mb-4"></v-switch>
+          <p class="text-caption text-grey">控制首页搜索框的显示与隐藏</p>
+         </div>
+         <div class="mb-6">
+          <p class="mb-2">默认搜索引擎</p><v-select v-model="searchEngine" :items="searchEngineOptions" item-title="name" item-value="value" variant="outlined" :color="primaryColor" hide-details></v-select>
+          <p class="text-caption mt-2 text-grey">当前搜索引擎：{{ getSearchEngineName() }}</p>
+         </div>
+         <div class="mb-6">
+          <v-switch v-model="showCategories" label="显示分类" :color="primaryColor" hide-details class="mb-4"></v-switch>
+          <p class="text-caption text-grey">控制是否在首页显示分类区域</p>
+         </div>
+         <div class="mb-6">
+          <v-switch v-model="categoriesExpanded" label="默认展开分类" :color="primaryColor" hide-details class="mb-4"></v-switch>
+          <p class="text-caption text-grey">控制分类区域是否默认展开</p>
+         </div>
+         <div class="mb-4">
+          <p class="mb-2">轮播图设置</p><v-switch v-model="carouselEnabled" label="启用轮播图" :color="primaryColor" hide-details class="mb-4" @change="onCarouselEnabledChange"></v-switch> <v-text-field v-model="carouselInterval" label="轮播间隔（毫秒）" type="number" variant="outlined" :color="primaryColor" hide-details class="mb-2" :disabled="!carouselEnabled"></v-text-field>
+          <p class="text-caption text-grey">当前间隔：{{ carouselInterval }} 毫秒</p>
+          <p class="text-caption text-grey mt-1" v-if="!carouselEnabled">轮播图当前已禁用</p>
+         </div>
+        </v-window-item>
+        <v-window-item value="layout">
+         <h3 class="text-h6 mb-4">布局设置</h3>
+         <v-radio-group v-model="layout" class="mb-6" :color="primaryColor">
+          <v-radio label="单列布局" value="single" :color="primaryColor"></v-radio>
+          <v-radio label="双列布局" value="double" :color="primaryColor"></v-radio>
+         </v-radio-group>
+         <div class="layout-preview">
+          <div v-if="layout === 'single'" class="single-layout-preview">
+           <div class="preview-item" style="height: 40px; margin-bottom: 8px; background-color: #e0e0e0;"></div>
+           <div class="preview-item" style="height: 80px; margin-bottom: 8px; background-color: #bdbdbd;"></div>
+           <div class="preview-item" style="height: 80px; margin-bottom: 8px; background-color: #bdbdbd;"></div>
+           <div class="preview-item" style="height: 80px; background-color: #bdbdbd;"></div>
+          </div>
+          <div v-else class="double-layout-preview">
+           <div class="d-flex gap-2 mb-2">
+            <div class="preview-item flex-grow-1" style="height: 80px; background-color: #bdbdbd;"></div>
+            <div class="preview-item flex-grow-1" style="height: 80px; background-color: #bdbdbd;"></div>
+           </div>
+           <div class="d-flex gap-2">
+            <div class="preview-item flex-grow-1" style="height: 80px; background-color: #bdbdbd;"></div>
+            <div class="preview-item flex-grow-1" style="height: 80px; background-color: #bdbdbd;"></div>
+           </div>
+          </div>
+         </div>
+        </v-window-item>
+        <v-window-item value="data">
+         <h3 class="text-h6 mb-4">数据管理</h3>
+         <div class="storage-info">
+          <p class="mb-2">数据占用</p><v-progress-linear v-model="storageUsage" :color="primaryColor" height="20" class="mb-2">
+           <template v-slot:default="{ value }">
+            <strong>{{ Math.ceil(value) }}%</strong>
+           </template>
+          </v-progress-linear>
+          <p class="text-caption">已使用 {{ Math.ceil(storageSize / 1024) }} KB / 5 MB</p>
+         </div>
+         <div class="mt-6">
+          <v-btn :color="primaryColor" variant="outlined" block class="mb-3" @click="exportData">
+           <v-icon start>
+            mdi-export
+           </v-icon> 导出数据
+          </v-btn> <v-btn :color="primaryColor" variant="outlined" block class="mb-3" @click="importData">
+           <v-icon start>
+            mdi-import
+           </v-icon> 导入数据
+          </v-btn> <v-btn color="error" variant="outlined" block @click="showClearDialog = true">
+           <v-icon start>
+            mdi-delete
+           </v-icon> 清除所有数据
+          </v-btn>
+         </div>
+        </v-window-item>
+        <v-window-item value="messages">
+  <h3 class="text-h6 mb-4">消息设置</h3>
+  <div class="mb-6">
+    <p class="mb-2">消息通知</p>
+    <v-switch v-model="messageSettings.enableNotifications" label="启用消息通知" :color="primaryColor" hide-details class="mb-4"></v-switch>
+    <v-switch v-model="messageSettings.autoCheckTime" label="根据时间自动推送消息" :color="primaryColor" hide-details class="mb-4"></v-switch>
+    <!-- 请在此处插入下面这行代码 -->
+    <v-switch v-model="messageSettings.enableAutoRefresh" label="进入页面时自动刷新消息" :color="primaryColor" hide-details class="mb-4"></v-switch>
+    <p class="text-caption text-grey">根据当前时间自动推送相关提醒消息</p>
+  </div>
+  <!-- ... 其余代码保持不变 ... -->
 
-    <!-- 清除数据确认对话框 -->
+         <div class="mb-4">
+          <p class="mb-2">消息管理</p><v-btn :color="primaryColor" variant="outlined" block class="mb-2" @click="loadDefaultMessages">
+           <v-icon start>
+            mdi-refresh
+           </v-icon> 重新加载默认消息
+          </v-btn> <v-btn :color="primaryColor" variant="outlined" block class="mb-2" @click="markAllAsRead">
+           <v-icon start>
+            mdi-check-all
+           </v-icon> 标记所有消息为已读
+          </v-btn> <v-btn color="error" variant="outlined" block @click="clearAllMessages">
+           <v-icon start>
+            mdi-delete
+           </v-icon> 清除所有消息
+          </v-btn>
+         </div>
+         <div class="mt-4">
+          <p class="mb-2 text-grey">当前消息统计</p><v-list>
+           <v-list-item>
+            <v-list-item-title>
+             总消息数
+            </v-list-item-title>
+            <v-list-item-subtitle>
+             {{ messages.length }}
+            </v-list-item-subtitle>
+           </v-list-item>
+           <v-list-item>
+            <v-list-item-title>
+             未读消息数
+            </v-list-item-title>
+            <v-list-item-subtitle>
+             {{ unreadCount }}
+            </v-list-item-subtitle>
+           </v-list-item>
+           <v-list-item>
+            <v-list-item-title>
+             最后更新时间
+            </v-list-item-title>
+            <v-list-item-subtitle>
+             {{ messageLastUpdate ? formatTime(messageLastUpdate) : '从未更新' }}
+            </v-list-item-subtitle>
+           </v-list-item>
+          </v-list>
+         </div>
+        </v-window-item>
+       </v-window>
+      </v-card-text>
+      <v-card-actions>
+       <v-spacer></v-spacer>
+       <v-btn :color="primaryColor" @click="showSettingsDialog = false">
+        关闭
+       </v-btn>
+      </v-card-actions>
+     </v-card>
+    </v-dialog> <!-- 清除数据确认对话框 -->
     <v-dialog v-model="showClearDialog" width="90%" max-width="400">
-      <v-card>
-        <v-card-title class="headline">确认清除</v-card-title>
-        <v-card-text><p>确定要清除所有数据吗？此操作不可撤销。</p></v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="grey" @click="showClearDialog = false">取消</v-btn>
-          <v-btn color="error" @click="clearData">确认清除</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- 开发者全屏对话框（支持滚动） -->
+     <v-card>
+      <v-card-title class="headline">
+       确认清除
+      </v-card-title>
+      <v-card-text>
+       <p>确定要清除所有数据吗？此操作不可撤销。</p>
+      </v-card-text>
+      <v-card-actions>
+       <v-spacer></v-spacer>
+       <v-btn color="grey" @click="showClearDialog = false">
+        取消
+       </v-btn>
+       <v-btn color="error" @click="clearData">
+        确认清除
+       </v-btn>
+      </v-card-actions>
+     </v-card>
+    </v-dialog> <!-- 开发者全屏对话框（支持滚动） -->
     <v-dialog v-model="showDeveloperDialog" fullscreen scrollable hide-overlay transition="dialog-bottom-transition">
-      <v-card>
-        <v-toolbar dark color="primary">
-          <v-btn icon dark @click="showDeveloperDialog = false"><v-icon>mdi-close</v-icon></v-btn>
-          <v-toolbar-title>开发者信息</v-toolbar-title>
-        </v-toolbar>
-        <v-card-text style="overflow-y: auto; max-height: calc(100vh - 64px);">
-          <p>感谢以下人员的贡献
-          <p>开发者邮箱 MC_EC_0987@outlook.com</p>
-                    <v-divider></v-divider>
-          <!-- 示例长内容 -->
-          <p>1.Aaa </p>
-          <p>2. 无 </p>
-        </v-card-text> 
-      </v-card>
-    </v-dialog>
-
-    <!-- 公告全屏对话框（支持滚动） -->
+     <v-card>
+      <v-toolbar dark color="primary">
+       <v-btn icon dark @click="showDeveloperDialog = false">
+        <v-icon>
+         mdi-close
+        </v-icon>
+       </v-btn>
+       <v-toolbar-title>
+        开发者信息
+       </v-toolbar-title>
+      </v-toolbar>
+      <v-card-text style="overflow-y: auto; max-height: calc(100vh - 64px);">
+       <p>感谢以下人员的贡献</p>
+       <p>开发者邮箱 MC_EC_0987@outlook.com</p>
+       <v-divider></v-divider> <!-- 示例长内容 -->
+       <p>1.Aaa</p>
+       <p>2. 无</p>
+      </v-card-text>
+     </v-card>
+    </v-dialog> <!-- 公告全屏对话框（支持滚动） -->
     <v-dialog v-model="showAnnouncementDialog" fullscreen scrollable hide-overlay transition="dialog-bottom-transition">
-      <v-card>
-        <v-toolbar dark color="primary">
-          <v-btn icon dark @click="showAnnouncementDialog = false"><v-icon>mdi-close</v-icon></v-btn>
-          <v-toolbar-title>公告</v-toolbar-title>
-        </v-toolbar>
-        <v-card-text style="overflow-y: auto; max-height: calc(100vh - 64px);">
-          <!-- <p>这里是公告内容，您可以发布最新消息、维护通知等。</p> -->
-          <!-- 滚动文字 -->
-         <marquee 
-  style="background:#1677ff; color:#fff; padding:10px 0; font-size:16px; border-radius:6px; font-weight:bold;"
-  direction="left" 
-  scrollamount="6" 
-  behavior="scroll"
->
-          本站在2026年3月进行了全新升级，新增多项功能。
-</marquee>
-
-          <v-divider></v-divider>
-          <!-- 示例长内容 -->
-          <p>暂无最新公告</p>
-        </v-card-text>
-      </v-card>
+     <v-card>
+      <v-toolbar dark color="primary">
+       <v-btn icon dark @click="showAnnouncementDialog = false">
+        <v-icon>
+         mdi-close
+        </v-icon>
+       </v-btn>
+       <v-toolbar-title>
+        公告
+       </v-toolbar-title>
+      </v-toolbar>
+      <v-card-text style="overflow-y: auto; max-height: calc(100vh - 64px);">
+       <!-- <p>这里是公告内容，您可以发布最新消息、维护通知等。</p> --> <!-- 滚动文字 -->
+       <marquee style="background:#1677ff; color:#fff; padding:10px 0; font-size:16px; border-radius:6px; font-weight:bold;" direction="left" scrollamount="6" behavior="scroll">
+        本站在2026年3月进行了全新升级，新增多项功能。
+       </marquee>
+       <v-divider></v-divider> <!-- 示例长内容 -->
+       <p>暂无最新公告</p>
+      </v-card-text>
+     </v-card>
     </v-dialog>
-
-  </v-app>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vuetify@3.x/dist/vuetify.js"></script>
-<script>
+   </v-app>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@3.x/dist/vuetify.js"></script>
+  <script>
 const { createApp, ref, computed, onMounted, watch, onUnmounted, nextTick } = Vue;
 const { VApp, VMain, VAppBar, VAppBarTitle, VSpacer, VBtn, VIcon, VBottomNavigation, VBadge, VCard, VCardText, VCardTitle, VCardActions, VDialog, VList, VListItem, VListItemTitle, VListItemSubtitle, VAlert, VOverlay, VProgressLinear, VSwitch, VRadioGroup, VRadio, VTabs, VTab, VWindow, VWindowItem, VCarousel, VCarouselItem, VTextField, VSelect, VChip, VToolbar, VAvatar, VRow, VCol } = Vuetify.components;
 
@@ -753,7 +883,8 @@ createApp({
     const messageLastUpdate = ref(null);
     const messageSettings = ref({
       enableNotifications: true,
-      autoCheckTime: true
+      autoCheckTime: true,
+      enableAutoRefresh: true // 新增：启用自动刷新
     });
 
     const theme = computed(() => darkMode.value ? 'dark' : 'light');
@@ -769,34 +900,9 @@ createApp({
       { id: 'all', name: '全部', icon: 'mdi-apps', color: 'primary' },
       { id: 'aaa', name: 'Aaa的工具', icon: 'mdi-flask', color: 'pink' },
       { id: 'null', name: '无', icon: 'mdi-select-off', color: 'black' },
-     // { id: 'search', name: '搜索', icon: 'mdi-magnify', color: 'blue' },
-     // { id: 'news', name: '新闻', icon: 'mdi-newspaper', color: 'red' },
-     // { id: 'video', name: '视频', icon: 'mdi-play-circle', color: 'pink' },
-     // { id: 'shopping', name: '购物', icon: 'mdi-cart', color: 'orange' },
-     // { id: 'social', name: '社交', icon: 'mdi-chat', color: 'orange-darken-2' },
-     // { id: 'study', name: '学习', icon: 'mdi-school', color: 'green' },
-     // { id: 'tech', name: '技术', icon: 'mdi-github', color: 'grey-darken-3' },
-     // { id: 'map', name: '地图', icon: 'mdi-map', color: 'blue-darken-2' },
-     // { id: 'music', name: '音乐', icon: 'mdi-music', color: 'purple' },
-     // { id: 'tool', name: '工具', icon: 'mdi-tools', color: 'teal' },
-     // { id: 'edu', name: '教育', icon: 'mdi-book-open', color: 'indigo' }
     ]);
 
     const allLinks = ref([
-     // { id: 1, name: '百度搜索', desc: '百度搜索', icon: 'mdi-magnify', url: 'https://www.baidu.com', color: 'blue', category: 'search' },
-     // { id: 2, name: '今日头条', desc: '新闻资讯', icon: 'mdi-newspaper', url: 'https://www.toutiao.com', color: 'red', category: 'news' },
-     // { id: 3, name: '哔哩哔哩', desc: '视频平台', icon: 'mdi-play-circle', url: 'https://www.bilibili.com', color: 'pink', category: 'video' },
-     // { id: 4, name: '京东商城', desc: '购物商城', icon: 'mdi-cart', url: 'https://www.jd.com', color: 'orange', category: 'shopping' },
-     // { id: 5, name: '微博', desc: '社交网络', icon: 'mdi-chat', url: 'https://www.weibo.com', color: 'orange-darken-2', category: 'social' },
-     // { id: 6, name: '慕课网', desc: '学习资源', icon: 'mdi-school', url: 'https://www.imooc.com', color: 'green', category: 'study' },
-     // { id: 7, name: 'GitHub', desc: '技术社区', icon: 'mdi-github', url: 'https://github.com', color: 'grey-darken-3', category: 'tech' },
-     // { id: 8, name: '高德地图', desc: '地图导航', icon: 'mdi-map', url: 'https://www.amap.com', color: 'blue-darken-2', category: 'map' },
-     // { id: 9, name: '淘宝', desc: '购物平台', icon: 'mdi-shopping', url: 'https://www.taobao.com', color: 'orange', category: 'shopping' },
-     // { id: 10, name: '知乎', desc: '知识社区', icon: 'mdi-forum', url: 'https://www.zhihu.com', color: 'blue', category: 'social' },
-     // { id: 11, name: '网易云音乐', desc: '音乐平台', icon: 'mdi-music', url: 'https://music.163.com', color: 'red', category: 'music' },
-     // { id: 12, name: 'CSDN', desc: '技术博客', icon: 'mdi-code-braces', url: 'https://www.csdn.net', color: 'orange', category: 'tech' },
-     // { id: 13, name: '腾讯文档', desc: '在线办公', icon: 'mdi-file-document', url: 'https://docs.qq.com', color: 'blue', category: 'tool' },
-     // { id: 14, name: 'Coursera', desc: '在线课程', icon: 'mdi-school', url: 'https://www.coursera.org', color: 'indigo', category: 'edu' },
       { id: 15, name: '临时邮箱', desc: '邮箱', icon: 'mdi-email', url: 'fen/index.html', color: 'blue', category: 'aaa' },
       { id: 16, name: '鲸鱼壁纸', desc: '壁纸分享', icon: 'mdi-image-area', url: 'fen/index2.html', color: 'yellow', category: 'aaa' },
       { id: 17, name: 'Aaa导航页', desc: '导航工具', icon: 'mdi-home', url: 'fen/index3.html', color: 'red', category: 'aaa' },
@@ -815,7 +921,8 @@ createApp({
       { name: 'Bing 搜索', value: 'bing' },
       { name: '百度搜索', value: 'baidu' },
       { name: 'Google 搜索', value: 'google' },
-      { name: '搜狗搜索', value: 'sogou' }
+      { name: '搜狗搜索', value: 'sogou' },
+      { name: '站内导航搜索（测试）', value: 'internal' } // 新增
     ]);
 
     const themeColors = ref([
@@ -879,10 +986,39 @@ createApp({
       return searchUrls[searchEngine.value] || searchUrls.bing;
     };
 
+    // 新增：站内搜索处理函数
+    const performInternalSearch = (query) => {
+      if (!query || query.trim() === '') {
+        alert('请输入搜索内容');
+        return;
+      }
+      const lowerCaseQuery = query.toLowerCase();
+      // 在 allLinks 中搜索，匹配 name 或 desc
+      const results = allLinks.value.filter(link => 
+        link.name.toLowerCase().includes(lowerCaseQuery) || 
+        (link.desc && link.desc.toLowerCase().includes(lowerCaseQuery))
+      );
+      
+      if (results.length > 0) {
+        const resultList = results.map(r => `• ${r.name}: ${r.desc}`).join('\n');
+        alert(`找到 ${results.length} 个相关链接：\n\n${resultList}\n\n点击确定后，您可以手动查找并点击这些链接。`);
+      } else {
+        alert(`未找到与“${query}”相关的导航链接。`);
+      }
+    };
+
     const performSearch = () => {
       if (!searchQuery.value || searchQuery.value.trim() === '') { alert('请输入搜索内容'); return; }
-      const url = getSearchUrl(searchQuery.value);
-      if (url) window.open(url, '_blank');
+      
+      // 判断当前搜索引擎
+      if (searchEngine.value === 'internal') {
+        // 执行站内搜索
+        performInternalSearch(searchQuery.value);
+      } else {
+        // 执行外部搜索
+        const url = getSearchUrl(searchQuery.value);
+        if (url) window.open(url, '_blank');
+      }
     };
 
     const toggleCategories = () => { categoriesExpanded.value = !categoriesExpanded.value; };
@@ -1415,7 +1551,7 @@ if (hour === 0 && minute >= 0 && minute < 30) { // 凌晨0:00
       searchQuery.value = '';
       showSearch.value = true;
       messages.value = [];
-      messageSettings.value = { enableNotifications: true, autoCheckTime: true };
+      messageSettings.value = { enableNotifications: true, autoCheckTime: true, enableAutoRefresh: true };
       messageLastUpdate.value = null;
       localStorage.removeItem('navHelperData');
       showClearDialog.value = false;
@@ -1490,9 +1626,14 @@ if (hour === 0 && minute >= 0 && minute < 30) { // 凌晨0:00
       window.addEventListener('resize', handleResize); 
       document.documentElement.style.scrollBehavior = 'smooth';
       
-      // 加载默认消息（如果还没有消息）
-      if (messages.value.length === 0) {
+      // 修改后的消息加载逻辑：优先检查用户设置
+      if (messageSettings.value.enableAutoRefresh) {
         loadDefaultMessages();
+      } else {
+        // 如果未启用自动刷新，则仅在无消息时加载一次
+        if (messages.value.length === 0) {
+          loadDefaultMessages();
+        }
       }
       
       // 检查时间消息
@@ -1518,7 +1659,7 @@ if (hour === 0 && minute >= 0 && minute < 30) { // 凌晨0:00
       theme, favoriteLinks, filteredLinks, storageSize, storageUsage,
       messages, showMessageDialog, selectedMessage, messageLastUpdate, messageSettings,
       unreadCount,
-      isFavorite, getColorName, getSearchEngineName, getSearchUrl, performSearch,
+      isFavorite, getColorName, getSearchEngineName, getSearchUrl, performSearch, performInternalSearch,
       toggleCategories, selectCategory, clearCategoryFilter, scrollToQuickNav, scrollToTop,
       toggleFavorite, startLongPress, endLongPress, openLink, toggleDarkMode, onCarouselEnabledChange,
       exportData, importData, clearData, openRewardLink,
@@ -1548,5 +1689,5 @@ if (hour === 0 && minute >= 0 && minute < 30) { // 凌晨0:00
 }))
 .mount('#app');
 </script>
-</body>
+ </body>
 </html>
