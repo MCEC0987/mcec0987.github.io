@@ -1,0 +1,565 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>死了么app</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        :root {
+            --brand-green: #29c675;
+            --brand-green-dark: #21b466;
+            --text-main: #333333;
+            --text-muted: #aaaaaa;
+            --tip-bg: #f8f8f8;
+            --danger: #ff6b6b;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            font-family: -apple-system, "SF Pro Text", "PingFang SC", sans-serif;
+            color: var(--text-main);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            overflow: hidden;
+        }
+
+        .app-container {
+            width: min(100vw, 320px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: max(36px, env(safe-area-inset-top)) 20px max(30px, env(safe-area-inset-bottom)) 20px;
+            position: relative;
+            margin: 0 auto;
+            background: #fff;
+        }
+
+        .form-wrap {
+            width: 100%;
+            max-width: 220px;
+            margin: 0 auto;
+        }
+
+        .field-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 0.5px solid #f0f0f0;
+            padding: 12px 0;
+            margin-bottom: 8px;
+            transition: border-color 0.2s ease;
+        }
+
+        .field-item:focus-within {
+            border-color: rgba(41, 198, 117, 0.35);
+        }
+
+        .field-item input {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: var(--text-main);
+            width: 100%;
+            background: transparent;
+        }
+
+        .field-item input::placeholder {
+            color: #c6c6c6;
+        }
+
+        .field-icon {
+            font-size: 10px;
+            color: #ddd;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .center-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .main-btn {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(180deg, #32d780 0%, var(--brand-green) 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 30px rgba(41, 198, 117, 0.25);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, opacity 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .main-btn:hover {
+            box-shadow: 0 16px 34px rgba(41, 198, 117, 0.3);
+        }
+
+        .main-btn:active {
+            transform: scale(0.95);
+        }
+
+        .main-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            margin-bottom: 8px;
+            object-fit: contain;
+        }
+
+        .btn-text {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .last-checkin-tag {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 15px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .status-text {
+            min-height: 20px;
+            margin-top: 10px;
+            font-size: 11px;
+            text-align: center;
+            color: var(--brand-green-dark);
+        }
+
+        .status-text.error {
+            color: var(--danger);
+        }
+
+        .footer-wrap {
+            width: 100%;
+            max-width: 230px;
+            margin: 0 auto;
+        }
+
+        .warning-card {
+            background-color: var(--tip-bg);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .warning-card p {
+            color: var(--text-muted);
+            font-size: 11px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .legal {
+            text-align: center;
+            font-size: 10px;
+            color: #ccc;
+        }
+
+        .legal span {
+            color: var(--brand-green);
+        }
+
+        .octopus-watermark {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            opacity: 0.1;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* 弹窗 */
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 99999;
+        }
+
+        .modal-card {
+            width: 100%;
+            max-width: 300px;
+            background: #fff;
+            border-radius: 18px;
+            padding: 18px 18px 16px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+            text-align: center;
+            animation: popupIn 0.22s ease;
+        }
+
+        @keyframes popupIn {
+            from {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: #f3f3f3;
+            color: #888;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin: 8px 0 12px;
+        }
+
+        .modal-desc {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .modal-qrcode {
+            width: 210px;
+            max-width: 100%;
+            border-radius: 12px;
+            display: block;
+            margin: 0 auto 14px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .modal-btn {
+            min-width: 110px;
+            height: 38px;
+            border: none;
+            border-radius: 999px;
+            background: var(--brand-green);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media (max-height: 650px) {
+            .app-container {
+                padding-top: 24px;
+                padding-bottom: 24px;
+            }
+
+            .main-btn {
+                width: 124px;
+                height: 124px;
+            }
+
+            .logo-icon {
+                width: 38px;
+                height: 38px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="app" class="app-container">
+
+    <!-- 输入区 -->
+    <div class="form-wrap">
+        <div class="field-item">
+            <input
+                type="text"
+                v-model.trim="config.name"
+                @input="saveData"
+                placeholder="你的名字"
+                maxlength="20"
+                autocomplete="name"
+            >
+            <i class="fa-solid fa-pencil field-icon"></i>
+        </div>
+
+        <div class="field-item">
+            <input
+                type="email"
+                v-model.trim="config.email"
+                @input="saveData"
+                placeholder="紧急联系人邮箱"
+                maxlength="50"
+                autocomplete="email"
+                inputmode="email"
+            >
+            <i class="fa-solid fa-pencil field-icon"></i>
+        </div>
+    </div>
+
+    <!-- 签到区 -->
+    <div class="center-wrap">
+        <button
+            class="main-btn"
+            @click="handleCheckIn"
+            :disabled="submitting"
+            aria-label="今日签到"
+        >
+            <img src="1.png" class="logo-icon" alt="logo">
+            <span class="btn-text">{{ submitting ? '签到中...' : '今日签到' }}</span>
+        </button>
+
+        <p class="last-checkin-tag" v-if="config.lastTime">
+            上次签到：{{ formattedTime }}<br>
+            已过去：{{ timeAgo }}
+        </p>
+
+        <div class="status-text" :class="{ error: statusType === 'error' }">
+            {{ statusMessage }}
+        </div>
+    </div>
+
+    <!-- 底部区 -->
+    <div class="footer-wrap">
+        <div class="warning-card">
+            <p>2 日未签到，系统将以你的名义，<br>在次日邮件通知你的紧急联系人</p>
+        </div>
+        <div class="legal">
+            签到即同意 <span>隐私政策</span> 和 <span>用户协议</span>
+        </div>
+    </div>
+
+    <img src="1.png" class="octopus-watermark" alt="">
+
+    <!-- 使用 teleport，避免弹窗定位异常 -->
+    <teleport to="body">
+        <div v-if="showQqModal" class="modal-mask" @click.self="closeQqModal">
+            <div class="modal-card">
+                <button class="modal-close" @click="closeQqModal" aria-label="关闭弹窗">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <div class="modal-title">请进入QQ群</div>
+                <div class="modal-desc">长按识别下方二维码，加入QQ群获取最新通知</div>
+
+                <img
+                    class="modal-qrcode"
+                    src="https://cloudflareimg.cdn.sn/i/69d13028bf65c_1775317032.webp"
+                    alt="QQ群二维码"
+                >
+
+                <button class="modal-btn" @click="closeQqModal">我知道了</button>
+            </div>
+        </div>
+    </teleport>
+</div>
+
+<script>
+    const { createApp, ref, computed, onMounted, onBeforeUnmount } = Vue;
+
+    createApp({
+        setup() {
+            const STORAGE_KEY = 'died_app_data';
+
+            const config = ref({
+                name: '',
+                email: '',
+                lastTime: null
+            });
+
+            const statusMessage = ref('');
+            const statusType = ref('success');
+            const submitting = ref(false);
+            const now = ref(Date.now());
+            const showQqModal = ref(true);
+
+            let timer = null;
+            let statusTimer = null;
+
+            const showStatus = (message, type = 'success') => {
+                statusMessage.value = message;
+                statusType.value = type;
+
+                if (statusTimer) {
+                    clearTimeout(statusTimer);
+                }
+
+                statusTimer = setTimeout(() => {
+                    statusMessage.value = '';
+                }, 2200);
+            };
+
+            const safeParse = (value) => {
+                try {
+                    return JSON.parse(value);
+                } catch (e) {
+                    return null;
+                }
+            };
+
+            const saveData = () => {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(config.value));
+                } catch (e) {
+                    showStatus('保存失败，请检查浏览器存储权限', 'error');
+                }
+            };
+
+            const validateEmail = (email) => {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            };
+
+            const formattedTime = computed(() => {
+                if (!config.value.lastTime) return '';
+                const date = new Date(config.value.lastTime);
+                const MM = `${date.getMonth() + 1}`.padStart(2, '0');
+                const DD = `${date.getDate()}`.padStart(2, '0');
+                const HH = `${date.getHours()}`.padStart(2, '0');
+                const mm = `${date.getMinutes()}`.padStart(2, '0');
+                return `${MM}月${DD}日 ${HH}:${mm}`;
+            });
+
+            const timeAgo = computed(() => {
+                if (!config.value.lastTime) return '';
+                const diff = Math.max(0, now.value - config.value.lastTime);
+                const minutes = Math.floor(diff / 60000);
+                const hours = Math.floor(diff / 3600000);
+                const days = Math.floor(diff / 86400000);
+
+                if (days > 0) return `${days}天前`;
+                if (hours > 0) return `${hours}小时前`;
+                if (minutes > 0) return `${minutes}分钟前`;
+                return '刚刚';
+            });
+
+            const handleCheckIn = () => {
+                if (submitting.value) return;
+
+                const name = (config.value.name || '').trim();
+                const email = (config.value.email || '').trim();
+
+                if (!name) {
+                    showStatus('请先填写你的名字', 'error');
+                    return;
+                }
+
+                if (!email) {
+                    showStatus('请先填写紧急联系人邮箱', 'error');
+                    return;
+                }
+
+                if (!validateEmail(email)) {
+                    showStatus('请输入正确的邮箱格式', 'error');
+                    return;
+                }
+
+                submitting.value = true;
+
+                try {
+                    if (navigator.vibrate) {
+                        navigator.vibrate(40);
+                    }
+
+                    config.value.lastTime = Date.now();
+                    saveData();
+                    now.value = Date.now();
+
+                    showStatus('签到成功，已重置计时器');
+                } finally {
+                    setTimeout(() => {
+                        submitting.value = false;
+                    }, 300);
+                }
+            };
+
+            const closeQqModal = () => {
+                showQqModal.value = false;
+            };
+
+            onMounted(() => {
+                const savedData = localStorage.getItem(STORAGE_KEY);
+                if (savedData) {
+                    const parsed = safeParse(savedData);
+                    if (parsed && typeof parsed === 'object') {
+                        config.value = {
+                            name: parsed.name || '',
+                            email: parsed.email || '',
+                            lastTime: parsed.lastTime || null
+                        };
+                    }
+                }
+
+                timer = setInterval(() => {
+                    now.value = Date.now();
+                }, 60000);
+            });
+
+            onBeforeUnmount(() => {
+                if (timer) {
+                    clearInterval(timer);
+                }
+                if (statusTimer) {
+                    clearTimeout(statusTimer);
+                }
+            });
+
+            return {
+                config,
+                saveData,
+                handleCheckIn,
+                formattedTime,
+                timeAgo,
+                statusMessage,
+                statusType,
+                submitting,
+                showQqModal,
+                closeQqModal
+            };
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
