@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Aaa导航</title>
+  <title>Aaa导航助手-消息中心</title>
   <link href="https://cdn.jsdelivr.net/npm/vuetify@3.x/dist/vuetify.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@7.x/css/materialdesignicons.min.css" rel="stylesheet">
   <style>
@@ -184,7 +184,7 @@
   mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
 ">
-         📢我们的域名<a href="https://aaa-nb-520.cc.cd">aaa-nb-520.cc.cd</a> - 🔔万一呢？我是说万一 -
+         📢我们的域名<a href="https://aaa-nb-520.cc.cd">aaa-nb-520.cc.cd</a> - 🔔万一呢？我是说万一 (是啥意思呀？) -
         </marquee>
        </div>
        <div class="search-container" :class="{ 'no-carousel': !carouselEnabled }" v-show="showSearch">
@@ -909,7 +909,7 @@ createApp({
       { id: 18, name: '手机端Web应用构建器', desc: '在手机端构建Web应用', icon: 'mdi-earth', url: 'fen/手机端Web应用构建器.html', color: 'green', category: 'aaa' },
       { id: 19, name: '小乌龟网页取源', desc: '一键获取网页源代码', icon: 'mdi-spider', url: 'fen/source-code.html', color: 'purple', category: 'aaa' },
       { id: 20, name: '源码购买', desc: '暂时先放这，Aaa导航页源码购买', icon: 'mdi-code-tags', url: 'https://www.512fk.cc/shop/WLXTPOPI', color: 'cyan', category: 'aaa' },
-      { id: 21, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'null' },
+      { id: 21, name: '外链网盘', desc: '网址：http://aaanb.us.ci/', icon: 'mdi-weather-cloudy', url: 'http://aaanb.us.ci/', color: '#009788', category: 'aaa' },
       { id: 22, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'null' },
       { id: 23, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'null' },
       { id: 24, name: '无', desc: '待添加', icon: 'mdi-alert-circle', url: './404.html', color: 'white', category: 'null' },
@@ -1080,6 +1080,16 @@ createApp({
     // 消息相关方法
     const loadDefaultMessages = () => {
       const defaultMessages = [
+      {
+          id: 0,
+          title: '暂停维护更新通知',
+          content: '从2026年5月4日开始本站暂停维护更新，因为一些原因最终暂时放下',
+          sender: '系统通知',
+          senderIcon: 'mdi-bell',
+          senderColor: 'primary',
+          time: new Date().getTime() - 1000 * 60 * 0, // 0分钟前
+          read: false
+        },
         {
           id: 1,
           title: '欢迎使用Aaa导航助手',
@@ -1087,7 +1097,7 @@ createApp({
           sender: '系统通知',
           senderIcon: 'mdi-bell',
           senderColor: 'primary',
-          time: new Date().getTime() - 1000 * 60 * 30, // 30分钟前
+          time: new Date().getTime() - 1000 * 60 * 300, // 300分钟前
           read: false
         },
         {
@@ -1097,7 +1107,7 @@ createApp({
           sender: '系统更新',
           senderIcon: 'mdi-update',
           senderColor: 'green',
-          time: new Date().getTime() - 1000 * 60 * 60 * 2, // 2小时前
+          time: new Date().getTime() - 1000 * 60 * 60 * 20, // 20小时前
           read: false
         },
         {
@@ -1107,7 +1117,7 @@ createApp({
           sender: '开发团队',
           senderIcon: 'mdi-code-braces',
           senderColor: 'orange',
-          time: new Date().getTime() - 1000 * 60 * 60 * 5, // 5小时前
+          time: new Date().getTime() - 1000 * 60 * 60 * 50, // 50小时前
           read: true
         },
         {
@@ -1117,7 +1127,7 @@ createApp({
           sender: '系统安全',
           senderIcon: 'mdi-shield-lock',
           senderColor: 'red',
-          time: new Date().getTime() - 1000 * 60 * 60 * 24, // 1天前
+          time: new Date().getTime() - 1000 * 60 * 60 * 240, // 10天前
           read: true
         }
       ];
